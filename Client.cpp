@@ -70,7 +70,11 @@ public:
 
 
 int main() {
-    SimpleClient client("127.0.0.1", 12345);
+    std::string rep="";
+    std::cout << "IP>";
+    std::cin >> rep;
+
+    SimpleClient client(rep, 12345);
 
     if (client.connectToServer()) {
         std::string message="";

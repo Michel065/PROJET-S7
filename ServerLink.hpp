@@ -1,5 +1,5 @@
-#ifndef _SERVERLINK_H_
-#define _SERVERLINK_H_
+    #ifndef _SERVERLINK_H_
+    #define _SERVERLINK_H_
 
 #include <string>
 #include <netinet/in.h>
@@ -20,6 +20,5 @@ class ServerLink {
         std::string receiveMessage();
         void disconnect();
 };
-
 
 #endif 

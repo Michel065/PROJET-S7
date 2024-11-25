@@ -2,6 +2,7 @@
 #define _CLIENT_H_
 
 #include "ServerLink.hpp"
+#include "Structure.hpp"
 
 
 class Client {

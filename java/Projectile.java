@@ -13,7 +13,7 @@ public class Projectile {
         this.directionX = directionX;
         this.directionY = directionY;
     }
-
+    
     // Getters et setters
     public int getId() {
         return id;
@@ -31,12 +31,12 @@ public class Projectile {
         this.speed = speed;
     }
 
-    public int getX() {
-        return (int)x;
+    public float getX() {
+        return this.x;
     }
 
-    public int getY() {
-        return (int)y;
+    public float getY() {
+        return this.y;
     }
 
     public void setPosition(float x, float y) {
@@ -45,12 +45,12 @@ public class Projectile {
     }
 
     public void move() {
-        this.x = directionX * speed;
-        this.y = directionY * speed;
+        this.x += directionX * speed;
+        this.y += directionY * speed;
     }
 
     public float[] simu_move() {
-        return new float[]{directionX * speed, directionY * speed};
+        return new float[]{x+directionX * speed, y+directionY * speed};
     }
 
     @Override

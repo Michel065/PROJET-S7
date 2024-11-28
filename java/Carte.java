@@ -20,6 +20,18 @@ public class Carte {
         carte=new MatriceCarre<Tuple>(taille);
 
         obstacles = new ArrayList<>(nbr_max_obstacle_par_case*taille*taille);
+
+        init_matrice();
+    }
+
+    private void init_matrice(){
+        int indice_dans_liste=0;
+        for(int x=0;x<taille;x++){
+            for(int y=0;y<taille;y++){
+                carte.set(x,y,new Tuple(indice_dans_liste,indice_dans_liste));
+                indice_dans_liste+=nbr_max_obstacle_par_case;
+            }
+        }
     }
 
     public void create_all_initial_obstacle(){
@@ -36,6 +48,13 @@ public class Carte {
     }
 
     private boolean ajoute_obstacle(int x,int y){
+        
+
+        return true;
+    }
+
+    private boolean retire_obstacle(int x,int y,int id){
+
         return true;
     }
 

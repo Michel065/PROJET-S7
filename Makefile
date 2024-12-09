@@ -6,7 +6,8 @@ MAIN = Host
 # Cibles
 all:
 	$(JAVAC) *.java
-
+	$(JAVA) $(MAIN)
+	
 run: all
 	$(JAVA) $(MAIN)
 

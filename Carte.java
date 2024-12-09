@@ -93,6 +93,19 @@ public class Carte {
         System.out.println("nbr Obstacle par case:"+nbr_max_obstacle_par_case);
     }
 
+    public void printliste_obstacle(){
+        System.out.println("____liste____");
+        System.out.print("[");
+        int i=0;
+        for(Obstacle obstacle : obstacles){
+            if(obstacle!=null) System.out.print(i+",");
+            else System.out.print(" ,");
+        }
+        
+        System.out.println("]");
+    }
+
+
     public void print_nbr_obstacle_par_case_matrice() {
         System.out.println("Nombre d'obstacles par case dans la matrice :");
         for (int x = 0; x < taille; x++) {
@@ -136,11 +149,10 @@ public class Carte {
                 // Taille d'une case dans la fenêtre et taille des cercles
                 double caseWidthInOrigin = windowWidth / (double) taille_reel;
                 double caseHeightInOrigin = windowHeight / (double) taille_reel;
-                int circleSize = (int) (Math.min(caseWidthInOrigin, caseHeightInOrigin) * 0.5); // Taille d'un cercle
-    
+
                 // Dessiner les lignes de la matrice si demandé
                 if (showGrid) {
-                    g2d.setColor(Color.LIGHT_GRAY); // Couleur des lignes
+                    g2d.setColor(Color.BLACK); // Couleur des lignes
                     for (int i = 0; i <= taille; i++) {
                         // Lignes verticales
                         int x = (int) (i * (windowWidth / (double) taille));
@@ -152,20 +164,20 @@ public class Carte {
                     }
                 }
     
+                double taille_case_pour=0.9;
                 // Dessiner les obstacles
                 for (Obstacle obstacle : obstacles) {
                     if (obstacle != null) {
                         // Mise à l'échelle des coordonnées des obstacles
-                        int scaledX = (int) (obstacle.x * caseWidthInOrigin);
-                        int scaledY = (int) (obstacle.y * caseHeightInOrigin);
+                        g.setColor(Color.RED);
     
-                        // Ajuste les coordonnées pour centrer le cercle
-                        scaledX -= circleSize / 2;
-                        scaledY -= circleSize / 2;
-    
-                        // Dessin des cercles
-                        g2d.setColor(Color.RED);
-                        g2d.fillOval(scaledX, scaledY, circleSize, circleSize);
+                        // Convertir la position float en position pour l'affichage
+                        int drawX = (int) ((obstacle.x+0.05+0.04*(1-taille_case_pour)*10) * caseWidthInOrigin); 
+                        int drawY = (int) ((obstacle.y+0.05+0.04*(1-taille_case_pour)*10) * caseHeightInOrigin);
+
+                        // Dessiner un carré de la taille de la case
+                        g.fillRect(drawX, drawY, (int) (caseWidthInOrigin*taille_case_pour), (int)(caseHeightInOrigin*taille_case_pour));
+
                     }
                 }
             }

@@ -16,7 +16,7 @@ public class DisplayApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         host = new Host(50, 0.01, 15); // Initialisation de la logique
-        host.genere_projectile(50);
+        //host.genere_projectile(50);
 
         // Création de l'interface graphique
         Pane root = new Pane();
@@ -37,14 +37,18 @@ public class DisplayApp extends Application {
             @Override
             public void handle(long now) {
                 gc.clearRect(0, 0, sizeWindow, sizeWindow); // Effacer l'écran
+
                 drawObstacles();
                 drawProjectiles();
-                host.update_projectile(); // Mettre à jour les projectiles
+                System.out.println("SCourcou");
+
+                //drawPlayers();
+                /*s
                 if (host.is_finish()) {
                     host.genere_x_new_projectile(50);
-                    /*stop(); // Arrêter l'animation
-                    primaryStage.close(); // Fermer la fenêtre*/
-                }
+                    top(); // Arrêter l'animation
+                    primaryStage.close(); // Fermer la fenêtre
+                }*/
             }
         }.start();
     }
@@ -86,17 +90,42 @@ public class DisplayApp extends Application {
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
         double caseWidth = (double) sizeWindow / host.map;
         double caseHeight = (double) sizeWindow / host.map;
+        
+        ListShare<Projectile> li=host.getProjectiles();
+        if(li != null){
+            for (Projectile projectile : li) {
+                // Calcul des coordonnées pour placer correctement les projectiles
+                double drawX = projectile.getX() * caseWidth;
+                double drawY = projectile.getY() * caseHeight;
+        
+                // Taille des projectiles (fixée à une fraction de la case)
+                double projectileSize = Math.min(caseWidth, caseHeight) * 0.5;
+        
+                // Dessiner les projectiles
+                gc.fillOval(drawX, drawY, projectileSize, projectileSize);
+            }
+        }
+    }
+
+    private void drawPlayers() {
+        gc.setFill(Color.GREEN);
     
-        for (Projectile projectile : host.getProjectiles()) {
-            // Calcul des coordonnées pour placer correctement les projectiles
-            double drawX = projectile.getX() * caseWidth;
-            double drawY = projectile.getY() * caseHeight;
-    
-            // Taille des projectiles (fixée à une fraction de la case)
-            double projectileSize = Math.min(caseWidth, caseHeight) * 0.5;
-    
-            // Dessiner les projectiles
-            gc.fillOval(drawX, drawY, projectileSize, projectileSize);
+        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
+        double caseWidth = (double) sizeWindow / host.map;
+        double caseHeight = (double) sizeWindow / host.map;
+        ListShare<Projectile> li=host.getPlayers();
+        if(li != null){
+            for (Player player :li) {
+                // Calcul des coordonnées pour placer correctement les projectiles
+                double drawX = player.getX() * caseWidth;
+                double drawY = player.getY() * caseHeight;
+        
+                // Taille des projectiles (fixée à une fraction de la case)
+                double playerSize = Math.min(caseWidth, caseHeight);
+        
+                // Dessiner les projectiles
+                gc.fillOval(drawX, drawY, playerSize, playerSize);
+            }
         }
     }
     

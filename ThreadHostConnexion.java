@@ -1,45 +1,64 @@
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Vector;
 
 public class ThreadHostConnexion extends Thread  {
+    private int port;
+    private Carte carte;
+    private ListShare<Player> players;
+    private ListShare<Projectile> projectiles;
+    private ServerSocket maSocketEcoute = null;
+    private boolean phase_de_test=true;
 
-    ThreadHostConnexion(int port){
+    
 
+
+    ThreadHostConnexion(int port,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles,boolean phase_de_test){
+        this.port=port;
+        this.carte=carte;
+        this.players=players;
+        this.projectiles=projectiles;
+        this.phase_de_test=phase_de_test;
+    }
+
+    public void faux_client(int nbr){
+        for(int i=0;i<nbr;i++){
+            ThreadHostToClient ThreadClient = new ThreadHostToClient(null, carte,players,projectiles);
+            ThreadClient.start();
+        }
     }
     
     public void run() { 
-    try {
-			port = Integer.parseInt(args[0]);
-			maSocketEcoute = new ServerSocket(port); // creation d'une socket server sur le port d'ecoute "port"
+        if(phase_de_test){
+            faux_client(2);
+        }
+        else{
+            try {
+                maSocketEcoute = new ServerSocket(port);
 
-			lesClients = new Vector<PrintWriter>();
+                System.out.println("Serveur pret et ecoute sur le port "+port);
 
-			System.out.println("Serveur pret et ecoute sur le port "+port);
+                while(true) {				
+                    Socket clientSocket = maSocketEcoute.accept();
 
-			while(true) {				
-				Socket clientSocket = maSocketEcoute.accept(); // attente de connexion d'un client (bloquant tant que pas de client)
-				//si un client se connecte, alors accept() retourne une socket pour communiquer avec ce client
-				System.out.println("Connexion de : " + clientSocket.getInetAddress() + " : port " + clientSocket.getPort());
+                    System.out.println("Connexion de : " + clientSocket.getInetAddress() + " : port " + clientSocket.getPort());//on precise qui ce connecte
 
-				//creation et demarrage d'un thread pour dialoguer avec le client
-				ServeurTchatThreadService serviceThread = new ServeurTchatThreadService(clientSocket, lesClients);
-				serviceThread.start();
-			}
-		}
-		catch (Exception e) { 
-			System.err.println("Erreur : "+e);
-			e.printStackTrace();
-		}
-		finally {
-			try {
-				if(maSocketEcoute!=null) maSocketEcoute.close();
-			} catch (IOException e) {
-				System.err.println("Erreur : "+e);
-				e.printStackTrace();
-			}
-		}
+                    ThreadHostToClient ThreadClient = new ThreadHostToClient(clientSocket, carte,players,projectiles);
+                    ThreadClient.start();
+                }
+            }
+            catch (Exception e) { 
+                System.err.println("Erreur : "+e);
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    if(maSocketEcoute!=null) maSocketEcoute.close();
+                } catch (IOException e) {
+                    System.err.println("Erreur : "+e);
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

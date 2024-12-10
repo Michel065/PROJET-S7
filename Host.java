@@ -1,12 +1,15 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Iterator;
+
 
 public class Host {
-    private Carte carte;
-    private List<Projectile> projectiles;
+    
     public long map;
+    private Carte carte;
+    private ListShare<Projectile> projectiles;
+    private ListShare<Player> players;
+    private ThreadHostConnexion recepteur;
+    private Random random = new Random();
 
 
 
@@ -17,7 +20,6 @@ public class Host {
     }
 
     public void add_new_projectile(){
-            Random random = new Random();
             float x,y,speed;
             float dirx,diry;
             x = random.nextFloat() * map;
@@ -42,7 +44,7 @@ public class Host {
     }
 
     public void genere_projectile(int nbr){
-        projectiles=new ArrayList<>((int)nbr);
+        projectiles=new ListShare<>();
         genere_x_new_projectile(nbr);
     }
 
@@ -51,24 +53,6 @@ public class Host {
             add_new_projectile();
         }
     }
-
-    public void update_projectile() {
-        synchronized (projectiles) { // Synchronisation pour éviter les conflits d'accès
-            Iterator<Projectile> iterator = projectiles.iterator();
-            float[] coord = new float[2];
-            while (iterator.hasNext()) {
-                Projectile projectile = iterator.next();
-                projectile.simu_move(coord);
-                if (carte.ca_touche_ou_pas(coord[0], coord[1], (float) 0.5)) {
-                    iterator.remove(); // Supprime directement l'élément de manière sûre
-                } else {
-                    projectile.move();
-                }
-            }
-        }
-    }
-    
-
     
 
     public void print_projectile(){
@@ -77,11 +61,13 @@ public class Host {
         }
     }
 
+
+    //pour le display
     public boolean is_finish(){
-        return projectiles.size()==0;
+        return players.size()==0;
     }
 
-    public List<Projectile> getProjectiles(){
+    public ListShare<Projectile> getProjectiles(){
         return projectiles;
     }
 
@@ -89,7 +75,13 @@ public class Host {
         return carte.getObstacles();
     }
 
-    public void start(){
-        
+    public ListShare<Player> getPlayers(){
+        return players;
+    }
+
+    //pour la partie avec des robots
+    public void start(int port){
+        recepteur= new ThreadHostConnexion(port,carte,players,projectiles,true);
+        recepteur.start();
     }
 }

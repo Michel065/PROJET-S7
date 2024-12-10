@@ -1,17 +1,15 @@
 public class Player {
     private int id; // Identifiant unique du joueur
     private int health; // Points de vie
-    private int x, y; // Position dans la grille
+    private float x, y; // Position dans la grille
 
-    // Constructeur
-    public Player(int id, int health, int x, int y) {
+    public Player(int id, int health, float x, float y) {
         this.id = id;
         this.health = health;
         this.x = x;
         this.y = y;
     }
 
-    // Getters et setters
     public int getId() {
         return id;
     }
@@ -28,11 +26,11 @@ public class Player {
         this.health = health;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 

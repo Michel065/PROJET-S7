@@ -1,0 +1,1 @@
+c juste une version 1 qui a un host qui test la carte(implementé selon la methode du profs) et des collision entre des projectiles aleatoire et des obstacles 

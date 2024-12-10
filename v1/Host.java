@@ -3,14 +3,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Iterator;
 
-public class Hostv2 {
+public class Host {
     private Carte carte;
     private List<Projectile> projectiles;
     public long map;
 
 
 
-    Hostv2(long map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
+    Host(long map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();
@@ -87,5 +87,9 @@ public class Hostv2 {
 
     public List<Obstacle> getObstacles(){
         return carte.getObstacles();
+    }
+
+    public void start(){
+        
     }
 }

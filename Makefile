@@ -1,15 +1,16 @@
 # Variables
 JAVAC = javac
 JAVA = java
-MAIN = Host_Graph
+JAVAFX_PATH = /usr/share/openjfx/lib
+MAIN = DisplayApp
 
 # Cibles
 all:
-	$(JAVAC) *.java
-	$(JAVA) $(MAIN)
-	
+	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml *.java
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml $(MAIN)
+
 run: all
-	$(JAVA) $(MAIN)
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml $(MAIN)
 
 clean:
 	rm -f *.class

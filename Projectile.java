@@ -48,8 +48,9 @@ public class Projectile {
         this.y += directionY * speed;
     }
 
-    public float[] simu_move() {
-        return new float[]{x+directionX * speed, y+directionY * speed};
+    public void simu_move(float[] coord) {
+        coord[0] = x + directionX * speed;
+        coord[1] = y + directionY * speed;
     }
 
     @Override

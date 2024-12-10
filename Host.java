@@ -68,5 +68,5 @@ public class Host {
         Host host = new Host();
         host.genere_projectile(10);
         host.print_projectile();
-
+    }
 }

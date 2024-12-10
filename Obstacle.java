@@ -24,4 +24,8 @@ public class Obstacle {
     public Tuple get(){
         return coord;
     }  
+
+    public boolean is_egual(int x, int y){
+        return x==coord.x && y==coord.y;
+    }
 }

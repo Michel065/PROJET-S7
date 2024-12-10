@@ -1,11 +1,10 @@
 public class Projectile {
     private int id; // Identifiant unique du projectile
     private float speed; // Vitesse
-    private float x, y; // Position actuelle
-    private int directionX, directionY; // Direction de déplacement
+    private float x, y,directionX, directionY;
 
     // Constructeur
-    public Projectile(int id, float speed, float x, float y, int directionX, int directionY) {
+    public Projectile(int id, float speed, float x, float y, float directionX, float directionY) {
         this.id = id;
         this.speed = speed;
         this.x = x;
@@ -55,6 +54,6 @@ public class Projectile {
 
     @Override
     public String toString() {
-        return "Projectile{id='" + id + "', speed=" + speed + ", position=(" + x + ", " + y + ")}";
+        return "Projectile{id='" + id + "', speed=" + speed + ", position=(" + x + ", " + y + "), direction=(" + directionX + ", " + directionY + ")}";
     }
 }

@@ -26,6 +26,7 @@ public class Carte {
 
         init_liste();
         init_matrice();
+        ajoute_bordure();
         
     }
 
@@ -80,6 +81,16 @@ public class Carte {
         return false;
     }
 
+    public void ajoute_bordure(){
+        for(int i=0;i<taille_reel;i++){
+            ajoute_obstacle(0,i);
+            ajoute_obstacle(i,0);
+            ajoute_obstacle((int)taille_reel-1,i);
+            ajoute_obstacle(i,(int)taille_reel-1);
+        }
+    }
+
+
     public boolean retire_obstacle(int x,int y){
         Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
         for(int i =couple.x;i<couple.y;i++){
@@ -105,6 +116,17 @@ public class Carte {
             Obstacle tmp=obstacles.get(i);
             float distance_carre = calcul_distance_carre_obstacle(x,y,tmp.get());
             if(distance_carre<(radius*2)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean here_obstacle(float x,float y){
+        Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille((int)x,(int)y));
+        for(int i =couple.x;i<couple.y;i++){
+            Obstacle tmp=obstacles.get(i);
+            if(tmp.is_egual((int)x,(int)y)){
                 return true;
             }
         }

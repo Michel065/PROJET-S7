@@ -1,7 +1,7 @@
 # Variables
 JAVAC = javac
 JAVA = java
-MAIN = Host
+MAIN = Host_Graph
 
 # Cibles
 all:

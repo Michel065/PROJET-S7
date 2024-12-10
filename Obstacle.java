@@ -1,9 +1,27 @@
 public class Obstacle {
-    public int x,y;
+    private Tuple coord;
 
     public Obstacle(int x,int y){
-        this.x=x;
-        this.y=y;
+        coord=new Tuple(x,y);
     }
 
+    public int getx(){
+        return coord.x;
+    }
+
+    public int gety(){
+        return coord.y;
+    }
+
+    public void setx(int xx){
+        coord.x=xx;
+    }
+
+    public void sety(int yy){
+        coord.y=yy;
+    }
+
+    public Tuple get(){
+        return coord;
+    }  
 }

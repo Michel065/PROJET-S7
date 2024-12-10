@@ -1,5 +1,3 @@
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,7 +5,7 @@ import java.util.Random;
 public class Carte {
 
     private long taille_origine,taille_reel,nbr_obstacle_totale,longeur_list_obstacle;
-    private int largeur_case,largeur_matrice,nbr_moyen_obstacle_par_case;
+    private int largeur_case,largeur_matrice,nbr_moyen_obstacle_par_case,nbr_max_obstacle_par_case;
     private double pourcentage_obstacle;
 
     private MatriceCarre<Tuple> carte;
@@ -17,12 +15,12 @@ public class Carte {
         this.taille_origine=taille;
         this.nbr_obstacle_totale=(long) Math.ceil(pourcentage_obstacle*taille_origine*taille_origine);
         this.largeur_case=(int) Math.ceil(taille_origine/Math.sqrt(nbr_obstacle_totale/nbr_moyen_obstacle_par_case));
-        this.largeur_matrice=(int) Math.ceil(taille_origine/largeur_case);
+        this.largeur_matrice=(int) Math.ceil((taille_origine+1)/largeur_case);
         this.nbr_moyen_obstacle_par_case = nbr_moyen_obstacle_par_case;
         this.pourcentage_obstacle = pourcentage_obstacle;
         this.taille_reel=(long)(largeur_case*largeur_matrice);
         this.longeur_list_obstacle=largeur_case*largeur_matrice*largeur_matrice;
-
+        this.nbr_max_obstacle_par_case=Math.max(largeur_case*largeur_case,nbr_moyen_obstacle_par_case*2);
         carte=new MatriceCarre<Tuple>(largeur_matrice);
         obstacles = new ArrayList<>((int)longeur_list_obstacle);
 
@@ -32,7 +30,7 @@ public class Carte {
     }
 
     private void init_liste(){
-        for(int i=0;i<largeur_case*largeur_matrice*largeur_matrice ;i++){
+        for(int i=0;i<nbr_max_obstacle_par_case*largeur_matrice*largeur_matrice;i++){
             obstacles.add(null);
         }
     }
@@ -51,19 +49,20 @@ public class Carte {
         Random random = new Random();
         int nbr_obstacle=(int)(taille_reel*taille_reel*pourcentage_obstacle);
         for(int i=0;i<nbr_obstacle;i++){
-            int x = random.nextInt(taille_reel);
-            int y = random.nextInt(taille_reel);
+            int x = random.nextInt((int)taille_reel);
+            int y = random.nextInt((int)taille_reel);
             while(!ajoute_obstacle(x,y)){
-                x = random.nextInt(taille_reel);
-                y = random.nextInt(taille_reel);
+                x = random.nextInt((int)taille_reel);
+                y = random.nextInt((int)taille_reel);
             }
         }
+        
     }
 
     private boolean Obstacle_existe_deja(int x,int y,Tuple couple){
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
-            if(tmp.x==x && tmp.y==y){
+            if(tmp.getx()==x && tmp.gety()==y){
                 return true;
             }
         }
@@ -71,10 +70,9 @@ public class Carte {
     }
 
 
-    private boolean ajoute_obstacle(int x,int y){
+    public boolean ajoute_obstacle(int x,int y){
         Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
-        
-        if(!Obstacle_existe_deja(x,y,couple)){
+        if(!Obstacle_existe_deja(x,y,couple) && couple.y-couple.x<nbr_max_obstacle_par_case){
             obstacles.set(couple.y, new Obstacle(x, y));
             couple.y++;
             return true;
@@ -82,10 +80,37 @@ public class Carte {
         return false;
     }
 
-    private boolean retire_obstacle(int x,int y,int id){
-
-        return true;
+    public boolean retire_obstacle(int x,int y){
+        Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
+        for(int i =couple.x;i<couple.y;i++){
+            Obstacle tmp=obstacles.get(i);
+            if(tmp.getx()==x && tmp.gety()==y){
+                couple.y--;
+                obstacles.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
+
+    private float calcul_distance_carre_obstacle(float x, float y, Tuple obstale){
+        float xx=Math.abs(x-(obstale.x+(float)0.5));
+        float yy=Math.abs(y-(obstale.y+(float)0.5));
+        return xx*xx+yy*yy;
+    }
+
+    public boolean ca_touche_ou_pas(float x,float y,float radius){
+        Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille((int)x,(int)y));
+        for(int i =couple.x;i<couple.y;i++){
+            Obstacle tmp=obstacles.get(i);
+            float distance_carre = calcul_distance_carre_obstacle(x,y,tmp.get());
+            if(distance_carre<(radius*2)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void printinfo(){
         System.out.println("____Carte____");
@@ -134,64 +159,12 @@ public class Carte {
     public Tuple get_Coordonnees_De_Reel_Vers_Grille(int x, int y) {
         return new Tuple((int) (x / largeur_case),(int) (y / largeur_case));
     }
-    
-    public void display(int windowWidth, int windowHeight, boolean showGrid) {
-        // Création de la fenêtre
-        JFrame frame = new JFrame("Carte des Obstacles");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(windowWidth, windowHeight); // Taille personnalisée
-    
-        // Centrer la fenêtre sur l'écran
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screenSize.width - windowWidth) / 2;
-        int y = (screenSize.height - windowHeight) / 2;
-        frame.setLocation(x, y);
-    
-        // Création d'un panneau personnalisé pour dessiner
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-    
-                // Taille d'une case dans la fenêtre et taille des cercles
-                double caseWidthInOrigin = windowWidth / (double) taille_reel;
-                double caseHeightInOrigin = windowHeight / (double) taille_reel;
 
-                // Dessiner les lignes de la matrice si demandé
-                if (showGrid) {
-                    g2d.setColor(Color.BLACK); // Couleur des lignes
-                    for (int i = 0; i <= largeur_case; i++) {
-                        // Lignes verticales
-                        int x = (int) (i * (windowWidth / (double) largeur_case));
-                        g2d.drawLine(x, 0, x, windowHeight);
+    public List<Obstacle> getObstacles(){
+        return obstacles;
+    }
     
-                        // Lignes horizontales
-                        int y = (int) (i * (windowHeight / (double) largeur_case));
-                        g2d.drawLine(0, y, windowWidth, y);
-                    }
-                }
-    
-                double taille_case_pour=0.9;
-                // Dessiner les obstacles
-                for (Obstacle obstacle : obstacles) {
-                    if (obstacle != null) {
-                        // Mise à l'échelle des coordonnées des obstacles
-                        g.setColor(Color.RED);
-    
-                        // Convertir la position float en position pour l'affichage
-                        int drawX = (int) ((obstacle.x+0.05+0.04*(1-taille_case_pour)*10) * caseWidthInOrigin); 
-                        int drawY = (int) ((obstacle.y+0.05+0.04*(1-taille_case_pour)*10) * caseHeightInOrigin);
-
-                        // Dessiner un carré de la taille de la case
-                        g.fillRect(drawX, drawY, (int) (caseWidthInOrigin*taille_case_pour), (int)(caseHeightInOrigin*taille_case_pour));
-
-                    }
-                }
-            }
-        };
-    
-        frame.add(panel);
-        frame.setVisible(true);
+    public long getTailleReel(){
+        return taille_reel;
     }
 }

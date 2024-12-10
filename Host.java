@@ -1,13 +1,23 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import javax.swing.*;
+import java.awt.*;
+
+
 
 public class Host {
     private Carte carte;
     private List<Projectile> projectiles;
+    private long map;
+    private double pourcentageObstacle;
+    private int nbrMoyenObstacleParCase;
 
     Host(){
-        long map = 100; 
-        double pourcentageObstacle = 0.15;
-        int nbrMoyenObstacleParCase = 5;
+        map = 20; 
+        pourcentageObstacle = 0.15;
+        nbrMoyenObstacleParCase = 5;
 
         // Initialisation de la carte
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
@@ -23,13 +33,40 @@ public class Host {
         
     }
 
-    public void start(){
-        // Affichage graphique
-        carte.display(750, 750,true);
+    public void genere_projectile(int nbr){
+        projectiles=new ArrayList<>((int)nbr);
+        Random random = new Random();
+        for(int i=0;i<nbr;i++){
+            float x,y,speed;
+            int dirx,diry;
+            x = random.nextFloat() * map;
+            y = random.nextFloat() * map;
+            speed = random.nextFloat() * 5;
+            dirx = random.nextInt(nbr);
+            diry = random.nextInt(nbr);
+            float norm = (float) Math.sqrt(dirx * dirx + diry * diry);
+            if (norm != 0) {
+                dirx /= norm;
+                diry /= norm;
+            }
+            projectiles.add(new Projectile(i, speed, x, y, dirx, diry));
+        }
+    }
+
+    public void update_projectile(){
+
+    }
+
+    public void print_projectile(){
+        for (Projectile pro : projectiles) {
+            System.out.println(pro.toString());
+
+        }
     }
 
     public static void main(String[] args) {
-        Host host=new Host();
-        host.start();
-    }
+        Host host = new Host();
+        host.genere_projectile(10);
+        host.print_projectile();
+
 }

@@ -16,10 +16,8 @@ public class Hostv2 {
         carte.create_all_initial_obstacle();
     }
 
-    public void genere_projectile(int nbr){
-        projectiles=new ArrayList<>((int)nbr);
-        Random random = new Random();
-        for(int i=0;i<nbr;i++){
+    public void add_new_projectile(){
+            Random random = new Random();
             float x,y,speed;
             float dirx,diry;
             x = random.nextFloat() * map;
@@ -29,6 +27,7 @@ public class Hostv2 {
                 y = random.nextFloat() * map;
             }
             speed = (float)0.2;
+            int nbr =100;
             dirx = random.nextInt(nbr);
             diry = random.nextInt(nbr);
             dirx-=nbr/2;
@@ -39,7 +38,17 @@ public class Hostv2 {
                 diry /= norm;
             }
 
-            projectiles.add(new Projectile(i, speed, x, y, dirx, diry));
+            projectiles.add(new Projectile(1, speed, x, y, dirx, diry));
+    }
+
+    public void genere_projectile(int nbr){
+        projectiles=new ArrayList<>((int)nbr);
+        genere_x_new_projectile(nbr);
+    }
+
+    public void genere_x_new_projectile(int nbr){
+        for(int i=0;i<nbr;i++){
+            add_new_projectile();
         }
     }
 

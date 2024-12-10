@@ -7,10 +7,10 @@ MAIN = DisplayApp
 # Cibles
 all:
 	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml *.java
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml $(MAIN)
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml -Dprism.order=sw $(MAIN)
 
-run: all
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml $(MAIN)
+run:
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml -Dprism.order=sw $(MAIN)
 
 clean:
 	rm -f *.class

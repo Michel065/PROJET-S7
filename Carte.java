@@ -111,7 +111,9 @@ public class Carte {
     }
 
     public boolean ca_touche_ou_pas(float x,float y,float radius){
-        Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille((int)x,(int)y));
+        Tuple tmp1=get_Coordonnees_De_Reel_Vers_Grille((int)x,(int)y);
+        if(tmp1 == null) return true;
+        Tuple couple = carte.get(tmp1);
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
             float distance_carre = calcul_distance_carre_obstacle(x,y,tmp.get());
@@ -179,7 +181,11 @@ public class Carte {
     }
 
     public Tuple get_Coordonnees_De_Reel_Vers_Grille(int x, int y) {
-        return new Tuple((int) (x / largeur_case),(int) (y / largeur_case));
+
+        int xx=(x / largeur_case),yy=(y / largeur_case);
+        if(xx>=largeur_matrice || yy>=largeur_matrice || xx<0 || yy<0) return null;
+
+        return new Tuple(xx,yy);
     }
 
     public List<Obstacle> getObstacles(){

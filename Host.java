@@ -17,6 +17,8 @@ public class Host {
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();
+        this.players= new ListShare<>();
+        this.projectiles= new ListShare<>();
     }
 
     public void add_new_projectile(){
@@ -83,5 +85,10 @@ public class Host {
     public void start(int port){
         recepteur= new ThreadHostConnexion(port,carte,players,projectiles,true);
         recepteur.start();
+    }
+
+    public void killAllPlayers(){
+
+        while(players.size()>0) {players.remove(0);}
     }
 }

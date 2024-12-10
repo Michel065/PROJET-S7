@@ -1,7 +1,8 @@
 public class Player {
-    private int id; // Identifiant unique du joueur
-    private int health; // Points de vie
-    private float x, y; // Position dans la grille
+    private int id;
+    private int health; 
+    private float x, y,speed;
+    private double orientation=0;
 
     public Player(int id, int health, float x, float y) {
         this.id = id;
@@ -42,5 +43,41 @@ public class Player {
     @Override
     public String toString() {
         return "Player{id='" + id + "', health=" + health + ", position=(" + x + ", " + y + ")}";
+    }
+
+
+
+    public void rotate(int angle){
+        orientation+=(angle*0.01745329253);
+    }
+
+    public void addToSpeed(float val){
+        speed+=val;
+        if(speed>0)
+            Math.min(speed,2);
+        else if(speed<0)
+            Math.max(speed,-2);
+
+    }
+
+    public void simu_move(float[] val){
+        val[0]=x+(float)(Math.cos(orientation)*speed);
+        val[1]=y+(float)(Math.sin(orientation)*speed);
+    }
+
+    private void reduce_speed(){
+        if(speed>0.1)
+        speed*=0.9;
+        else speed=0;
+    }
+
+    public void move(){
+        x+=(float)(Math.cos(orientation)*speed);
+        y+=(float)(Math.sin(orientation)*speed);
+        reduce_speed();
+    }
+
+    public double getOrientation() {
+        return orientation;
     }
 }

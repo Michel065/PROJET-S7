@@ -30,7 +30,7 @@ public class ThreadHostConnexion extends Thread  {
     
     public void run() { 
         if(phase_de_test){
-            faux_client(2);
+            faux_client(5);
         }
         else{
             try {

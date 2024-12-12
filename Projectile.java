@@ -2,6 +2,7 @@ public class Projectile {
     private int id; // Identifiant unique du projectile
     private float speed; // Vitesse
     private float x, y,directionX, directionY;
+    private int life=20;
 
     // Constructeur
     public Projectile(int id, float speed, float x, float y, float directionX, float directionY) {
@@ -46,6 +47,7 @@ public class Projectile {
     public void move() {
         this.x += directionX * speed;
         this.y += directionY * speed;
+        life--;
     }
 
     public void simu_move(float[] coord) {
@@ -56,5 +58,9 @@ public class Projectile {
     @Override
     public String toString() {
         return "Projectile{id='" + id + "', speed=" + speed + ", position=(" + x + ", " + y + "), direction=(" + directionX + ", " + directionY + ")}";
+    }
+
+    public boolean en_vie(){
+        return life>0;
     }
 }

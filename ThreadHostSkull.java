@@ -24,7 +24,7 @@ public abstract class ThreadHostSkull extends Thread {
         float[] coord = new float[2];
         for (Projectile projectile : ourprojectiles) {
             projectile.simu_move(coord);
-            if (carte.ca_touche_ou_pas(coord[0], coord[1], (float) 0.5)) {
+            if (!projectile.en_vie() || carte.ca_touche_ou_pas(coord[0], coord[1], (float) 0.5)) {
                 projectiles.remove(projectile);
                 
             } else {

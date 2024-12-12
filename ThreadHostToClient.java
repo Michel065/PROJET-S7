@@ -1,8 +1,15 @@
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+//pour Manu
+import javax.swing.*;
+
+import javafx.stage.Stage;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
 public class ThreadHostToClient extends Thread {
@@ -14,15 +21,17 @@ public class ThreadHostToClient extends Thread {
     private Socket clientSocket=null;
     private Random random = new Random();
     private long taille_map=0;
+    private Stage primaryStage;
 
 
-    ThreadHostToClient(Socket client,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
+    ThreadHostToClient(Socket client,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles,Stage primaryStage){
         this.clientSocket=client;
         this.carte=carte;
         this.players=players;
         this.projectiles=projectiles;
         this.taille_map=carte.getTailleReel();
         this.ourprojectiles= new ArrayList<>();
+        this.primaryStage = primaryStage;
     }
     
     public void update_projectile() {
@@ -108,6 +117,31 @@ public class ThreadHostToClient extends Thread {
 
     }
 
+    private void manu(){
+        primaryStage.getScene().setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case W: 
+                    System.out.println("Touche 'W' pressée !");
+                    // Logic for moving up
+                    break;
+                case A:
+                    System.out.println("Touche 'A' pressée !");
+                    // Logic for moving left
+                    break;
+                case S:
+                    System.out.println("Touche 'S' pressée !");
+                    // Logic for moving down
+                    break;
+                case D:
+                    System.out.println("Touche 'D' pressée !");
+                    // Logic for moving right
+                    break;
+                default:
+                    System.out.println("Autre touche pressée : " + event.getCode());
+            }
+        });
+    }
+    
     public void run() { 
         //imaginer un system de comm avec un vrai client    
         //reception de msg/envoie, ...
@@ -116,7 +150,8 @@ public class ThreadHostToClient extends Thread {
         create_player();
 
         while(!is_closed()){
-            action_alea();
+            //action_alea();
+            manu();
             update_player();
             update_projectile();
 

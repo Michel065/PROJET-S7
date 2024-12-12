@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javafx.stage.Stage;
+
 public class ThreadHostConnexion extends Thread  {
     private int port;
     private Carte carte;
@@ -9,28 +11,30 @@ public class ThreadHostConnexion extends Thread  {
     private ListShare<Projectile> projectiles;
     private ServerSocket maSocketEcoute = null;
     private boolean phase_de_test=true;
+    private Stage primaryStage;
 
     
 
 
-    ThreadHostConnexion(int port,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles,boolean phase_de_test){
+    ThreadHostConnexion(int port,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles,boolean phase_de_test,Stage primaryStage){
         this.port=port;
         this.carte=carte;
         this.players=players;
         this.projectiles=projectiles;
         this.phase_de_test=phase_de_test;
+        this.primaryStage=primaryStage;
     }
 
     public void faux_client(int nbr){
         for(int i=0;i<nbr;i++){
-            ThreadHostToClient ThreadClient = new ThreadHostToClient(null, carte,players,projectiles);
+            ThreadHostToClient ThreadClient = new ThreadHostToClient(null, carte,players,projectiles,primaryStage);
             ThreadClient.start();
         }
     }
     
     public void run() { 
         if(phase_de_test){
-            faux_client(5);
+            faux_client(1);
         }
         else{
             try {

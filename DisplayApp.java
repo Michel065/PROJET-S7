@@ -31,6 +31,14 @@ public class DisplayApp extends Application {
             System.out.println("La fermeture ...");
             host.killAllPlayers();
         });
+
+        
+        
+        primaryStage.getScene().setOnKeyReleased(event -> {
+            System.out.println("Touche relâchée : " + event.getCode());
+        });
+        
+
         startAnimation(primaryStage);
     }
 

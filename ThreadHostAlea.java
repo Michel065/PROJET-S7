@@ -9,6 +9,9 @@ public class ThreadHostAlea extends ThreadHostSkull {
     }
     
     @Override
+    protected void init(){}
+
+    @Override
     protected void action(){
         float val = random.nextFloat();
         if(val<0.1){

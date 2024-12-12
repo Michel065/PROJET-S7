@@ -1,36 +1,45 @@
+import java.util.HashSet;
+import java.util.Set;
+
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class ThreadHostManuel extends ThreadHostSkull {
     private Stage primaryStage;
+    private final Set<KeyCode> activeKeys = new HashSet<>();
 
-    ThreadHostManuel(Stage primaryStage,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
+    ThreadHostManuel(Stage primaryStage, Carte carte, ListShare<Player> players, ListShare<Projectile> projectiles) {
         super(carte, players, projectiles);
-        this.primaryStage=primaryStage;
+        this.primaryStage = primaryStage;
+        
     }
     
     @Override
-    protected void action(){
-        primaryStage.getScene().setOnKeyReleased(event -> {
-            switch (event.getCode()) {
-                case Z:
-                    ourplayer.addToSpeed((float)0.4);
-                    break;
-                case Q:
-                ourplayer.rotate(-10);
+    protected void init() {
+        if (primaryStage.getScene() != null) {
+            primaryStage.getScene().setOnKeyPressed(event -> activeKeys.add(event.getCode()));
+            primaryStage.getScene().setOnKeyReleased(event -> activeKeys.remove(event.getCode()));
+        } else {
+            System.err.println("Erreur : La scène n'est pas définie pour le stage.");
+        }
+    }
 
-                    break;
-                case S:
-                    ourplayer.addToSpeed((float)-0.4);
-                    break;
-                case D:
-                    ourplayer.rotate(10);
-                    break;
-                case SPACE:
-                    tire();
-                    break;
-                default:
-                    System.out.println("Autre touche pressée : " + event.getCode());
-            }
-        });
+    @Override
+    protected void action() {
+        if (activeKeys.contains(KeyCode.Z)) {
+            ourplayer.addToSpeed((float) 0.2);
+        }
+        if (activeKeys.contains(KeyCode.Q)) {
+            ourplayer.rotate(-5);
+        }
+        if (activeKeys.contains(KeyCode.S)) {
+            ourplayer.addToSpeed((float) -0.2);
+        }
+        if (activeKeys.contains(KeyCode.D)) {
+            ourplayer.rotate(5);
+        }
+        if (activeKeys.contains(KeyCode.SPACE)) {
+            tire();
+        }
     }
 }

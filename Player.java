@@ -3,6 +3,7 @@ public class Player {
     private int health; 
     private float x, y,speed;
     private double orientation=0;
+    private float max_speed=(float)0.9;
 
     public Player(int id, int health, float x, float y) {
         this.id = id;
@@ -54,9 +55,9 @@ public class Player {
     public void addToSpeed(float val){
         speed+=val;
         if(speed>0)
-            Math.min(speed,1);
+            Math.min(speed,max_speed);
         else if(speed<0)
-            Math.max(speed,-1);
+            Math.max(speed,-max_speed);
 
     }
 

@@ -10,4 +10,7 @@ public class ThreadHostToClient extends ThreadHostSkull {
     
     @Override
     protected void action(){}
+
+    @Override
+    protected void init(){}
 }

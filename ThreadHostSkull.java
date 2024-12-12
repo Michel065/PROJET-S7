@@ -87,6 +87,8 @@ public abstract class ThreadHostSkull extends Thread {
             System.out.println("Le thread a été interrompu.");
         }
             System.out.println("start:");
+
+        init();
         while(!is_closed()){
             action();
             update_player();
@@ -104,4 +106,5 @@ public abstract class ThreadHostSkull extends Thread {
     }
 
     protected abstract void action();
+    protected abstract void init();
 }

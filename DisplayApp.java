@@ -86,7 +86,6 @@ public class DisplayApp extends Application {
     
 
     private void drawProjectiles() {
-        gc.setFill(Color.BLUE);
     
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
         double caseWidth = (double) sizeWindow / host.map;
@@ -96,6 +95,8 @@ public class DisplayApp extends Application {
         if(li != null){
             for (Projectile projectile : li) {
                 synchronized(projectile){
+                    Color projectileColor = projectile.getCouleur(); 
+                    gc.setFill(projectileColor);
                     // Calcul des coordonnées pour placer correctement les projectiles
                     double drawX = projectile.getX() * caseWidth;
                     double drawY = projectile.getY() * caseHeight;
@@ -111,7 +112,6 @@ public class DisplayApp extends Application {
     }
 
     private void drawPlayers() {
-        gc.setFill(Color.GREEN);
     
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
         double caseWidth = (double) sizeWindow / host.map;
@@ -120,6 +120,8 @@ public class DisplayApp extends Application {
         if(li != null){
             for (Player player :li) {
                 synchronized(player){
+                    Color playerColor = player.getCouleur(); 
+                    gc.setFill(playerColor);
                     // Calcul des coordonnées pour placer correctement les projectiles
                     double drawX = player.getX() * caseWidth;
                     double drawY = player.getY() * caseHeight;

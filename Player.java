@@ -1,23 +1,19 @@
+import javafx.scene.paint.Color;
+
 public class Player {
-    private int id;
+    private Color coul;
     private int health; 
     private float x, y,speed;
     private double orientation=0;
     private float max_speed=(float)0.9;
+    private float radius=(float)0.6;
 
-    public Player(int id, int health, float x, float y) {
-        this.id = id;
+    public Player(Color coul, int health, float x, float y) {
+        this.coul = coul;
         this.health = health;
         this.x = x;
         this.y = y;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        
     }
 
     public int getHealth() {
@@ -43,7 +39,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player{id='" + id + "', health=" + health + ", position=(" + x + ", " + y + ")}";
+        return "Player{id='" + coul + "', health=" + health + ", position=(" + x + ", " + y + ")}";
     }
 
 
@@ -85,4 +81,23 @@ public class Player {
     public double getOrientation() {
         return orientation;
     }
+
+    public Color getCouleur() {
+        return coul;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
+    public boolean is_touch_by(Projectile pro){
+        float xx=Math.abs(pro.getX()-x);
+        float yy=Math.abs(pro.getY()-y);
+        return xx*xx+yy*yy<((radius+pro.getRadius())*(radius+pro.getRadius()));
+    }
+
+    
+
+    
+
 }

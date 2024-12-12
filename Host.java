@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.Random;
 import javafx.stage.Stage;
 
 
@@ -11,7 +10,6 @@ public class Host {
     private ListShare<Projectile> projectiles;
     private ListShare<Player> players;
     private ThreadHostConnexion recepteur;
-    private Random random = new Random();
 
 
 
@@ -21,43 +19,7 @@ public class Host {
         carte.create_all_initial_obstacle();
         this.players= new ListShare<>();
         this.projectiles= new ListShare<>();
-    }
-
-    public void add_new_projectile(){
-            float x,y,speed;
-            float dirx,diry;
-            x = random.nextFloat() * map;
-            y = random.nextFloat() * map;
-            while(carte.here_obstacle(x,y)){
-                x = random.nextFloat() * map;
-                y = random.nextFloat() * map;
-            }
-            speed = (float)0.2;
-            int nbr =100;
-            dirx = random.nextInt(nbr);
-            diry = random.nextInt(nbr);
-            dirx-=nbr/2;
-            diry-=nbr/2;
-            float norm = (float) Math.sqrt(dirx * dirx + diry * diry);
-            if (norm != 0) {
-                dirx /= norm;
-                diry /= norm;
-            }
-
-            projectiles.add(new Projectile(1, speed, x, y, dirx, diry));
-    }
-
-    public void genere_projectile(int nbr){
-        projectiles=new ListShare<>();
-        genere_x_new_projectile(nbr);
-    }
-
-    public void genere_x_new_projectile(int nbr){
-        for(int i=0;i<nbr;i++){
-            add_new_projectile();
-        }
-    }
-    
+    }    
 
     public void print_projectile(){
         for (Projectile pro : projectiles) {
@@ -90,6 +52,8 @@ public class Host {
     //pour la partie avec des robots
     public void start(Stage primaryStage){
         ThreadHostManuel recepteur= new ThreadHostManuel(primaryStage,carte,players,projectiles);
+        ThreadHostAlea rece= new ThreadHostAlea(carte,players,projectiles);
+        rece.start();
         recepteur.start();
     }
 

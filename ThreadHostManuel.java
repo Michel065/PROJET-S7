@@ -2,6 +2,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ThreadHostManuel extends ThreadHostSkull {
@@ -11,7 +12,7 @@ public class ThreadHostManuel extends ThreadHostSkull {
     ThreadHostManuel(Stage primaryStage, Carte carte, ListShare<Player> players, ListShare<Projectile> projectiles) {
         super(carte, players, projectiles);
         this.primaryStage = primaryStage;
-        
+        coul=Color.GREEN;
     }
     
     @Override

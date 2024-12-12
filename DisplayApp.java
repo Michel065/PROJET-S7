@@ -16,7 +16,7 @@ public class DisplayApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         host = new Host(50, 0.01, 5); // Initialisation de la logique
-        host.start(5001);
+        host.start(primaryStage);
         // Création de l'interface graphique
         Pane root = new Pane();
         canvas = new Canvas(sizeWindow, sizeWindow);
@@ -31,13 +31,6 @@ public class DisplayApp extends Application {
             System.out.println("La fermeture ...");
             host.killAllPlayers();
         });
-
-        
-        
-        primaryStage.getScene().setOnKeyReleased(event -> {
-            System.out.println("Touche relâchée : " + event.getCode());
-        });
-        
 
         startAnimation(primaryStage);
     }

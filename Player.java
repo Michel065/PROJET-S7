@@ -54,9 +54,9 @@ public class Player {
     public void addToSpeed(float val){
         speed+=val;
         if(speed>0)
-            Math.min(speed,2);
+            Math.min(speed,1);
         else if(speed<0)
-            Math.max(speed,-2);
+            Math.max(speed,-1);
 
     }
 
@@ -66,9 +66,13 @@ public class Player {
     }
 
     private void reduce_speed(){
-        if(speed>0.1)
+        if(Math.abs(speed)>0.1)
         speed*=0.9;
         else speed=0;
+    }
+
+    public void reset_speed(){
+        speed=0;
     }
 
     public void move(){

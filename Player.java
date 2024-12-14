@@ -1,48 +1,24 @@
 import javafx.scene.paint.Color;
+import java.time.Instant;
+import java.time.Duration;
 
-public class Player {
-    private Color coul;
-    private int health; 
-    private float x, y,speed;
+public class Player extends Rond {
     private double orientation=0;
-    private float max_speed=(float)0.9;
-    private float radius=(float)0.6;
+    private float max_speed=(float)0.9,speed;
+
+    //info projectile:
+    float proj_speed = (float)0.4;
+    int proj_life = 20;
+    float proj_radius = (float)0.4;
+    int proj_degat=15;
+    int cooldown=500;//en ms
+    Instant start=  Instant.now(),end;
+    Duration duration;
 
     public Player(Color coul, int health, float x, float y) {
-        this.coul = coul;
-        this.health = health;
-        this.x = x;
-        this.y = y;
-        
+        super(coul, health, (float)0.5, x, y);
+        name="Player";
     }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public String toString() {
-        return "Player{id='" + coul + "', health=" + health + ", position=(" + x + ", " + y + ")}";
-    }
-
-
 
     public void rotate(int angle){
         orientation+=(angle*0.01745329253);
@@ -57,11 +33,6 @@ public class Player {
 
     }
 
-    public void simu_move(float[] val){
-        val[0]=x+(float)(Math.cos(orientation)*speed);
-        val[1]=y+(float)(Math.sin(orientation)*speed);
-    }
-
     private void reduce_speed(){
         if(Math.abs(speed)>0.1)
         speed*=0.9;
@@ -72,6 +43,13 @@ public class Player {
         speed=0;
     }
 
+    @Override
+    public void simu_move(float[] val){
+        val[0]=x+(float)(Math.cos(orientation)*speed);
+        val[1]=y+(float)(Math.sin(orientation)*speed);
+    }
+
+    @Override
     public void move(){
         x+=(float)(Math.cos(orientation)*speed);
         y+=(float)(Math.sin(orientation)*speed);
@@ -82,22 +60,14 @@ public class Player {
         return orientation;
     }
 
-    public Color getCouleur() {
-        return coul;
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    public boolean is_touch_by(Projectile pro){
-        float xx=Math.abs(pro.getX()-x);
-        float yy=Math.abs(pro.getY()-y);
-        return xx*xx+yy*yy<((radius+pro.getRadius())*(radius+pro.getRadius()));
-    }
-
-    
-
-    
+    public Projectile tire(){
+        end = Instant.now();
+        duration = Duration.between(start, end);
+        if(duration.toMillis() >=cooldown){
+            start=end;
+            return new Projectile(coul, proj_speed,proj_life,proj_radius,proj_degat,x,y, (float) Math.cos(orientation), (float) Math.sin(orientation)); 
+        }
+        return null;
+}
 
 }

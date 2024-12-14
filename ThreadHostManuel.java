@@ -31,13 +31,13 @@ public class ThreadHostManuel extends ThreadHostSkull {
             ourplayer.addToSpeed((float) 0.2);
         }
         if (activeKeys.contains(KeyCode.Q)) {
-            ourplayer.rotate(-5);
+            ourplayer.rotate(-10);
         }
         if (activeKeys.contains(KeyCode.S)) {
             ourplayer.addToSpeed((float) -0.2);
         }
         if (activeKeys.contains(KeyCode.D)) {
-            ourplayer.rotate(5);
+            ourplayer.rotate(10);
         }
         if (activeKeys.contains(KeyCode.SPACE)) {
             tire();

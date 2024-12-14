@@ -15,7 +15,7 @@ public class DisplayApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        host = new Host(50, 0.01, 5); // Initialisation de la logique
+        host = new Host(30, 0.01, 5); // Initialisation de la logique
         host.start(primaryStage);
         // Création de l'interface graphique
         Pane root = new Pane();
@@ -93,8 +93,10 @@ public class DisplayApp extends Application {
         
         ListShare<Projectile> li=host.getProjectiles();
         if(li != null){
+            //System.out.println("la taille:" + li.size());
             for (Projectile projectile : li) {
                 synchronized(projectile){
+                    
                     Color projectileColor = projectile.getCouleur(); 
                     gc.setFill(projectileColor);
                     // Calcul des coordonnées pour placer correctement les projectiles
@@ -102,7 +104,7 @@ public class DisplayApp extends Application {
                     double drawY = projectile.getY() * caseHeight;
             
                     // Taille des projectiles (fixée à une fraction de la case)
-                    double projectileSize = Math.min(caseWidth, caseHeight) * 0.5;
+                    double projectileSize = Math.min(caseWidth, caseHeight) * projectile.getRadius()*2;
             
                     // Dessiner les projectiles
                     gc.fillOval(drawX, drawY, projectileSize, projectileSize);
@@ -112,29 +114,40 @@ public class DisplayApp extends Application {
     }
 
     private void drawPlayers() {
-    
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
         double caseWidth = (double) sizeWindow / host.map;
         double caseHeight = (double) sizeWindow / host.map;
-        ListShare<Player> li= host.getPlayers();
-        if(li != null){
-            for (Player player :li) {
-                synchronized(player){
+        ListShare<Player> li = host.getPlayers();
+        if (li != null) {
+            for (Player player : li) {
+                synchronized (player) {
+                    // Couleur et dessin du joueur
                     Color playerColor = player.getCouleur(); 
                     gc.setFill(playerColor);
-                    // Calcul des coordonnées pour placer correctement les projectiles
+    
                     double drawX = player.getX() * caseWidth;
                     double drawY = player.getY() * caseHeight;
-            
-                    // Taille des projectiles (fixée à une fraction de la case)
-                    double playerSize = Math.min(caseWidth, caseHeight);
-            
-                    // Dessiner les projectiles
+    
+                    double playerSize = Math.min(caseWidth, caseHeight) * player.getRadius() * 2;
+    
+                    // Dessiner le joueur
                     gc.fillOval(drawX, drawY, playerSize, playerSize);
+    
+                    // Dessiner la barre de vie au-dessus du joueur
+                    double healthPercentage = player.getHealth() / 100.0; // Assumes health is out of 100
+                    double barWidth = playerSize * healthPercentage;
+                    double barHeight = playerSize * 0.2; // 20% of player size for the height
+    
+                    gc.setFill(Color.RED); // Background color for health bar
+                    gc.fillRect(drawX, drawY - barHeight - 2, playerSize, barHeight);
+    
+                    gc.setFill(Color.GREEN); // Foreground color for health
+                    gc.fillRect(drawX, drawY - barHeight - 2, barWidth, barHeight);
                 }
             }
         }
     }
+    
     
 
     public static void main(String[] args) {

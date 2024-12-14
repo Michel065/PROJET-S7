@@ -51,10 +51,13 @@ public class Host {
 
     //pour la partie avec des robots
     public void start(Stage primaryStage){
+        int nbr=0;
         ThreadHostManuel recepteur= new ThreadHostManuel(primaryStage,carte,players,projectiles);
-        ThreadHostAlea rece= new ThreadHostAlea(carte,players,projectiles);
-        rece.start();
         recepteur.start();
+        for(int i=0;i<nbr;i++){
+            ThreadHostAlea rece= new ThreadHostAlea(carte,players,projectiles);
+            rece.start();
+        }
     }
 
     public void start(int port,boolean bo){

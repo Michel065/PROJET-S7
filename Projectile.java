@@ -21,9 +21,9 @@ public class Projectile extends Rond {
     }
 
     @Override
-    public void simu_move(float[] coord) {
-        coord[0] = x + directionX * speed;
-        coord[1] = y + directionY * speed;
+    public void simu_move() {
+        coord_simu[0] = x + directionX * speed;
+        coord_simu[1] = y + directionY * speed;
         
         
     }

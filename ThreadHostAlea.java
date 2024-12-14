@@ -17,7 +17,7 @@ public class ThreadHostAlea extends ThreadHostSkull {
 
     @Override
     protected void action(){
-        /*
+        /* 
         float val = random.nextFloat();
         if(val<0.1){
             ourplayer.addToSpeed((float)0.4);
@@ -33,6 +33,7 @@ public class ThreadHostAlea extends ThreadHostSkull {
         val = random.nextFloat();
         if(val<0.1){
             tire();
-        }*/
+        }
+        */
     }
 }

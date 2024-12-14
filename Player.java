@@ -1,19 +1,19 @@
 import javafx.scene.paint.Color;
-import java.time.Instant;
-import java.time.Duration;
 
 public class Player extends Rond {
     private double orientation=0;
     private float max_speed=(float)0.9,speed;
 
     //info projectile:
-    float proj_speed = (float)0.4;
-    int proj_life = 20;
-    float proj_radius = (float)0.4;
-    int proj_degat=15;
-    int cooldown=500;//en ms
-    Instant start=  Instant.now(),end;
-    Duration duration;
+    private float proj_speed = (float)0.4;
+    private int proj_life = 20;
+    private float proj_radius = (float)0.2;
+    private int proj_degat=15;
+
+    
+    private long cooldown=500*1000*1000;//en ns
+    private long start = System.nanoTime(), end;
+
 
     public Player(Color coul, int health, float x, float y) {
         super(coul, health, (float)0.5, x, y);
@@ -44,9 +44,9 @@ public class Player extends Rond {
     }
 
     @Override
-    public void simu_move(float[] val){
-        val[0]=x+(float)(Math.cos(orientation)*speed);
-        val[1]=y+(float)(Math.sin(orientation)*speed);
+    public void simu_move(){
+        coord_simu[0]=x+(float)(Math.cos(orientation)*speed);
+        coord_simu[1]=y+(float)(Math.sin(orientation)*speed);
     }
 
     @Override
@@ -61,9 +61,8 @@ public class Player extends Rond {
     }
 
     public Projectile tire(){
-        end = Instant.now();
-        duration = Duration.between(start, end);
-        if(duration.toMillis() >=cooldown){
+        end = System.nanoTime();
+        if(end-start >=cooldown){
             start=end;
             return new Projectile(coul, proj_speed,proj_life,proj_radius,proj_degat,x,y, (float) Math.cos(orientation), (float) Math.sin(orientation)); 
         }

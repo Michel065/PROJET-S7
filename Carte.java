@@ -105,18 +105,18 @@ public class Carte {
     }
 
     private float calcul_distance_carre_obstacle(float x, float y, Tuple obstale){
-        float xx=Math.abs(x-(obstale.x+(float)0.5));
-        float yy=Math.abs(y-(obstale.y+(float)0.5));
+        float xx=Math.abs(x-(obstale.x));
+        float yy=Math.abs(y-(obstale.y));
         return xx*xx+yy*yy;
     }
 
-    public boolean ca_touche_ou_pas(float x,float y,float radius){
-        Tuple tmp1=get_Coordonnees_De_Reel_Vers_Grille((int)x,(int)y);
+    public boolean ca_touche_ou_pas(float[] coord,float radius){
+        Tuple tmp1=get_Coordonnees_De_Reel_Vers_Grille((int)coord[0],(int)coord[1]);
         if(tmp1 == null) return true;
         Tuple couple = carte.get(tmp1);
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
-            float distance_carre = calcul_distance_carre_obstacle(x,y,tmp.get());
+            float distance_carre = calcul_distance_carre_obstacle(coord[0],coord[1],tmp.get());
             if(distance_carre<(radius*2)){
                 return true;
             }

@@ -51,7 +51,7 @@ public class Host {
 
     //pour la partie avec des robots
     public void start(Stage primaryStage){
-        int nbr=0;
+        int nbr=1;
         ThreadHostManuel recepteur= new ThreadHostManuel(primaryStage,carte,players,projectiles);
         recepteur.start();
         for(int i=0;i<nbr;i++){

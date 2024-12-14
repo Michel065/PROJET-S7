@@ -15,7 +15,6 @@ public abstract class ThreadHostSkull extends Thread {
     protected Color coul=Color.GREEN;
     private Projectile proj_tmp;
     private List<Projectile> list_projectile_a_supp;
-    private float[] coord_simu=new float[2];;
 
 
     ThreadHostSkull(Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
@@ -26,7 +25,7 @@ public abstract class ThreadHostSkull extends Thread {
         this.ourprojectiles= new ArrayList<>();
     }
     
-    private boolean player_is_touch(Projectile proj){
+    private boolean other_player_is_touch(Projectile proj){
         boolean touche=false;
         for(Player player : players){
             if(player!=ourplayer && !proj.getCouleur().equals(player.getCouleur())){
@@ -43,7 +42,7 @@ public abstract class ThreadHostSkull extends Thread {
     private boolean player_touch(){
         for(Player player : players){
             if(player!=ourplayer && !ourplayer.getCouleur().equals(player.getCouleur())){
-                if(ourplayer.is_touch_by(player)){
+                if(ourplayer.is_touch_in_simu(player)){
                     return true;
                 }
             }
@@ -55,8 +54,8 @@ public abstract class ThreadHostSkull extends Thread {
     private void update_projectile() {
         list_projectile_a_supp =new ArrayList<>();
         for (Projectile projectile : ourprojectiles) {
-            projectile.simu_move(coord_simu);
-            if (!projectile.is_alive() || carte.ca_touche_ou_pas(coord_simu[0], coord_simu[1], projectile.getRadius()) || player_is_touch(projectile)) {
+            projectile.simu_move();
+            if (!projectile.is_alive() || carte.ca_touche_ou_pas(projectile.get_simu_move(), projectile.getRadius()) || other_player_is_touch(projectile)) {
                 list_projectile_a_supp.add(projectile);
                 
             } else {
@@ -71,8 +70,8 @@ public abstract class ThreadHostSkull extends Thread {
     private void update_player() {
         if(ourplayer !=null){
             if(ourplayer.getHealth()>0){
-                ourplayer.simu_move(coord_simu);
-                if (!carte.ca_touche_ou_pas(coord_simu[0], coord_simu[1], ourplayer.getRadius()) ) {//&& !player_touch()
+                ourplayer.simu_move();
+                if (!carte.ca_touche_ou_pas(ourplayer.get_simu_move(), ourplayer.getRadius()) && !player_touch() ) {
                     ourplayer.move();
                 } 
                 else{
@@ -91,14 +90,13 @@ public abstract class ThreadHostSkull extends Thread {
     private void create_player(){
         Random random = new Random();
         float x,y;
-        x = random.nextFloat() * taille_map;
-        y = random.nextFloat() * taille_map;
-        while(carte.here_obstacle(x,y)){
-            x = random.nextFloat() * taille_map;
-            y = random.nextFloat() * taille_map;
+        x = random.nextFloat() * (taille_map-5);
+        y = random.nextFloat() * (taille_map-5);
+        while(carte.here_obstacle((x+(float)2.5),(y+(float)2.5))){
+            x = random.nextFloat() * (taille_map-5);
+            y = random.nextFloat() * (taille_map-5);
         }
-        
-        ourplayer= new Player(coul,100,x,y);
+        ourplayer= new Player(coul,100,x+(float)2.5,y+(float)2.5);
         players.add(ourplayer);
         
     }
@@ -108,13 +106,11 @@ public abstract class ThreadHostSkull extends Thread {
     }
 
     protected void tire(){
-       
-        proj_tmp= ourplayer.tire();
+        proj_tmp=ourplayer.tire();
         if(proj_tmp != null){
             projectiles.add(proj_tmp);
             ourprojectiles.add(proj_tmp);
         }
-        
     }
 
     public void run() { 
@@ -122,7 +118,7 @@ public abstract class ThreadHostSkull extends Thread {
         create_player();
         System.out.println("Mode manuel apres 2s:");
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         }catch (InterruptedException e) {
             System.out.println("Le thread a été interrompu.");
         }

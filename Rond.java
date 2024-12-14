@@ -6,6 +6,8 @@ public abstract class Rond {
     protected float x, y,speed;
     protected float radius;
     protected String name="Rond";
+    protected float [] coord_simu=new float[2];
+
 
     public Rond(Color coul, int health,float radius, float x, float y) {
         this.coul = coul;
@@ -46,9 +48,13 @@ public abstract class Rond {
         return name+"{couleur='" + coul + "', health=" + health + ", position=(" + x + ", " + y + ")}";
     }
 
-    protected abstract void simu_move(float[] val);
+    protected abstract void simu_move();
 
     protected abstract void move();
+
+    public float[] get_simu_move(){
+        return coord_simu;
+    }
 
 
     public Color getCouleur() {
@@ -62,6 +68,12 @@ public abstract class Rond {
     public boolean is_touch_by(Rond rond){
         float xx=Math.abs(rond.getX()-x);
         float yy=Math.abs(rond.getY()-y);
+        return xx*xx+yy*yy<((radius+rond.getRadius())*(radius+rond.getRadius()));
+    }
+
+    public boolean is_touch_in_simu(Rond rond){
+        float xx=Math.abs(rond.getX()-coord_simu[0]);
+        float yy=Math.abs(rond.getY()-coord_simu[1]);
         return xx*xx+yy*yy<((radius+rond.getRadius())*(radius+rond.getRadius()));
     }
 

@@ -16,7 +16,7 @@ public class DisplayApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         host = new Host(30, 0.01, 5); // Initialisation de la logique
-        host.start(primaryStage);
+        host.start(5001,true);
         // Création de l'interface graphique
         Pane root = new Pane();
         canvas = new Canvas(sizeWindow, sizeWindow);
@@ -29,7 +29,7 @@ public class DisplayApp extends Application {
 
         primaryStage.setOnCloseRequest(event -> {
             System.out.println("La fermeture ...");
-            host.killAllPlayers();
+            Host.is_close=true;
         });
 
         startAnimation(primaryStage);

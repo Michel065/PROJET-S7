@@ -101,9 +101,6 @@ public abstract class ThreadHostSkull extends Thread {
         
     }
 
-    private boolean is_closed(){
-        return players.size()==0 || (ourplayer ==null && ourprojectiles.size()==0);
-    }
 
     protected void tire(){
         proj_tmp=ourplayer.tire();
@@ -125,7 +122,7 @@ public abstract class ThreadHostSkull extends Thread {
             System.out.println("start:");
 
         init();
-        while(!is_closed()){
+        while(!Host.is_close){
             action();
             update_projectile();
             update_player();
@@ -136,7 +133,7 @@ public abstract class ThreadHostSkull extends Thread {
             }
         }
 
-        System.out.println("fermeture du thread : " + Thread.currentThread().getName()+"!");
+        System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
 
     }
 

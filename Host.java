@@ -10,6 +10,7 @@ public class Host {
     private ListShare<Projectile> projectiles;
     private ListShare<Player> players;
     private ThreadHostConnexion recepteur;
+    public static boolean is_close=false;
 
 
 

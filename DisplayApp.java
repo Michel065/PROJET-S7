@@ -17,6 +17,7 @@ public class DisplayApp extends Application {
     public void start(Stage primaryStage) {
         host = new Host(30, 0.01, 5); // Initialisation de la logique
         host.start(5001,true);
+        //host.start(primaryStage);
         // Création de l'interface graphique
         Pane root = new Pane();
         canvas = new Canvas(sizeWindow, sizeWindow);

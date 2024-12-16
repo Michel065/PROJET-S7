@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashSet;
@@ -15,8 +17,13 @@ public class ThreadClientToHost  extends Thread {
     private int port=5001;
     private String IP="";
     private PrintWriter serveur_input;
+    private BufferedReader serveur_output;
+
     private String message="";
     private final Set<KeyCode> activeKeys = new HashSet<>();
+
+    //pour la carte
+    private Carte carte;
     
     ThreadClientToHost(Stage primaryStage,String ip,int port ){
         this.primaryStage=primaryStage;
@@ -32,6 +39,17 @@ public class ThreadClientToHost  extends Thread {
         } else {
             System.err.println("Erreur : La scène n'est pas définie pour le stage.");
         }
+
+        try {
+            carte=new Carte(serveur_output.readLine());
+        } catch (IOException e) {
+            System.err.println("Erreur : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public Carte get_carte(){
+        return carte;
     }
 
     private void stringifie_action() {
@@ -53,6 +71,8 @@ public class ThreadClientToHost  extends Thread {
         try{
             serveur = new Socket(IP, port);// on init la co
             serveur_input = new PrintWriter(serveur.getOutputStream());
+            serveur_output = new BufferedReader(new InputStreamReader(serveur.getInputStream()));
+
         }
         catch (IOException e) {
             System.err.println("Erreur\n"+e.getMessage());

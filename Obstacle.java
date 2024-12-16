@@ -28,4 +28,8 @@ public class Obstacle {
     public boolean is_egual(int x, int y){
         return x==coord.x && y==coord.y;
     }
+
+    public String to_String(){
+        return coord.x+":"+coord.y;
+    }
 }

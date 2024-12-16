@@ -1,12 +1,15 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ThreadHostToClient extends ThreadHostSkull {
     private Socket clientSocket=null;
     private String message="";
     private BufferedReader client_input;
+    private PrintWriter client_output;
+
 
 
     ThreadHostToClient(Socket client,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
@@ -27,10 +30,7 @@ public class ThreadHostToClient extends ThreadHostSkull {
         }
     }
 
-    @Override
-    protected void action(){
-        recevoir();
-
+    private void mouve() {
         if (message.contains("Z")) {
             ourplayer.addToSpeed((float) 0.2);
         }
@@ -48,10 +48,29 @@ public class ThreadHostToClient extends ThreadHostSkull {
         }
     }
 
+    private void envoyer() {
+
+    }
+
+    @Override
+    protected void action(){
+        envoyer();
+        recevoir();
+        mouve();
+        
+    }
+
     @Override
     protected void init(){
         try {
 			client_input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            client_output = new PrintWriter(clientSocket.getOutputStream());
+
+            //on vcommence par envoyer les proj et info importante
+
+            // on recup la taille de la fenetre
+            
+
 		} catch (IOException e) {
 			System.err.println("Erreur\n"+e.getMessage());
 			e.printStackTrace();

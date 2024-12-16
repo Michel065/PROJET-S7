@@ -1,32 +1,19 @@
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class Client extends Application {
-    public static boolean is_close=false;
-    private final int sizeWindow = 750;
+public class Client {
+    private String serverIp;
+    private int port;
+    private ThreadClientToHost toServer;
+    public static boolean is_close = false;
 
-    @Override
-    public void start(Stage primaryStage) {
-        // Création de l'interface graphique
-        Pane root = new Pane();
-
-        primaryStage.setTitle("Fenêtre Vide");
-        primaryStage.setScene(new Scene(root, sizeWindow, sizeWindow));
-        primaryStage.show();
-
-        primaryStage.setOnCloseRequest(event -> {
-            System.out.println("La fermeture ...");
-            Host.is_close=true;
-        });
-        //on init
-        ThreadClientToHost to_serveur= new ThreadClientToHost(primaryStage,"127.0.0.1",5001);
-        to_serveur.start();
-    
+    public Client(String serverIp, int port) {
+        this.serverIp = serverIp;
+        this.port = port;
     }
 
-    public static void main(String[] args) {
-        Application.launch(Client.class, args); // Correction ici
+    public void connect(Stage primaryStage) {
+        // Démarrage du thread pour la connexion avec le serveur
+        toServer = new ThreadClientToHost(primaryStage, serverIp, port);
+        toServer.start();
     }
 }

@@ -19,6 +19,11 @@ public class ThreadHostAlea extends ThreadHostSkull {
     protected void action(){
         float val = random.nextFloat();
         if(val<0.1){
+            tire();
+        }
+
+        /*val = random.nextFloat();
+        if(val<0.1){
             ourplayer.addToSpeed((float)0.4);
         }
         else if(val>0.97){
@@ -28,10 +33,7 @@ public class ThreadHostAlea extends ThreadHostSkull {
         val = random.nextFloat();
         if(val<0.2){
             ourplayer.rotate(10);
-        }
-        val = random.nextFloat();
-        if(val<0.1){
-            tire();
-        }
+        }*/
+        
     }
 }

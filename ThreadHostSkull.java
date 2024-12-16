@@ -103,11 +103,17 @@ public abstract class ThreadHostSkull extends Thread {
 
 
     protected void tire(){
-        proj_tmp=ourplayer.tire();
-        if(proj_tmp != null){
-            projectiles.add(proj_tmp);
-            ourprojectiles.add(proj_tmp);
+        if(ourplayer != null){
+            proj_tmp=ourplayer.tire();
+            if(proj_tmp != null){
+                projectiles.add(proj_tmp);
+                ourprojectiles.add(proj_tmp);
+            }
         }
+    }
+
+    private boolean is_finish(){
+        return Host.is_close || (ourplayer==null && ourprojectiles.size()==0);
     }
 
     public void run() { 
@@ -122,7 +128,7 @@ public abstract class ThreadHostSkull extends Thread {
             System.out.println("start:");
 
         init();
-        while(!Host.is_close){
+        while(!is_finish()){
             action();
             update_projectile();
             update_player();

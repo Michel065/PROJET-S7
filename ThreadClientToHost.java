@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
@@ -19,17 +20,27 @@ public class ThreadClientToHost  extends Thread {
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
 
-    private String message="";
+    private String message_sortant="";
+    private String message_entrant="";
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
     //pour la carte
     private Carte carte;
+    private ListShare<Projectile> projectiles;
+    private ListShare<Player> players;
+    private Player ourPlayer;
     
-    ThreadClientToHost(Stage primaryStage,String ip,int port ){
+    ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<Projectile> pr,ListShare<Player>pl){
         this.primaryStage=primaryStage;
         this.port=port;
-        this.IP=ip;
+        this.projectiles=pr;
+        this.players=pl;
+        this.ourPlayer=new Player(Color.GREEN,100,0,0);
         
+    }
+
+    public Float[] get_case_centre() {
+        return new Float[] {ourPlayer.getX(), ourPlayer.getY()};
     }
 
     private void init() {
@@ -40,12 +51,21 @@ public class ThreadClientToHost  extends Thread {
             System.err.println("Erreur : La scène n'est pas définie pour le stage.");
         }
 
+        String msg =readServeur();
+        if(!msg.equals(""))
+            carte=new Carte(msg);
+        else System.out.println("erreur recueration de la carte");
+        
+    }
+
+    private String readServeur(){
         try {
-            carte=new Carte(serveur_output.readLine());
+            return serveur_output.readLine();
         } catch (IOException e) {
             System.err.println("Erreur : " + e.getMessage());
             e.printStackTrace();
         }
+        return"";
     }
 
     public Carte get_carte(){
@@ -53,17 +73,40 @@ public class ThreadClientToHost  extends Thread {
     }
 
     private void stringifie_action() {
-        message="";
+        message_sortant="";
         for (KeyCode key : activeKeys) {
-            message+=key+" ";
+            message_sortant+=key+" ";
         }
     }
 
     private void send() {
-        if (serveur_input != null && !message.isEmpty()) {
-            serveur_input.println(message);
+        if (serveur_input != null && !message_sortant.isEmpty()) {
+            serveur_input.println(message_sortant);
             serveur_input.flush();
         }
+    }
+
+    private void send(String msg) {
+        if (serveur_input != null && !msg.isEmpty()) {
+            serveur_input.println(msg);
+            serveur_input.flush();
+        }
+    }
+
+    private String recevoir() {
+        try {
+            if (serveur_output.ready()) {
+                message_entrant = serveur_output.readLine(); 
+                return message_entrant;
+            } else {
+                message_entrant = "";
+                return "";
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Override
@@ -85,10 +128,15 @@ public class ThreadClientToHost  extends Thread {
             try {
                 stringifie_action();
                 send();
+                if(recevoir().equals("$end"))Client.is_close=true;
+
+                if (!message_entrant.isEmpty()) {
+                    String[] coord = message_entrant.split(":");
+                    ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
+                }
 
 
-
-                Thread.sleep(100);
+                Thread.sleep(20);
             } catch (InterruptedException e) {
                 System.err.println("Le thread a été interrompu : " + e.getMessage());
                 Thread.currentThread().interrupt(); // Signaler l'interruption
@@ -96,6 +144,8 @@ public class ThreadClientToHost  extends Thread {
             }
         }        
         System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
+
+        send("$end");
 
     }
 }

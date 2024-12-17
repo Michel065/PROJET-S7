@@ -6,9 +6,10 @@ import java.net.Socket;
 
 public class ThreadHostToClient extends ThreadHostSkull {
     private Socket clientSocket=null;
-    private String message="";
-    private BufferedReader client_input;
-    private PrintWriter client_output;
+    private BufferedReader client_output;
+    private PrintWriter client_input;
+
+    private float x,y;
 
 
 
@@ -17,64 +18,82 @@ public class ThreadHostToClient extends ThreadHostSkull {
         this.clientSocket=client;
     }
 
-    private void recevoir() {
+    private String recevoir() {
         try {
-            if (client_input.ready()) { // Vérifie s'il y a un message disponible
-                message = client_input.readLine(); // Lit le message si disponible
-            } else {
-                message = ""; // Aucun message, on passe à autre chose
+            while (client_output.ready()) { 
+                return client_output.readLine();
             }
         } catch (IOException e) {
             System.err.println("Erreur : " + e.getMessage());
             e.printStackTrace();
         }
+        return "";
     }
 
-    private void mouve() {
-        if (message.contains("Z")) {
+    private void mouve(String msg) {
+        if (msg.contains("Z")) {
             ourplayer.addToSpeed((float) 0.2);
         }
-        if (message.contains("Q")) {
+        if (msg.contains("Q")) {
             ourplayer.rotate(-10);
         }
-        if (message.contains("S")) {
+        if (msg.contains("S")) {
             ourplayer.addToSpeed((float) -0.2);
         }
-        if (message.contains("D")) {
+        if (msg.contains("D")) {
             ourplayer.rotate(10);
         }
-        if (message.contains("SPACE")) {
+        if (msg.contains("SPACE")) {
             tire();
+        }
+        if(msg.equals("$end"))remode_player();
+    }
+
+    private void send(String msg) {
+        if (client_input != null && !msg.isEmpty()) {
+            client_input.println(msg);
+            client_input.flush();
         }
     }
 
-    private void envoyer() {
-
+    private void envoyer_info(){
+        if(x!=ourplayer.getX() || y!=ourplayer.getY()){
+            send(ourplayer.getCoordString());
+            x=ourplayer.getX();
+            y=ourplayer.getY();
+        }
     }
 
     @Override
     protected void action(){
-        envoyer();
-        recevoir();
-        mouve();
+
+        
+        envoyer_info();
+        mouve(recevoir());
         
     }
 
     @Override
     protected void init(){
         try {
-			client_input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            client_output = new PrintWriter(clientSocket.getOutputStream());
+			client_output = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            client_input = new PrintWriter(clientSocket.getOutputStream());
 
-            //on vcommence par envoyer les proj et info importante
-
-            // on recup la taille de la fenetre
+            send(carte.stringifie());
             
+
+            x=ourplayer.getX();
+            y=ourplayer.getY();
 
 		} catch (IOException e) {
 			System.err.println("Erreur\n"+e.getMessage());
 			e.printStackTrace();
 		}
         
-    }    
+    }   
+    
+    @Override
+    protected void finish(){
+        send("$end");
+    }
 }

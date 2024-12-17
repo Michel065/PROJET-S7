@@ -43,4 +43,7 @@ public class ThreadHostManuel extends ThreadHostSkull {
             tire();
         }
     }
+    
+    @Override
+    protected void finish(){}
 }

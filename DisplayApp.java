@@ -15,7 +15,7 @@ public class DisplayApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        host = new Host(30, 0.01, 5); // Initialisation de la logique
+        host = new Host(30, 0.05, 5); // Initialisation de la logique
         host.start(5001,true);
         //host.start(primaryStage);
         // Création de l'interface graphique
@@ -48,7 +48,7 @@ public class DisplayApp extends Application {
                 /*
                 if (host.is_finish()) {
                     host.genere_x_new_projectile(50);
-                    top(); // Arrêter l'animation
+                    stop(); // Arrêter l'animation
                     primaryStage.close(); // Fermer la fenêtre
                 }*/
             }

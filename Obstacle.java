@@ -29,7 +29,7 @@ public class Obstacle {
         return x==coord.x && y==coord.y;
     }
 
-    public String to_String(){
+    public String stringifi(){
         return coord.x+":"+coord.y;
     }
 }

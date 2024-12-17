@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 
 
 public abstract class ThreadHostSkull extends Thread {
-    private Carte carte;
+    protected Carte carte;
     private ListShare<Player> players;
     private ListShare<Projectile> projectiles;
     private List<Projectile> ourprojectiles;
@@ -82,7 +82,7 @@ public abstract class ThreadHostSkull extends Thread {
         }
     }
 
-    private void remode_player(){
+    protected void remode_player(){
         players.remove(ourplayer);
         ourplayer=null;
     }
@@ -96,6 +96,9 @@ public abstract class ThreadHostSkull extends Thread {
             x = random.nextFloat() * (taille_map-5);
             y = random.nextFloat() * (taille_map-5);
         }
+
+        Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
+        coul = colors[random.nextInt(colors.length)];
         ourplayer= new Player(coul,100,x+(float)2.5,y+(float)2.5);
         players.add(ourplayer);
         
@@ -125,7 +128,7 @@ public abstract class ThreadHostSkull extends Thread {
         }catch (InterruptedException e) {
             System.out.println("Le thread a été interrompu.");
         }
-            System.out.println("start:");
+        System.out.println("start:");
 
         init();
         while(!is_finish()){
@@ -133,16 +136,17 @@ public abstract class ThreadHostSkull extends Thread {
             update_projectile();
             update_player();
             try {
-                Thread.sleep(100);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu.");
             }
         }
-
+        finish();
         System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
 
     }
 
     protected abstract void action();
     protected abstract void init();
+    protected abstract void finish();
 }

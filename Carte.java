@@ -7,6 +7,7 @@ public class Carte {
     private long taille_origine,taille_reel,nbr_obstacle_totale,longeur_list_obstacle;
     private int largeur_case,largeur_matrice,nbr_moyen_obstacle_par_case,nbr_max_obstacle_par_case;
     private double pourcentage_obstacle;
+    private int nbr_actuel_obstacle;
 
     private MatriceCarre<Tuple> carte;
     private List<Obstacle> obstacles;
@@ -80,6 +81,7 @@ public class Carte {
         if(!Obstacle_existe_deja(x,y,couple) && couple.y-couple.x<nbr_max_obstacle_par_case){
             obstacles.set(couple.y, new Obstacle(x, y));
             couple.y++;
+            nbr_actuel_obstacle++;
             return true;
         }
         return false;
@@ -102,6 +104,7 @@ public class Carte {
             if(tmp.getx()==x && tmp.gety()==y){
                 couple.y--;
                 obstacles.remove(i);
+                nbr_actuel_obstacle--;
                 return true;
             }
         }
@@ -151,6 +154,7 @@ public class Carte {
         System.out.println("nbr de cases d'origine:"+taille_origine*taille_origine);
         System.out.println("nouveau nbr de case:"+taille_reel*taille_reel);
         System.out.println("soit reel>origine ?:"+(taille_origine*taille_origine>=taille_reel*taille_reel));
+        System.out.println("nbr d'obstacle :"+nbr_actuel_obstacle);
         System.out.println("____________");
     }
 
@@ -204,18 +208,28 @@ public class Carte {
         String msg="taille:"+taille_origine+"/pourc_obst:"+pourcentage_obstacle+"/nbrmoyenobstacle:"+nbr_moyen_obstacle_par_case+"/";
         
         for (Obstacle ob : obstacles) {
-            msg+=ob.toString()+",";
+            if(ob!=null){
+                msg+=ob.stringifi()+",";
+            }
         }
         msg+="end";
         return msg;
     }
 
     public Carte(String msg){
+        /*
+         * le msg doit etre de type taille:val/lepourcentage d'obstacle:val/le nbr de obstales_par case/liste des obstacle
+         * avec la liste des obstacle sous former de exemple : 1:2,2:5,2:4,end
+         */
         String[]liste_info=msg.split("/");
         
         this.taille_origine=Long.parseLong(liste_info[0].split(":")[1]);
         this.pourcentage_obstacle=Double.parseDouble(liste_info[1].split(":")[1]);
         this.nbr_moyen_obstacle_par_case=Integer.parseInt(liste_info[2].split(":")[1]);
+
+        init_info();
+        init_liste();
+        init_matrice();
 
         // Traitement des points dans `liste_info[3]`
         String[] liste_point = liste_info[3].split(",");

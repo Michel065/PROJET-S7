@@ -14,6 +14,8 @@ public class ThreadHostAlea extends ThreadHostSkull {
     
     @Override
     protected void init(){}
+    @Override
+    protected void finish(){}
 
     @Override
     protected void action(){

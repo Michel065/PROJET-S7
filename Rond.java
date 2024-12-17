@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 public abstract class Rond {
     protected Color coul;
     protected int health; 
-    protected float x, y,speed;
+    protected float x, y,old_x,old_y,speed;
     protected float radius;
     protected String name="Rond";
     protected float [] coord_simu=new float[2];
@@ -38,10 +38,19 @@ public abstract class Rond {
         return y;
     }
 
+    public String getCoordString() {
+        return x+":"+y;
+    }
+
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
+
+    public void setPosition(float var1, float var2) {
+        this.x = var1;
+        this.y = var2;
+     }
 
     @Override
     public String toString() {

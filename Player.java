@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import javafx.scene.paint.Color;
 
 public class Player extends Rond {
@@ -70,3 +71,6 @@ public class Player extends Rond {
 }
 
 }
+=======
+coucou je suis un test
+>>>>>>> main

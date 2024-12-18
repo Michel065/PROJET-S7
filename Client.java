@@ -12,25 +12,22 @@ public class Client extends Application {
     private GraphicsContext gc;
 
     private String serverIp;
-    private int largeur_display_en_case = 10;
-    private int rayon_display_en_case = largeur_display_en_case/2;
+    private int rayon_display_en_case = 5;
     private int port;
     private ThreadClientToHost toServer;
     public static boolean is_close = false;
     private Carte carte;
-    private ListShare<Projectile> projectiles;
-    private ListShare<Player> players;
+    private ListShare<LightRond> Rond;
     private Float[] centre;
 
     public Client() {
         this.serverIp = "127.0.0.1";
         this.port = 5001;
-        this.players = new ListShare<>();
-        this.projectiles = new ListShare<>();
+        this.Rond = new ListShare<>();
     }
 
     public void connect(Stage primaryStage) {
-        toServer = new ThreadClientToHost(primaryStage, serverIp, port,projectiles,players);
+        toServer = new ThreadClientToHost(primaryStage, serverIp, port,Rond);
         toServer.start();
     }
 
@@ -39,6 +36,7 @@ public class Client extends Application {
             try {
                 Thread.sleep(100);
                 carte = toServer.get_carte();
+                rayon_display_en_case = toServer.get_rayon_display_en_case();
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu.");
             }
@@ -86,8 +84,9 @@ public class Client extends Application {
 
                 centre = toServer.get_case_centre();
                 drawObstacles();
-                drawProjectiles();
-                drawPlayers();
+                drawRond();
+                //drawProjectiles();
+                //drawPlayers();
 
                 if (Client.is_close) {
                     stop(); // Arrêter l'animation
@@ -103,7 +102,7 @@ public class Client extends Application {
         }
     
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / largeur_display_en_case;
+        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
         double caseHeight = caseWidth; // Cases carrées
     
         // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
@@ -134,11 +133,36 @@ public class Client extends Application {
         }
     }
     
-    private void drawProjectiles() {
+
+    private void drawRond() {
     
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / largeur_display_en_case;
-        double caseHeight = (double) sizeWindow / largeur_display_en_case;
+        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
+        double caseHeight = (double) sizeWindow / (rayon_display_en_case*2);
+
+        for (LightRond rond : Rond) {
+            synchronized(rond){
+                Color projectileColor = rond.getCouleur(); 
+                gc.setFill(projectileColor);
+                // Calcul des coordonnées pour placer correctement les projectiles
+                double drawX = rond.getX() * caseWidth;
+                double drawY = rond.getY() * caseHeight;
+        
+                // Taille des projectiles (fixée à une fraction de la case)
+                double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius()*2;
+        
+                // Dessiner les projectiles
+                gc.fillOval(drawX, drawY, projectileSize, projectileSize);
+            }
+        }
+    }
+
+
+    /*private void drawProjectiles() {
+    
+        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
+        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
+        double caseHeight = (double) sizeWindow / (rayon_display_en_case*2);
 
         for (Projectile projectile : projectiles) {
             synchronized(projectile){
@@ -159,8 +183,8 @@ public class Client extends Application {
 
     private void drawPlayers() {
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / largeur_display_en_case;
-        double caseHeight = (double) sizeWindow / largeur_display_en_case;
+        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
+        double caseHeight = (double) sizeWindow / (rayon_display_en_case*2);
         for (Player player : players) {
             synchronized (player) {
                 // Couleur et dessin du joueur
@@ -187,7 +211,7 @@ public class Client extends Application {
                 gc.fillRect(drawX, drawY - barHeight - 2, barWidth, barHeight);
             }
         }
-    }
+    }*/
 
 
 

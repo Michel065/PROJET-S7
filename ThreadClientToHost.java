@@ -15,7 +15,8 @@ public class ThreadClientToHost  extends Thread {
     private Socket serveur=null;
     private Stage primaryStage;
     private int port=5001;
-    private String IP="";
+    private int rayon_display_en_case=5;
+    private String IP="", message_recu="",message_transmit="";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
 
@@ -23,15 +24,13 @@ public class ThreadClientToHost  extends Thread {
 
     //pour la carte
     private Carte carte;
-    private ListShare<Projectile> projectiles;
-    private ListShare<Player> players;
+    private ListShare<LightRond> Rond;
     private Player ourPlayer;
     
-    ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<Projectile> pr,ListShare<Player>pl){
+    ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<LightRond> Rond){
         this.primaryStage=primaryStage;
         this.port=port;
-        this.projectiles=pr;
-        this.players=pl;
+        this.Rond=Rond;
         this.ourPlayer=new Player(100,0,0);
         
     }
@@ -47,27 +46,14 @@ public class ThreadClientToHost  extends Thread {
         } else {
             System.err.println("Erreur : La scène n'est pas définie pour le stage.");
         }
-
-        String msg =readServeur();
-        if(!msg.equals(""))
-            carte=new Carte(msg);
-        else System.out.println("erreur recueration de la carte");
-        
-        
-    }
-
-    private String readServeur(){
-        try {
-            return serveur_output.readLine();
-        } catch (IOException e) {
-            System.err.println("Erreur : " + e.getMessage());
-            e.printStackTrace();
-        }
-        return"";
     }
 
     public Carte get_carte(){
         return carte;
+    }
+
+    public int get_rayon_display_en_case(){
+        return rayon_display_en_case;
     }
 
 
@@ -98,62 +84,104 @@ public class ThreadClientToHost  extends Thread {
         }
     }
 
-    private String recevoir() {
-        try {
-            String msg="";
-            while (serveur_output.ready()) { 
-                msg=serveur_output.readLine();
-            }
-            return msg;
-        } catch (IOException e) {
-            System.err.println("Erreur : " + e.getMessage());
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    private void update_our_data(String msg){
-        if(msg.equals("$end"))Client.is_close=true;
-
-        /*if (!msg.isEmpty()) {
-            String[] coord = msg.split(":");
-            ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
-        }*/
-    }
-
     @Override
     public void run() { 
-        try{
+        try{//init
             serveur = new Socket(IP, port);// on init la co
             serveur_input = new PrintWriter(serveur.getOutputStream());
             serveur_output = new BufferedReader(new InputStreamReader(serveur.getInputStream()));
+            init();
+
+            send("get carte\n\r");
+            Analyse(serveur_output.readLine());
+            
+
+            send("put ourplayer color 2\n\r");
+            send("put ourplayer invincibilite false\n\r");
+
 
         }
         catch (IOException e) {
             System.err.println("Erreur\n"+e.getMessage());
             e.printStackTrace();
         }
-            
-        init();
 
+        System.out.println("initialisation terminé!");
+        //notre boucle
         while(!Client.is_close){
             try {
-                String msg=stringifie_action("");
-                if(!msg.equals(""))System.out.println(msg);
-                send(msg);
-
-                update_our_data(recevoir());
-
+                message_transmit="get ourplayer coord\n\r";
+                message_transmit+="get projectiles\n\r";
+                message_transmit+="get players\n\r";
+                message_transmit=stringifie_action(message_transmit);
+                send(message_transmit);
+                while (serveur_output.ready()) { //pour eviter des acumulation
+                    message_recu=serveur_output.readLine();
+                    message_transmit += Analyse(message_recu);
+                }
+                send(message_transmit);
+                
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                System.err.println("Le thread a été interrompu : " + e.getMessage());
-                Thread.currentThread().interrupt(); // Signaler l'interruption
-                break; // Sortir de la boucle si le thread est interrompu
+                System.out.println("Le thread a été interrompu.");
+            }catch (IOException e) {
+                System.err.println("Erreur : " + e.getMessage());
+                e.printStackTrace();
             }
+            
         }        
         System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
 
         send("put ourplayer null\n\r");
 
+    }
+
+    public String Analyse(String requete){
+        if(requete.equals("")) return "";//pour eviter d'afficher du vide
+
+        String reponse="",msg_erreur="Commande non reconnue.";
+        String[] words = requete.split(" ");
+
+        if (words.length >= 2) {
+            String action = words[0].toLowerCase();
+            String target = words[1];
+            String object="";
+            String data="";
+            if (words.length >= 3) object = words[2];
+            if (words.length >= 4) data = words[3];
+            
+            //System.out.println(action+" " +object+" "+target+" "+data);
+            
+            if (action.equals("get")) {
+                System.out.println("coucou");
+
+
+            } else if(action.equals("put")) {
+                if (target.equals("carte")) {
+                    carte= new Carte(object);
+                }else if (target.equals("ourplayer")) {
+                    if (object.equals("coord")) {
+                        String[] coord = data.split(":");
+                        ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
+                    }else if(object.equals("null")){
+                        Client.is_close=true;
+                    }
+                }else if (target.equals("fenetre")) {
+                    if (object.equals("rayon")) {
+                        rayon_display_en_case=Integer.parseInt(data);
+                    }
+                }else if (target.equals("projectiles")) {
+                    int nbr= Integer.parseInt(object);
+                    String[] liste_Projectiles=data.split(",");
+                    for(int i=0;i<nbr;i++){
+                        String[] coord = liste_Projectiles[i].split(":");
+                        Rond.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1));
+                    }
+                }
+                else reponse=msg_erreur;
+            }else reponse=msg_erreur;
+        }
+        if(!reponse.equals(""))reponse+="\n\r";
+        return reponse;
     }
 }

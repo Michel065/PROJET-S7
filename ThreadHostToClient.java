@@ -8,26 +8,12 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
     private Socket clientSocket=null;
     private BufferedReader client_output;
     private PrintWriter client_input;
+    private int rayon_display_en_case=5;
     private String message_recu="",message_transmit="";
 
     ThreadHostToClient(Socket client,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
         super(carte, players, projectiles);
         this.clientSocket=client;
-    }
-
-    private String recevoir() {
-        try {
-            String msg="",previous="";
-            while (client_output.ready()) { 
-                previous=msg;
-                msg=client_output.readLine();
-            }
-            return previous;
-        } catch (IOException e) {
-            System.err.println("Erreur : " + e.getMessage());
-            e.printStackTrace();
-        }
-        return "";
     }
 
     private void send(String msg) {
@@ -37,24 +23,28 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         }
     }
 
-    @Override
-    public void run() { 
-        System.out.println("demarage du thread : " + Thread.currentThread().getName()+"!");
-        create_player();
+    private void creation_interface_client(){
         try {
 			client_output = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             client_input = new PrintWriter(clientSocket.getOutputStream());
-
-            send(carte.stringifie());
-
 		} catch (IOException e) {
 			System.err.println("Erreur\n"+e.getMessage());
 			e.printStackTrace();
 		}
 
+    } 
+
+    @Override
+    public void run() { 
+        System.out.println("demarage du thread : " + Thread.currentThread().getName()+"!");
+        create_player();
+        creation_interface_client();
+
+        send("put fenetre rayon 5\n\r");
         while(!is_finish()){
             try {
-                while (client_output.ready()) { 
+                message_transmit="";
+                while (client_output.ready()) { //pour eviter des acumulation
                     message_recu=client_output.readLine();
                     message_transmit += Analyse(message_recu);
                 }
@@ -73,7 +63,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
             }
         }
         System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
-        send("$end");
+        send("put ourplayer null\n\r");
     }
 
 
@@ -88,14 +78,39 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
             String target = words[1];
             String object="";
             String data="";
-            if (words.length == 3) object = words[2];
-            if (words.length == 4) data = words[3];
+            if (words.length >= 3) object = words[2];
+            if (words.length >= 4) data = words[3];
 
             
-            System.out.println(action+" " +object+" "+target);
+            //System.out.println(action+" " +object+" "+target+" "+data);
             if (action.equals("get")) {
                 if (target.equals("carte")) {
-                    reponse=carte.stringifie();
+                    reponse="put carte "+carte.stringifie();
+                }else if (target.equals("ourplayer")) {
+                    if (object.equals("coord")) {
+                        reponse="put ourplayer coord "+ourplayer.getCoordString();
+                    }
+                }
+                else if (target.equals("projectiles")) {                    
+                    String suite="";
+                    int x=0;
+                    for(Projectile pro:projectiles){
+                        if(pro.in_fentre(ourplayer, rayon_display_en_case)){
+                            suite+=pro.getCoordString()+",";
+                            x++;
+                        }
+                    }
+                    reponse="put projectile "+x+" "+suite;
+                }else if (target.equals("players")) {                    
+                    String suite="";
+                    int x=0;
+                    for(Player pl:players){
+                        if(pl.in_fentre(ourplayer, rayon_display_en_case)){
+                            suite+=pl.getCoordString()+",";
+                            x++;
+                        }
+                    }
+                    reponse="put player "+x+" "+suite;
                 }
                 else reponse=msg_erreur;
 
@@ -119,6 +134,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else if(object.equals("color")) {
                         int couleur = Integer.parseInt(data);
+                        System.out.println("couleur chois!");
                         if(ourplayer.setColor(couleur)){
                             reponse="ourplayer enregistre";
                         }

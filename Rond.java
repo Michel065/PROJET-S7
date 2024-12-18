@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 public abstract class Rond {
     protected Color coul=Color.WHITE;
     protected int health; 
-    protected float x, y,old_x,old_y,speed;
+    protected float x, y,speed;
     protected float radius;
     protected String name="Rond";
     protected float [] coord_simu=new float[2];
@@ -96,6 +96,10 @@ public abstract class Rond {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public boolean in_fentre(Rond val,int rayon) {
+        return Math.abs(val.getX()-x)<rayon && Math.abs(val.getY()-y)<rayon;
     }
 
 }

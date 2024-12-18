@@ -16,7 +16,7 @@ public class DisplayApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         host = new Host(30, 0.05, 5); // Initialisation de la logique
-        host.start(5001,true);
+        host.start(5001);
         //host.start(primaryStage);
         // Création de l'interface graphique
         Pane root = new Pane();

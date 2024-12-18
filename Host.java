@@ -1,5 +1,4 @@
 import java.util.List;
-import javafx.stage.Stage;
 
 
 
@@ -50,27 +49,8 @@ public class Host {
         while(players.size()>0) {players.remove(0);}
     }
 
-    //pour la partie avec des robots
-    public void start(Stage primaryStage){
-        int nbr=0;
-        ThreadHostManuel recepteur= new ThreadHostManuel(primaryStage,carte,players,projectiles);
+    public void start(int port){
+        recepteur= new ThreadHostConnexion(port,carte,players,projectiles);
         recepteur.start();
-        for(int i=0;i<nbr;i++){
-            ThreadHostAlea rece= new ThreadHostAlea(carte,players,projectiles);
-            rece.start();
-        }
     }
-
-    public void start(int port,boolean bo){
-        if(bo){
-            recepteur= new ThreadHostConnexion(port,carte,players,projectiles);
-            recepteur.start();
-        }
-        else{
-            ThreadHostAlea rece= new ThreadHostAlea(carte,players,projectiles);
-            rece.start();
-        }
-    }
-
-    
 }

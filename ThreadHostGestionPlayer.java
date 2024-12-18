@@ -4,8 +4,8 @@ import java.util.Random;
 
 public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
-    private ListShare<Player> players;
-    private ListShare<Projectile> projectiles;
+    protected ListShare<Player> players;
+    protected ListShare<Projectile> projectiles;
     private List<Projectile> ourprojectiles;
     protected Player ourplayer;
     private long taille_map=0;

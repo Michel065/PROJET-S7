@@ -79,4 +79,7 @@ public class Player extends Rond {
         invincibilite=val;
     }
 
+    public float get_proj_radius(){
+        return proj_radius;
+    }
 }

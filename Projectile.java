@@ -6,7 +6,8 @@ public class Projectile extends Rond {
 
     // Constructeur
     public Projectile(Color coul, float speed,int life, float radius,int proj_degat, float x, float y, float directionX, float directionY) {
-        super(coul, life, radius, x, y);
+        super(life, radius, x, y);
+        this.coul=coul;
         this.speed = speed;
         this.degat=proj_degat;
         this.directionX=directionX;

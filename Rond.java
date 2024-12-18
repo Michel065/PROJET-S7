@@ -1,16 +1,16 @@
 import javafx.scene.paint.Color;
 
 public abstract class Rond {
-    protected Color coul;
+    protected Color coul=Color.WHITE;
     protected int health; 
     protected float x, y,old_x,old_y,speed;
     protected float radius;
     protected String name="Rond";
     protected float [] coord_simu=new float[2];
+    protected boolean invincibilite=false;
 
 
-    public Rond(Color coul, int health,float radius, float x, float y) {
-        this.coul = coul;
+    public Rond(int health,float radius, float x, float y) {
         this.health = health;
         this.x = x;
         this.y = y;
@@ -23,7 +23,7 @@ public abstract class Rond {
     }
 
     public void addHealth(int val) {
-        health-=val;
+        if(!invincibilite)health-=val;
     }
 
     public void setHealth(int health) {

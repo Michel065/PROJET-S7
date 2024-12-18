@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
@@ -20,8 +19,6 @@ public class ThreadClientToHost  extends Thread {
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
 
-    private String message_sortant="";
-    private String message_entrant="";
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
     //pour la carte
@@ -35,7 +32,7 @@ public class ThreadClientToHost  extends Thread {
         this.port=port;
         this.projectiles=pr;
         this.players=pl;
-        this.ourPlayer=new Player(Color.GREEN,100,0,0);
+        this.ourPlayer=new Player(100,0,0);
         
     }
 
@@ -56,6 +53,7 @@ public class ThreadClientToHost  extends Thread {
             carte=new Carte(msg);
         else System.out.println("erreur recueration de la carte");
         
+        
     }
 
     private String readServeur(){
@@ -72,19 +70,26 @@ public class ThreadClientToHost  extends Thread {
         return carte;
     }
 
-    private void stringifie_action() {
-        message_sortant="";
-        for (KeyCode key : activeKeys) {
-            message_sortant+=key+" ";
-        }
-    }
 
-    private void send() {
-        if (serveur_input != null && !message_sortant.isEmpty()) {
-            serveur_input.println(message_sortant);
-            serveur_input.flush();
+    private String stringifie_action(String message_sortant) {
+        if (activeKeys.contains(KeyCode.Z)) {
+            message_sortant += "put ourplayer avance\n\r";
         }
+        if (activeKeys.contains(KeyCode.S)) {
+            message_sortant += "put ourplayer recule\n\r";
+        }
+        if (activeKeys.contains(KeyCode.Q)) {
+            message_sortant += "put ourplayer rotation_gauche\n\r";
+        }
+        if (activeKeys.contains(KeyCode.D)) {
+            message_sortant += "put ourplayer rotation_droite\n\r";
+        }
+        if (activeKeys.contains(KeyCode.SPACE)) {
+            message_sortant += "put ourplayer tirer\n\r";
+        }
+        return message_sortant;
     }
+    
 
     private void send(String msg) {
         if (serveur_input != null && !msg.isEmpty()) {
@@ -95,18 +100,25 @@ public class ThreadClientToHost  extends Thread {
 
     private String recevoir() {
         try {
-            if (serveur_output.ready()) {
-                message_entrant = serveur_output.readLine(); 
-                return message_entrant;
-            } else {
-                message_entrant = "";
-                return "";
+            String msg="";
+            while (serveur_output.ready()) { 
+                msg=serveur_output.readLine();
             }
+            return msg;
         } catch (IOException e) {
             System.err.println("Erreur : " + e.getMessage());
             e.printStackTrace();
         }
         return "";
+    }
+
+    private void update_our_data(String msg){
+        if(msg.equals("$end"))Client.is_close=true;
+
+        /*if (!msg.isEmpty()) {
+            String[] coord = msg.split(":");
+            ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
+        }*/
     }
 
     @Override
@@ -126,17 +138,13 @@ public class ThreadClientToHost  extends Thread {
 
         while(!Client.is_close){
             try {
-                stringifie_action();
-                send();
-                if(recevoir().equals("$end"))Client.is_close=true;
+                String msg=stringifie_action("");
+                if(!msg.equals(""))System.out.println(msg);
+                send(msg);
 
-                if (!message_entrant.isEmpty()) {
-                    String[] coord = message_entrant.split(":");
-                    ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
-                }
+                update_our_data(recevoir());
 
-
-                Thread.sleep(20);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 System.err.println("Le thread a été interrompu : " + e.getMessage());
                 Thread.currentThread().interrupt(); // Signaler l'interruption
@@ -145,7 +153,7 @@ public class ThreadClientToHost  extends Thread {
         }        
         System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
 
-        send("$end");
+        send("put ourplayer null\n\r");
 
     }
 }

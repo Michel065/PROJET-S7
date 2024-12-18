@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import javafx.scene.paint.Color;
 
 public class Player extends Rond {
@@ -10,15 +9,15 @@ public class Player extends Rond {
     private int proj_life = 20;
     private float proj_radius = (float)0.2;
     private int proj_degat=15;
-
     
     private long cooldown=500*1000*1000;//en ns
     private long start = System.nanoTime(), end;
 
 
-    public Player(Color coul, int health, float x, float y) {
-        super(coul, health, (float)0.5, x, y);
+    public Player(int health, float x, float y) {
+        super(health, (float)0.5, x, y);
         name="Player";
+        invincibilite=true;
     }
 
     public void rotate(int angle){
@@ -31,7 +30,6 @@ public class Player extends Rond {
             Math.min(speed,max_speed);
         else if(speed<0)
             Math.max(speed,-max_speed);
-
     }
 
     private void reduce_speed(){
@@ -68,9 +66,17 @@ public class Player extends Rond {
             return new Projectile(coul, proj_speed,proj_life,proj_radius,proj_degat,x,y, (float) Math.cos(orientation), (float) Math.sin(orientation)); 
         }
         return null;
-}
+    }
+
+    public boolean setColor(int val) {
+        Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
+        if (!(0 <= val && val < colors.length)) return false;
+        coul = colors[val];
+        return true;
+    }
+
+    public void setInvinvibilite(boolean val){
+        invincibilite=val;
+    }
 
 }
-=======
-coucou je suis un test
->>>>>>> main

@@ -20,6 +20,7 @@ public class Client extends Application {
     private Carte carte;
     private ListShare<Projectile> projectiles;
     private ListShare<Player> players;
+    private Float[] centre;
 
     public Client() {
         this.serverIp = "127.0.0.1";
@@ -47,9 +48,7 @@ public class Client extends Application {
     // Méthode pour démarrer la logique principale
     public void startClient() {
         recupCarteFromThread();
-        if (carte != null) {
-            carte.printinfo();
-        }
+        
     }
 
     @Override
@@ -62,7 +61,7 @@ public class Client extends Application {
         gc = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
 
-        primaryStage.setTitle("Fenêtre Vide");
+        primaryStage.setTitle("Fenêtre Client");
         primaryStage.setScene(new Scene(root, sizeWindow, sizeWindow));
         primaryStage.show();
 
@@ -85,7 +84,10 @@ public class Client extends Application {
             public void handle(long now) {
                 gc.clearRect(0, 0, sizeWindow, sizeWindow); // Effacer l'écran
 
+                centre = toServer.get_case_centre();
                 drawObstacles();
+                drawProjectiles();
+                drawPlayers();
 
                 if (Client.is_close) {
                     stop(); // Arrêter l'animation
@@ -105,7 +107,6 @@ public class Client extends Application {
         double caseHeight = caseWidth; // Cases carrées
     
         // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
-        Float[] centre = toServer.get_case_centre();
         float centreX = centre[0];
         float centreY = centre[1];
     
@@ -133,7 +134,62 @@ public class Client extends Application {
         }
     }
     
+    private void drawProjectiles() {
     
+        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
+        double caseWidth = (double) sizeWindow / largeur_display_en_case;
+        double caseHeight = (double) sizeWindow / largeur_display_en_case;
+
+        for (Projectile projectile : projectiles) {
+            synchronized(projectile){
+                Color projectileColor = projectile.getCouleur(); 
+                gc.setFill(projectileColor);
+                // Calcul des coordonnées pour placer correctement les projectiles
+                double drawX = projectile.getX() * caseWidth;
+                double drawY = projectile.getY() * caseHeight;
+        
+                // Taille des projectiles (fixée à une fraction de la case)
+                double projectileSize = Math.min(caseWidth, caseHeight) * projectile.getRadius()*2;
+        
+                // Dessiner les projectiles
+                gc.fillOval(drawX, drawY, projectileSize, projectileSize);
+            }
+        }
+    }
+
+    private void drawPlayers() {
+        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
+        double caseWidth = (double) sizeWindow / largeur_display_en_case;
+        double caseHeight = (double) sizeWindow / largeur_display_en_case;
+        for (Player player : players) {
+            synchronized (player) {
+                // Couleur et dessin du joueur
+                Color playerColor = player.getCouleur(); 
+                gc.setFill(playerColor);
+
+                double drawX = player.getX() * caseWidth;
+                double drawY = player.getY() * caseHeight;
+
+                double playerSize = Math.min(caseWidth, caseHeight) * player.getRadius() * 2;
+
+                // Dessiner le joueur
+                gc.fillOval(drawX, drawY, playerSize, playerSize);
+
+                // Dessiner la barre de vie au-dessus du joueur
+                double healthPercentage = player.getHealth() / 100.0; // Assumes health is out of 100
+                double barWidth = playerSize * healthPercentage;
+                double barHeight = playerSize * 0.2; // 20% of player size for the height
+
+                gc.setFill(Color.RED); // Background color for health bar
+                gc.fillRect(drawX, drawY - barHeight - 2, playerSize, barHeight);
+
+                gc.setFill(Color.GREEN); // Foreground color for health
+                gc.fillRect(drawX, drawY - barHeight - 2, barWidth, barHeight);
+            }
+        }
+    }
+
+
 
     public static void main(String[] args) {
         Application.launch(Client.class, args);

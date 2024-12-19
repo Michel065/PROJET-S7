@@ -100,7 +100,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                             x++;
                         }
                     }
-                    reponse="put projectile "+x+" "+suite;
+                    reponse="put projectiles "+x+" "+suite;
                 }else if (target.equals("players")) {                    
                     String suite="";
                     int x=0;
@@ -110,7 +110,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                             x++;
                         }
                     }
-                    reponse="put player "+x+" "+suite;
+                    reponse="put players "+x+" "+suite;
                 }
                 else reponse=msg_erreur;
 

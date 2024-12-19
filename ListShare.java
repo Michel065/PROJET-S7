@@ -50,6 +50,12 @@ public class ListShare<T> implements Iterable<T>  {
         }
     }
 
+    public void clear() {
+        synchronized(liste){
+            liste.clear();
+        }
+    }
+
     @Override
     public synchronized Iterator<T> iterator() {
         return liste.iterator();

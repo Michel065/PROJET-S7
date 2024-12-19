@@ -17,17 +17,19 @@ public class Client extends Application {
     private ThreadClientToHost toServer;
     public static boolean is_close = false;
     private Carte carte;
-    private ListShare<LightRond> Rond;
+    private ListShare<LightRond> players;
+    private ListShare<LightRond> projectiles;
     private Float[] centre;
 
     public Client() {
         this.serverIp = "127.0.0.1";
         this.port = 5001;
-        this.Rond = new ListShare<>();
+        this.players = new ListShare<>();
+        this.projectiles = new ListShare<>();
     }
 
     public void connect(Stage primaryStage) {
-        toServer = new ThreadClientToHost(primaryStage, serverIp, port,Rond);
+        toServer = new ThreadClientToHost(primaryStage, serverIp, port,players,projectiles);
         toServer.start();
     }
 
@@ -84,9 +86,9 @@ public class Client extends Application {
 
                 centre = toServer.get_case_centre();
                 drawObstacles();
-                drawRond();
-                //drawProjectiles();
-                //drawPlayers();
+                
+                drawProjectiles();
+                drawPlayers();
 
                 if (Client.is_close) {
                     stop(); // Arrêter l'animation
@@ -134,87 +136,80 @@ public class Client extends Application {
     }
     
 
-    private void drawRond() {
-    
-        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
-        double caseHeight = (double) sizeWindow / (rayon_display_en_case*2);
-
-        for (LightRond rond : Rond) {
-            synchronized(rond){
-                Color projectileColor = rond.getCouleur(); 
-                gc.setFill(projectileColor);
-                // Calcul des coordonnées pour placer correctement les projectiles
-                double drawX = rond.getX() * caseWidth;
-                double drawY = rond.getY() * caseHeight;
-        
-                // Taille des projectiles (fixée à une fraction de la case)
-                double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius()*2;
-        
-                // Dessiner les projectiles
-                gc.fillOval(drawX, drawY, projectileSize, projectileSize);
-            }
+    private void drawProjectiles() {
+        if (carte == null || gc == null) {
+            return;
         }
-    }
-
-
-    /*private void drawProjectiles() {
     
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
-        double caseHeight = (double) sizeWindow / (rayon_display_en_case*2);
-
-        for (Projectile projectile : projectiles) {
-            synchronized(projectile){
-                Color projectileColor = projectile.getCouleur(); 
+        double caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
+        double caseHeight = caseWidth; // Cases carrées
+    
+        // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
+        float centreX = centre[0];
+        float centreY = centre[1];
+    
+        // Décalage à appliquer pour centrer précisément le joueur
+        double offsetX = (centreX - (int) centreX) * caseWidth; // Partie fractionnaire * taille d'une case
+        double offsetY = (centreY - (int) centreY) * caseHeight;
+    
+        // Dessiner les LightRond
+        for (LightRond rond : projectiles) {
+            synchronized (rond) {
+                //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
+                Color projectileColor = rond.getCouleur();
                 gc.setFill(projectileColor);
-                // Calcul des coordonnées pour placer correctement les projectiles
-                double drawX = projectile.getX() * caseWidth;
-                double drawY = projectile.getY() * caseHeight;
-        
-                // Taille des projectiles (fixée à une fraction de la case)
-                double projectileSize = Math.min(caseWidth, caseHeight) * projectile.getRadius()*2;
-        
-                // Dessiner les projectiles
+    
+                // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
+                double drawX = (rond.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
+                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseHeight - offsetY;
+    
+                // Taille du rond (fixée à une fraction de la case)
+                double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
+    
+                // Dessiner le rond
                 gc.fillOval(drawX, drawY, projectileSize, projectileSize);
             }
         }
     }
 
     private void drawPlayers() {
+        if (carte == null || gc == null) {
+            return;
+        }
+    
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
-        double caseHeight = (double) sizeWindow / (rayon_display_en_case*2);
-        for (Player player : players) {
-            synchronized (player) {
-                // Couleur et dessin du joueur
-                Color playerColor = player.getCouleur(); 
-                gc.setFill(playerColor);
-
-                double drawX = player.getX() * caseWidth;
-                double drawY = player.getY() * caseHeight;
-
-                double playerSize = Math.min(caseWidth, caseHeight) * player.getRadius() * 2;
-
-                // Dessiner le joueur
-                gc.fillOval(drawX, drawY, playerSize, playerSize);
-
-                // Dessiner la barre de vie au-dessus du joueur
-                double healthPercentage = player.getHealth() / 100.0; // Assumes health is out of 100
-                double barWidth = playerSize * healthPercentage;
-                double barHeight = playerSize * 0.2; // 20% of player size for the height
-
-                gc.setFill(Color.RED); // Background color for health bar
-                gc.fillRect(drawX, drawY - barHeight - 2, playerSize, barHeight);
-
-                gc.setFill(Color.GREEN); // Foreground color for health
-                gc.fillRect(drawX, drawY - barHeight - 2, barWidth, barHeight);
+        double caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
+        double caseHeight = caseWidth; // Cases carrées
+    
+        // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
+        float centreX = centre[0];
+        float centreY = centre[1];
+    
+        // Décalage à appliquer pour centrer précisément le joueur
+        double offsetX = (centreX - (int) centreX) * caseWidth; // Partie fractionnaire * taille d'une case
+        double offsetY = (centreY - (int) centreY) * caseHeight;
+    
+        // Dessiner les LightRond
+        for (LightRond rond : players) {
+            synchronized (rond) {
+                //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
+                Color projectileColor = rond.getCouleur();
+                gc.setFill(projectileColor);
+    
+                // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
+                double drawX = (rond.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
+                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseHeight - offsetY;
+    
+                // Taille du rond (fixée à une fraction de la case)
+                double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
+    
+                // Dessiner le rond
+                gc.fillOval(drawX, drawY, projectileSize, projectileSize);
             }
         }
-    }*/
-
-
-
+    }
+    
     public static void main(String[] args) {
         Application.launch(Client.class, args);
     }

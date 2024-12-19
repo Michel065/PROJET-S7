@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javafx.scene.input.KeyCode;
+import java.util.Random;
 import javafx.stage.Stage;
 
 
@@ -24,13 +25,15 @@ public class ThreadClientToHost  extends Thread {
 
     //pour la carte
     private Carte carte;
-    private ListShare<LightRond> Rond;
+    private ListShare<LightRond> players;
+    private ListShare<LightRond> projectiles;
     private Player ourPlayer;
     
-    ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<LightRond> Rond){
+    ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<LightRond> pl,ListShare<LightRond> pr){
         this.primaryStage=primaryStage;
         this.port=port;
-        this.Rond=Rond;
+        this.projectiles=pr;
+        this.players=pl;
         this.ourPlayer=new Player(100,0,0);
         
     }
@@ -95,8 +98,9 @@ public class ThreadClientToHost  extends Thread {
             send("get carte\n\r");
             Analyse(serveur_output.readLine());
             
-
-            send("put ourplayer color 2\n\r");
+            Random random = new Random();
+            
+            send("put ourplayer color "+random.nextInt(4)+"\n\r");
             send("put ourplayer invincibilite false\n\r");
 
 
@@ -171,11 +175,23 @@ public class ThreadClientToHost  extends Thread {
                         rayon_display_en_case=Integer.parseInt(data);
                     }
                 }else if (target.equals("projectiles")) {
+                    projectiles.clear();
                     int nbr= Integer.parseInt(object);
                     String[] liste_Projectiles=data.split(",");
+                    String[] coord;
                     for(int i=0;i<nbr;i++){
-                        String[] coord = liste_Projectiles[i].split(":");
-                        Rond.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1));
+                        coord = liste_Projectiles[i].split(":");
+                        projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1));
+                    }
+                }
+                else if (target.equals("players")) {
+                    players.clear();
+                    int nbr= Integer.parseInt(object);
+                    String[] liste_Projectiles=data.split(",");
+                    String[] coord;
+                    for(int i=0;i<nbr;i++){
+                        coord = liste_Projectiles[i].split(":");
+                        players.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.getRadius(), 1));
                     }
                 }
                 else reponse=msg_erreur;

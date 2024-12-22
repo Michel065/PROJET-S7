@@ -1,17 +1,17 @@
-import javafx.scene.paint.Color;
 
 public class LightRond {
-    private Color coul=Color.GREEN;
+    private int coul;
     private float health; 
     private float x, y;
     private float radius;
 
 
-    public LightRond(float x,float y,float radius, float health) {
+    public LightRond(float x,float y,float radius, float health,int coul) {
         this.health = health;
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.coul=coul;
         
     }
 
@@ -31,7 +31,7 @@ public class LightRond {
         return radius;
     }
 
-    public Color getCouleur(){
+    public int getCouleur(){
         return coul;
     }
 }

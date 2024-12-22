@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javafx.scene.input.KeyCode;
+
 import java.util.Random;
 import javafx.stage.Stage;
 
@@ -20,6 +21,7 @@ public class ThreadClientToHost  extends Thread {
     private String IP="", message_recu="",message_transmit="";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
+    
 
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
@@ -38,8 +40,13 @@ public class ThreadClientToHost  extends Thread {
         
     }
 
-    public Float[] get_case_centre() {
-        return new Float[] {ourPlayer.getX(), ourPlayer.getY()};
+    public void get_case_centre(Float[] val) {
+        val[0]=ourPlayer.getX();
+        val[1]=ourPlayer.getY();
+    }
+
+    public float get_orientation() {
+        return ourPlayer.getOrientation();
     }
 
     private void init() {
@@ -115,6 +122,7 @@ public class ThreadClientToHost  extends Thread {
         while(!Client.is_close){
             try {
                 message_transmit="get ourplayer coord\n\r";
+                message_transmit+="get ourplayer orientation\n\r";
                 message_transmit+="get projectiles\n\r";
                 message_transmit+="get players\n\r";
                 message_transmit=stringifie_action(message_transmit);
@@ -143,7 +151,7 @@ public class ThreadClientToHost  extends Thread {
     public String Analyse(String requete){
         if(requete.equals("")) return "";//pour eviter d'afficher du vide
 
-        String reponse="",msg_erreur="Commande non reconnue.";
+        String reponse="",msg_erreur="";
         String[] words = requete.split(" ");
 
         if (words.length >= 2) {
@@ -169,6 +177,8 @@ public class ThreadClientToHost  extends Thread {
                         ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
                     }else if(object.equals("null")){
                         Client.is_close=true;
+                    }else if(object.equals("orientation")){
+                        ourPlayer.setOrientation(Float.parseFloat(data));
                     }
                 }else if (target.equals("fenetre")) {
                     if (object.equals("rayon")) {
@@ -181,7 +191,7 @@ public class ThreadClientToHost  extends Thread {
                     String[] coord;
                     for(int i=0;i<nbr;i++){
                         coord = liste_Projectiles[i].split(":");
-                        projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1));
+                        projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1,Integer.parseInt(coord[2])));
                     }
                 }
                 else if (target.equals("players")) {
@@ -191,7 +201,7 @@ public class ThreadClientToHost  extends Thread {
                     String[] coord;
                     for(int i=0;i<nbr;i++){
                         coord = liste_Projectiles[i].split(":");
-                        players.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.getRadius(), 1));
+                        players.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.getRadius(), 1,Integer.parseInt(coord[2])));
                     }
                 }
                 else reponse=msg_erreur;

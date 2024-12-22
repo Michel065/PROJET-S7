@@ -1,7 +1,5 @@
-import javafx.scene.paint.Color;
-
 public abstract class Rond {
-    protected Color coul=Color.WHITE;
+    protected int coul=-1;
     protected int health; 
     protected float x, y,speed;
     protected float radius;
@@ -39,7 +37,7 @@ public abstract class Rond {
     }
 
     public String getCoordString() {
-        return x+":"+y;
+        return x+":"+y+":"+coul;
     }
 
     public void setPosition(int x, int y) {
@@ -66,7 +64,7 @@ public abstract class Rond {
     }
 
 
-    public Color getCouleur() {
+    public int getCouleur() {
         return coul;
     }
 

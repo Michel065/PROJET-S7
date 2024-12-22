@@ -40,7 +40,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         create_player();
         creation_interface_client();
 
-        send("put fenetre rayon 5\n\r");
+        send("put fenetre rayon "+rayon_display_en_case+"\n\r");
         while(!is_finish()){
             try {
                 message_transmit="";
@@ -70,7 +70,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
     public String Analyse(String requete){
         if(requete.equals("")) return "";//pour eviter d'afficher du vide
 
-        String reponse="",msg_erreur="Commande non reconnue.";
+        String reponse="",msg_erreur=""; //"Commande non reconnue.";
         String[] words = requete.split(" ");
 
         if (words.length >= 2) {
@@ -81,14 +81,15 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
             if (words.length >= 3) object = words[2];
             if (words.length >= 4) data = words[3];
 
-            
-            //System.out.println(action+" " +object+" "+target+" "+data);
             if (action.equals("get")) {
                 if (target.equals("carte")) {
                     reponse="put carte "+carte.stringifie();
                 }else if (target.equals("ourplayer")) {
                     if (object.equals("coord")) {
+                        
                         reponse="put ourplayer coord "+ourplayer.getCoordString();
+                    }else if (object.equals("orientation")) {
+                        reponse="put ourplayer orientation "+(float)ourplayer.getOrientation();
                     }
                 }
                 else if (target.equals("projectiles")) {                    

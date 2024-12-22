@@ -1,11 +1,10 @@
-import javafx.scene.paint.Color;
 
 public class Projectile extends Rond {
     private float directionX, directionY;
     private int degat;
 
     // Constructeur
-    public Projectile(Color coul, float speed,int life, float radius,int proj_degat, float x, float y, float directionX, float directionY) {
+    public Projectile(int coul, float speed,int life, float radius,int proj_degat, float x, float y, float directionX, float directionY) {
         super(life, radius, x, y);
         this.coul=coul;
         this.speed = speed;

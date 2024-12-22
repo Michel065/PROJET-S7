@@ -12,10 +12,11 @@ public class DisplayApp extends Application {
     private Host host;
     private Canvas canvas;
     private GraphicsContext gc;
+    private Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
 
     @Override
     public void start(Stage primaryStage) {
-        host = new Host(30, 0.05, 5); // Initialisation de la logique
+        host = new Host(20, 0.05, 5); // Initialisation de la logique
         host.start(5001);
         //host.start(primaryStage);
         // Création de l'interface graphique
@@ -98,7 +99,7 @@ public class DisplayApp extends Application {
             for (Projectile projectile : li) {
                 synchronized(projectile){
                     
-                    Color projectileColor = projectile.getCouleur(); 
+                    Color projectileColor = colors[projectile.getCouleur()]; 
                     gc.setFill(projectileColor);
                     // Calcul des coordonnées pour placer correctement les projectiles
                     double drawX = projectile.getX() * caseWidth;
@@ -123,7 +124,7 @@ public class DisplayApp extends Application {
             for (Player player : li) {
                 synchronized (player) {
                     // Couleur et dessin du joueur
-                    Color playerColor = player.getCouleur(); 
+                    Color playerColor = colors[player.getCouleur()]; 
                     gc.setFill(playerColor);
     
                     double drawX = player.getX() * caseWidth;

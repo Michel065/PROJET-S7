@@ -24,7 +24,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     private boolean other_player_is_touch(Projectile proj){
         boolean touche=false;
         for(Player player : players){
-            if(player!=ourplayer && !proj.getCouleur().equals(player.getCouleur())){
+            if(player!=ourplayer && (proj.getCouleur()!=player.getCouleur())){
                 if(player.is_touch_by(proj)){
                     player.addHealth(proj.getDegat());
                     touche =true;
@@ -37,7 +37,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     private boolean player_touch(){
         for(Player player : players){
-            if(player!=ourplayer && !ourplayer.getCouleur().equals(player.getCouleur())){
+            if(player!=ourplayer && (ourplayer.getCouleur()!=player.getCouleur())){
                 if(ourplayer.is_touch_in_simu(player)){
                     return true;
                 }

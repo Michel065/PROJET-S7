@@ -53,4 +53,11 @@ public class Host {
         recepteur= new ThreadHostConnexion(port,carte,players,projectiles);
         recepteur.start();
     }
+
+    public static void main(String[] args) {
+
+        Host host = new Host(20, 0.05, 5); // Initialisation de la logique
+        host.start(5001);
+
+    }
 }

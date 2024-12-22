@@ -19,7 +19,9 @@ public class Client extends Application {
     private Carte carte;
     private ListShare<LightRond> players;
     private ListShare<LightRond> projectiles;
-    private Float[] centre;
+    private Float[] centre=new Float[2];
+
+    private Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
 
     public Client() {
         this.serverIp = "127.0.0.1";
@@ -59,6 +61,8 @@ public class Client extends Application {
         // Initialisation du Canvas et de GraphicsContext
         Canvas canvas = new Canvas(sizeWindow, sizeWindow);
         gc = canvas.getGraphicsContext2D();
+        gc.translate(sizeWindow / 2, sizeWindow / 2);
+        gc.rotate(-90);
         root.getChildren().add(canvas);
 
         primaryStage.setTitle("Fenêtre Client");
@@ -82,17 +86,23 @@ public class Client extends Application {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                gc.clearRect(0, 0, sizeWindow, sizeWindow); // Effacer l'écran
+                int val=sizeWindow/2;
+                gc.clearRect(-val,-val, sizeWindow, sizeWindow); // Effacer l'écran
 
-                centre = toServer.get_case_centre();
+                toServer.get_case_centre(centre);
+
+                gc.save();
+                float orientation = toServer.get_orientation();
+                gc.rotate(-Math.toDegrees(orientation));
                 drawObstacles();
-                
                 drawProjectiles();
                 drawPlayers();
 
+                gc.restore();
+
                 if (Client.is_close) {
-                    stop(); // Arrêter l'animation
-                    primaryStage.close(); // Fermer la fenêtre
+                    stop(); 
+                    primaryStage.close(); 
                 }
             }
         }.start();
@@ -116,10 +126,10 @@ public class Client extends Application {
         double offsetY = (centreY - (int)centreY) * caseHeight;
     
         // Calcul de la zone visible autour du centre
-        int startX = Math.max(0, (int) Math.floor(centreX - rayon_display_en_case));
-        int startY = Math.max(0, (int) Math.floor(centreY - rayon_display_en_case));
-        int endX = Math.min((int)carte.getTailleReel(), (int)(centreX + rayon_display_en_case+1));
-        int endY = Math.min((int)carte.getTailleReel(), (int)(centreY + rayon_display_en_case+1));
+        int startX = Math.max(0, (int) Math.floor(centreX - rayon_display_en_case-3));
+        int startY = Math.max(0, (int) Math.floor(centreY - rayon_display_en_case-3));
+        int endX = Math.min((int)carte.getTailleReel(), (int)(centreX + rayon_display_en_case+3));
+        int endY = Math.min((int)carte.getTailleReel(), (int)(centreY + rayon_display_en_case+3));
     
         // Dessiner les obstacles visibles dans la zone spécifiée
         gc.setFill(Color.RED);
@@ -129,11 +139,13 @@ public class Client extends Application {
                     // Calcul des positions en pixels en appliquant le décalage
                     double drawX = (x - (int)centreX + rayon_display_en_case) * caseWidth - offsetX;
                     double drawY = (y - (int)centreY + rayon_display_en_case) * caseHeight - offsetY;
-                    gc.fillRect(drawX, drawY, caseWidth, caseHeight);
+                    gc.fillRect(drawX-sizeWindow/2, drawY-sizeWindow/2, caseWidth, caseHeight);
                 }
             }
         }
     }
+    
+    
     
 
     private void drawProjectiles() {
@@ -157,7 +169,7 @@ public class Client extends Application {
         for (LightRond rond : projectiles) {
             synchronized (rond) {
                 //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
-                Color projectileColor = rond.getCouleur();
+                Color projectileColor = colors[rond.getCouleur()];
                 gc.setFill(projectileColor);
     
                 // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
@@ -168,7 +180,7 @@ public class Client extends Application {
                 double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
     
                 // Dessiner le rond
-                gc.fillOval(drawX, drawY, projectileSize, projectileSize);
+                gc.fillOval(drawX-sizeWindow/2, drawY-sizeWindow/2, projectileSize, projectileSize);
             }
         }
     }
@@ -194,7 +206,7 @@ public class Client extends Application {
         for (LightRond rond : players) {
             synchronized (rond) {
                 //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
-                Color projectileColor = rond.getCouleur();
+                Color projectileColor = colors[rond.getCouleur()];
                 gc.setFill(projectileColor);
     
                 // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
@@ -205,12 +217,15 @@ public class Client extends Application {
                 double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
     
                 // Dessiner le rond
-                gc.fillOval(drawX, drawY, projectileSize, projectileSize);
+                gc.fillOval(drawX-sizeWindow/2, drawY-sizeWindow/2, projectileSize, projectileSize);
             }
         }
     }
     
     public static void main(String[] args) {
+
+        //Host host = new Host(20, 0.05, 5); // Initialisation de la logique
+        //host.start(5001);
         Application.launch(Client.class, args);
     }
 }

@@ -1,5 +1,3 @@
-import javafx.scene.paint.Color;
-
 public class Player extends Rond {
     private double orientation=0;
     private float max_speed=(float)0.9,speed;
@@ -55,8 +53,12 @@ public class Player extends Rond {
         reduce_speed();
     }
 
-    public double getOrientation() {
-        return orientation;
+    public float getOrientation() {
+        return (float)orientation;
+    }
+
+    public void setOrientation(float val) {
+        orientation=val;
     }
 
     public Projectile tire(){
@@ -69,9 +71,7 @@ public class Player extends Rond {
     }
 
     public boolean setColor(int val) {
-        Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
-        if (!(0 <= val && val < colors.length)) return false;
-        coul = colors[val];
+        coul=val;
         return true;
     }
 

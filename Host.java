@@ -13,7 +13,7 @@ public class Host {
 
 
 
-    Host(long map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
+    Host(int map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();
@@ -55,8 +55,16 @@ public class Host {
     }
 
     public static void main(String[] args) {
-
-        Host host = new Host(20, 0.05, 5); // Initialisation de la logique
+        Host host;
+        if( args.length>0){
+            System.out.println("manuel ON ... \nOK");
+            host = new Host(Integer.parseInt(args[0]), Double.parseDouble(args[1]), Integer.parseInt(args[2])); // Initialisation de la logique
+        }
+        else{
+            System.out.println("manuel OFF ... \nOK");
+            host = new Host(20, 0.05, 5); // Initialisation de la logique
+        }
+        System.out.println("Host start ...\nOK");
         host.start(5001);
 
     }

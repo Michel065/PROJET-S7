@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -23,8 +24,12 @@ public class ThreadHostConnexion extends Thread  {
     public void run() { 
         try {
             maSocketEcoute = new ServerSocket(port);
-            maSocketEcoute.setSoTimeout(2000); 
+            InetAddress[] allAddresses = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+            for (InetAddress addr : allAddresses) {
+                System.out.println("Adresse IP disponible : " + addr.getHostAddress());
+            }
 
+            maSocketEcoute.setSoTimeout(2000); 
             System.out.println("Serveur pret et ecoute sur le port "+port);
             int premiere_connx=0;
             while(!(Host.is_close )) {	//|| (players.size()==0 && premiere_connx>0)

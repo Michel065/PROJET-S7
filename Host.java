@@ -65,7 +65,7 @@ public class Host {
             host = new Host(20, 0.05, 5); // Initialisation de la logique
         }
         System.out.println("Host start ...\nOK");
-        host.start(5001);
+        host.start(12345);
 
     }
 }

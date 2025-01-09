@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 public class ThreadClientToHost  extends Thread {
     private Socket serveur=null;
     private Stage primaryStage;
-    private int port=5001;
+    private int port=0;
     private int rayon_display_en_case=5;
     private String IP="", message_recu="",message_transmit="";
     private PrintWriter serveur_input;
@@ -34,6 +34,7 @@ public class ThreadClientToHost  extends Thread {
     ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<LightRond> pl,ListShare<LightRond> pr){
         this.primaryStage=primaryStage;
         this.port=port;
+        this.IP=ip;
         this.projectiles=pr;
         this.players=pl;
         this.ourPlayer=new Player(100,0,0);
@@ -96,8 +97,8 @@ public class ThreadClientToHost  extends Thread {
 
     @Override
     public void run() { 
-        try{//init
-            serveur = new Socket(IP, port);// on init la co
+        try{
+            serveur = new Socket(IP, port);
             serveur_input = new PrintWriter(serveur.getOutputStream());
             serveur_output = new BufferedReader(new InputStreamReader(serveur.getInputStream()));
             init();

@@ -4,15 +4,20 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ThreadHostToClient extends ThreadHostGestionPlayer {
+
+    private AtomicInteger index = new AtomicInteger(0);
+
     private Socket clientSocket=null;
     private BufferedReader client_output;
     private PrintWriter client_input;
     private int rayon_display_en_case=5;
     private String message_recu="",message_transmit="";
 
-    ThreadHostToClient(Socket client,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
-        super(carte, players, projectiles);
+    ThreadHostToClient(Socket client,Carte carte,ListePartageThread Liste_Thread){
+        super(carte, Liste_Thread);
         this.clientSocket=client;
     }
 
@@ -149,6 +154,10 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         }
         if(!reponse.equals(""))reponse+="\n\r";
         return reponse;
+    }
+
+    public void setIndex(int index){
+        this.index.set(index);
     }
 }
 

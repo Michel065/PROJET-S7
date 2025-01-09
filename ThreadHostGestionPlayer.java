@@ -4,8 +4,7 @@ import java.util.Random;
 
 public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
-    protected ListShare<Player> players;
-    protected ListShare<Projectile> projectiles;
+    protected ListePartageThread Liste_Thread;
     private List<Projectile> ourprojectiles;
     protected Player ourplayer;
     private long taille_map=0;
@@ -13,10 +12,9 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     private List<Projectile> list_projectile_a_supp;
 
 
-    ThreadHostGestionPlayer(Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
+    ThreadHostGestionPlayer(Carte carte,ListePartageThread Liste_Thread){
         this.carte=carte;
-        this.players=players;
-        this.projectiles=projectiles;
+        this.Liste_Thread=Liste_Thread;
         this.taille_map=carte.getTailleReel();
         this.ourprojectiles= new ArrayList<>();
     }

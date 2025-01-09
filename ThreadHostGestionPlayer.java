@@ -1,23 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javafx.scene.paint.Color;
 
-
-
-public abstract class ThreadHostSkull extends Thread {
+public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
-    private ListShare<Player> players;
-    private ListShare<Projectile> projectiles;
+    protected ListShare<Player> players;
+    protected ListShare<Projectile> projectiles;
     private List<Projectile> ourprojectiles;
     protected Player ourplayer;
     private long taille_map=0;
-    protected Color coul=Color.GREEN;
     private Projectile proj_tmp;
     private List<Projectile> list_projectile_a_supp;
 
 
-    ThreadHostSkull(Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
+    ThreadHostGestionPlayer(Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
         this.carte=carte;
         this.players=players;
         this.projectiles=projectiles;
@@ -28,7 +24,7 @@ public abstract class ThreadHostSkull extends Thread {
     private boolean other_player_is_touch(Projectile proj){
         boolean touche=false;
         for(Player player : players){
-            if(player!=ourplayer && !proj.getCouleur().equals(player.getCouleur())){
+            if(player!=ourplayer && (proj.getCouleur()!=player.getCouleur())){
                 if(player.is_touch_by(proj)){
                     player.addHealth(proj.getDegat());
                     touche =true;
@@ -41,7 +37,7 @@ public abstract class ThreadHostSkull extends Thread {
 
     private boolean player_touch(){
         for(Player player : players){
-            if(player!=ourplayer && !ourplayer.getCouleur().equals(player.getCouleur())){
+            if(player!=ourplayer && (ourplayer.getCouleur()!=player.getCouleur())){
                 if(ourplayer.is_touch_in_simu(player)){
                     return true;
                 }
@@ -51,7 +47,7 @@ public abstract class ThreadHostSkull extends Thread {
         
     }
 
-    private void update_projectile() {
+    protected void update_projectile() {
         list_projectile_a_supp =new ArrayList<>();
         for (Projectile projectile : ourprojectiles) {
             projectile.simu_move();
@@ -67,7 +63,7 @@ public abstract class ThreadHostSkull extends Thread {
 
     }
 
-    private void update_player() {
+    protected void update_player() {
         if(ourplayer !=null){
             if(ourplayer.getHealth()>0){
                 ourplayer.simu_move();
@@ -78,16 +74,16 @@ public abstract class ThreadHostSkull extends Thread {
                     ourplayer.reset_speed();
                 }
             }
-            else remode_player(); 
+            else remode_ourplayer(); 
         }
     }
 
-    protected void remode_player(){
+    protected void remode_ourplayer(){
         players.remove(ourplayer);
         ourplayer=null;
     }
 
-    private void create_player(){
+    protected void create_player(){
         Random random = new Random();
         float x,y;
         x = random.nextFloat() * (taille_map-5);
@@ -96,10 +92,7 @@ public abstract class ThreadHostSkull extends Thread {
             x = random.nextFloat() * (taille_map-5);
             y = random.nextFloat() * (taille_map-5);
         }
-
-        Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
-        coul = colors[random.nextInt(colors.length)];
-        ourplayer= new Player(coul,100,x+(float)2.5,y+(float)2.5);
+        ourplayer= new Player(100,x+(float)2.5,y+(float)2.5);
         players.add(ourplayer);
         
     }
@@ -115,38 +108,9 @@ public abstract class ThreadHostSkull extends Thread {
         }
     }
 
-    private boolean is_finish(){
+    protected boolean is_finish(){
         return Host.is_close || (ourplayer==null && ourprojectiles.size()==0);
     }
-
-    public void run() { 
-        System.out.println("demarage du thread : " + Thread.currentThread().getName()+"!");
-        create_player();
-        System.out.println("Mode manuel apres 2s:");
-        try {
-            Thread.sleep(1000);
-        }catch (InterruptedException e) {
-            System.out.println("Le thread a été interrompu.");
-        }
-        System.out.println("start:");
-
-        init();
-        while(!is_finish()){
-            action();
-            update_projectile();
-            update_player();
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                System.out.println("Le thread a été interrompu.");
-            }
-        }
-        finish();
-        System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
-
-    }
-
-    protected abstract void action();
-    protected abstract void init();
-    protected abstract void finish();
+    
+    public abstract void run();
 }

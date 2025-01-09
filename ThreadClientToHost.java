@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
+
+import java.util.Random;
 import javafx.stage.Stage;
 
 
@@ -16,31 +17,36 @@ public class ThreadClientToHost  extends Thread {
     private Socket serveur=null;
     private Stage primaryStage;
     private int port=5001;
-    private String IP="";
+    private int rayon_display_en_case=5;
+    private String IP="", message_recu="",message_transmit="";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
+    
 
-    private String message_sortant="";
-    private String message_entrant="";
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
     //pour la carte
     private Carte carte;
-    private ListShare<Projectile> projectiles;
-    private ListShare<Player> players;
+    private ListShare<LightRond> players;
+    private ListShare<LightRond> projectiles;
     private Player ourPlayer;
     
-    ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<Projectile> pr,ListShare<Player>pl){
+    ThreadClientToHost(Stage primaryStage,String ip,int port,ListShare<LightRond> pl,ListShare<LightRond> pr){
         this.primaryStage=primaryStage;
         this.port=port;
         this.projectiles=pr;
         this.players=pl;
-        this.ourPlayer=new Player(Color.GREEN,100,0,0);
+        this.ourPlayer=new Player(100,0,0);
         
     }
 
-    public Float[] get_case_centre() {
-        return new Float[] {ourPlayer.getX(), ourPlayer.getY()};
+    public void get_case_centre(Float[] val) {
+        val[0]=ourPlayer.getX();
+        val[1]=ourPlayer.getY();
+    }
+
+    public float get_orientation() {
+        return ourPlayer.getOrientation();
     }
 
     private void init() {
@@ -50,41 +56,36 @@ public class ThreadClientToHost  extends Thread {
         } else {
             System.err.println("Erreur : La scène n'est pas définie pour le stage.");
         }
-
-        String msg =readServeur();
-        if(!msg.equals(""))
-            carte=new Carte(msg);
-        else System.out.println("erreur recueration de la carte");
-        
-    }
-
-    private String readServeur(){
-        try {
-            return serveur_output.readLine();
-        } catch (IOException e) {
-            System.err.println("Erreur : " + e.getMessage());
-            e.printStackTrace();
-        }
-        return"";
     }
 
     public Carte get_carte(){
         return carte;
     }
 
-    private void stringifie_action() {
-        message_sortant="";
-        for (KeyCode key : activeKeys) {
-            message_sortant+=key+" ";
-        }
+    public int get_rayon_display_en_case(){
+        return rayon_display_en_case;
     }
 
-    private void send() {
-        if (serveur_input != null && !message_sortant.isEmpty()) {
-            serveur_input.println(message_sortant);
-            serveur_input.flush();
+
+    private String stringifie_action(String message_sortant) {
+        if (activeKeys.contains(KeyCode.Z)) {
+            message_sortant += "put ourplayer avance\n\r";
         }
+        if (activeKeys.contains(KeyCode.S)) {
+            message_sortant += "put ourplayer recule\n\r";
+        }
+        if (activeKeys.contains(KeyCode.Q)) {
+            message_sortant += "put ourplayer rotation_gauche\n\r";
+        }
+        if (activeKeys.contains(KeyCode.D)) {
+            message_sortant += "put ourplayer rotation_droite\n\r";
+        }
+        if (activeKeys.contains(KeyCode.SPACE)) {
+            message_sortant += "put ourplayer tirer\n\r";
+        }
+        return message_sortant;
     }
+    
 
     private void send(String msg) {
         if (serveur_input != null && !msg.isEmpty()) {
@@ -93,59 +94,120 @@ public class ThreadClientToHost  extends Thread {
         }
     }
 
-    private String recevoir() {
-        try {
-            if (serveur_output.ready()) {
-                message_entrant = serveur_output.readLine(); 
-                return message_entrant;
-            } else {
-                message_entrant = "";
-                return "";
-            }
-        } catch (IOException e) {
-            System.err.println("Erreur : " + e.getMessage());
-            e.printStackTrace();
-        }
-        return "";
-    }
-
     @Override
     public void run() { 
-        try{
+        try{//init
             serveur = new Socket(IP, port);// on init la co
             serveur_input = new PrintWriter(serveur.getOutputStream());
             serveur_output = new BufferedReader(new InputStreamReader(serveur.getInputStream()));
+            init();
+
+            send("get carte\n\r");
+            Analyse(serveur_output.readLine());
+            
+            Random random = new Random();
+            
+            send("put ourplayer color "+random.nextInt(4)+"\n\r");
+            send("put ourplayer invincibilite false\n\r");
+
 
         }
         catch (IOException e) {
             System.err.println("Erreur\n"+e.getMessage());
             e.printStackTrace();
         }
-            
-        init();
 
+        System.out.println("initialisation terminé!");
+        //notre boucle
         while(!Client.is_close){
             try {
-                stringifie_action();
-                send();
-                if(recevoir().equals("$end"))Client.is_close=true;
-
-                if (!message_entrant.isEmpty()) {
-                    String[] coord = message_entrant.split(":");
-                    ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
+                message_transmit="get ourplayer coord\n\r";
+                message_transmit+="get ourplayer orientation\n\r";
+                message_transmit+="get projectiles\n\r";
+                message_transmit+="get players\n\r";
+                message_transmit=stringifie_action(message_transmit);
+                send(message_transmit);
+                while (serveur_output.ready()) { //pour eviter des acumulation
+                    message_recu=serveur_output.readLine();
+                    message_transmit += Analyse(message_recu);
                 }
-
-
-                Thread.sleep(20);
+                send(message_transmit);
+                
+                Thread.sleep(50);
             } catch (InterruptedException e) {
-                System.err.println("Le thread a été interrompu : " + e.getMessage());
-                Thread.currentThread().interrupt(); // Signaler l'interruption
-                break; // Sortir de la boucle si le thread est interrompu
+                System.out.println("Le thread a été interrompu.");
+            }catch (IOException e) {
+                System.err.println("Erreur : " + e.getMessage());
+                e.printStackTrace();
             }
+            
         }        
         System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
 
-        send("$end");
+        send("put ourplayer null\n\r");
 
+    }
+
+    public String Analyse(String requete){
+        if(requete.equals("")) return "";//pour eviter d'afficher du vide
+
+        String reponse="",msg_erreur="";
+        String[] words = requete.split(" ");
+
+        if (words.length >= 2) {
+            String action = words[0].toLowerCase();
+            String target = words[1];
+            String object="";
+            String data="";
+            if (words.length >= 3) object = words[2];
+            if (words.length >= 4) data = words[3];
+            
+            //System.out.println(action+" " +object+" "+target+" "+data);
+            
+            if (action.equals("get")) {
+                System.out.println("coucou");
+
+
+            } else if(action.equals("put")) {
+                if (target.equals("carte")) {
+                    carte= new Carte(object);
+                }else if (target.equals("ourplayer")) {
+                    if (object.equals("coord")) {
+                        String[] coord = data.split(":");
+                        ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
+                    }else if(object.equals("null")){
+                        Client.is_close=true;
+                    }else if(object.equals("orientation")){
+                        ourPlayer.setOrientation(Float.parseFloat(data));
+                    }
+                }else if (target.equals("fenetre")) {
+                    if (object.equals("rayon")) {
+                        rayon_display_en_case=Integer.parseInt(data);
+                    }
+                }else if (target.equals("projectiles")) {
+                    projectiles.clear();
+                    int nbr= Integer.parseInt(object);
+                    String[] liste_Projectiles=data.split(",");
+                    String[] coord;
+                    for(int i=0;i<nbr;i++){
+                        coord = liste_Projectiles[i].split(":");
+                        projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1,Integer.parseInt(coord[2])));
+                    }
+                }
+                else if (target.equals("players")) {
+                    players.clear();
+                    int nbr= Integer.parseInt(object);
+                    String[] liste_Projectiles=data.split(",");
+                    String[] coord;
+                    for(int i=0;i<nbr;i++){
+                        coord = liste_Projectiles[i].split(":");
+                        players.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.getRadius(), 1,Integer.parseInt(coord[2])));
+                    }
+                }
+                else reponse=msg_erreur;
+            }else reponse=msg_erreur;
+        }
+        if(!reponse.equals(""))reponse+="\n\r";
+        return reponse;
     }
 }

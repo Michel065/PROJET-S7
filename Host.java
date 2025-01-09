@@ -1,5 +1,4 @@
 import java.util.List;
-import javafx.stage.Stage;
 
 
 
@@ -14,7 +13,7 @@ public class Host {
 
 
 
-    Host(long map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
+    Host(int map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();
@@ -50,27 +49,23 @@ public class Host {
         while(players.size()>0) {players.remove(0);}
     }
 
-    //pour la partie avec des robots
-    public void start(Stage primaryStage){
-        int nbr=0;
-        ThreadHostManuel recepteur= new ThreadHostManuel(primaryStage,carte,players,projectiles);
+    public void start(int port){
+        recepteur= new ThreadHostConnexion(port,carte,players,projectiles);
         recepteur.start();
-        for(int i=0;i<nbr;i++){
-            ThreadHostAlea rece= new ThreadHostAlea(carte,players,projectiles);
-            rece.start();
-        }
     }
 
-    public void start(int port,boolean bo){
-        if(bo){
-            recepteur= new ThreadHostConnexion(port,carte,players,projectiles);
-            recepteur.start();
+    public static void main(String[] args) {
+        Host host;
+        if( args.length>0){
+            System.out.println("manuel ON ... \nOK");
+            host = new Host(Integer.parseInt(args[0]), Double.parseDouble(args[1]), Integer.parseInt(args[2])); // Initialisation de la logique
         }
         else{
-            ThreadHostAlea rece= new ThreadHostAlea(carte,players,projectiles);
-            rece.start();
+            System.out.println("manuel OFF ... \nOK");
+            host = new Host(20, 0.05, 5); // Initialisation de la logique
         }
-    }
+        System.out.println("Host start ...\nOK");
+        host.start(5001);
 
-    
+    }
 }

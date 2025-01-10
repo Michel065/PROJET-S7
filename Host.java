@@ -1,6 +1,3 @@
-import java.util.List;
-
-
 
 public class Host {
     
@@ -36,16 +33,18 @@ public class Host {
     public static void main(String[] args) {
         System.out.println("param : nbr_max_joueur , largeur_carte , % de remplissage , nbr d'obstacle moyen par case.");
         Host host;
-        if( args.length==4){
+        int port =5001;
+        if( args.length>=4){
             System.out.println("manuel ON ... \nOK");
             host = new Host(Integer.parseInt(args[0]),Integer.parseInt(args[1]), Double.parseDouble(args[2]), Integer.parseInt(args[3])); // Initialisation de la logique
+            if(args.length>4)port=Integer.parseInt(args[4]);
         }
         else{
             System.out.println("manuel OFF ... \nOK");
             host = new Host(10,20, 0.05, 5); // Initialisation de la logique
         }
         System.out.println("Host start ...\nOK");
-        host.start(5001);
+        host.start(port);
 
     }
 }

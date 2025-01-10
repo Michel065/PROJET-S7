@@ -10,7 +10,7 @@ public class MatriceCarre<A> {
         return mat[x][y];
     }
 
-    public A get(Tuple val){
+    public A get(CoordInt val){
         return mat[val.x][val.y];
     }
     

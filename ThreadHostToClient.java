@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadHostToClient extends ThreadHostGestionPlayer {
 
-    private AtomicInteger index = new AtomicInteger(0);
-
     private Socket clientSocket=null;
     private BufferedReader client_output;
     private PrintWriter client_input;
@@ -154,10 +152,6 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         }
         if(!reponse.equals(""))reponse+="\n\r";
         return reponse;
-    }
-
-    public void setIndex(int index){
-        this.index.set(index);
     }
 }
 

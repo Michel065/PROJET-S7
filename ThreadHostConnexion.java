@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -8,6 +9,7 @@ public class ThreadHostConnexion extends Thread  {
     private int port;
     private Carte carte;
     private ListePartageThread Liste_Thread;
+    private int max_client;
     private ServerSocket maSocketEcoute = null;
 
     
@@ -17,6 +19,7 @@ public class ThreadHostConnexion extends Thread  {
         this.port=port;
         this.carte=carte;
         this.Liste_Thread = Liste_Thread;
+        this.max_client=Liste_Thread.get_max_size();
     }
     
     public void run() { 
@@ -38,10 +41,17 @@ public class ThreadHostConnexion extends Thread  {
                     clientSocket = maSocketEcoute.accept();
                     if(clientSocket!=null) premiere_connx++;
                     System.out.println("Connexion de : " + clientSocket.getInetAddress() + " : port " + clientSocket.getPort());//on precise qui ce connecte
-
-                    ThreadHostToClient ThreadClient = new ThreadHostToClient(clientSocket, carte,Liste_Thread);
-                    ThreadClient.start();
-                    Liste_Thread.ajouter(ThreadClient);
+                    if(Liste_Thread.get_size()<max_client){
+                        ThreadHostToClient ThreadClient = new ThreadHostToClient(clientSocket, carte,Liste_Thread);
+                        ThreadClient.start();
+                        Liste_Thread.ajouter(ThreadClient);
+                    }
+                    else{
+                        System.out.println("Connexion refuse serveur plein!");
+                        PrintWriter client_input = new PrintWriter(clientSocket.getOutputStream());
+                        client_input.println("erreur host plein\n\r");
+                        client_input.flush();
+                    }
                 } catch (SocketTimeoutException e) {}		
                 
             }

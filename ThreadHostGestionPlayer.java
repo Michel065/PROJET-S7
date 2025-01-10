@@ -1,15 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
     protected ListePartageThread Liste_Thread;
     private List<Projectile> ourprojectiles;
+    protected ListeAtomicCoord ourprojectilespartagee= new ListeAtomicCoord(30);//30 projectiles max par joueur
     protected Player ourplayer;
     private long taille_map=0;
     private Projectile proj_tmp;
-    private List<Projectile> list_projectile_a_supp;
+    protected boolean statut_joueur = false; // juste pour savoir si on est vivant ou pas
+    private int equipe=0;
+    private AtomicInteger index = new AtomicInteger(0);
 
 
     ThreadHostGestionPlayer(Carte carte,ListePartageThread Liste_Thread){
@@ -19,13 +23,31 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         this.ourprojectiles= new ArrayList<>();
     }
     
-    private boolean other_player_is_touch(Projectile proj){
+    public void setIndex(int index){
+        this.index.set(index);
+    }
+
+    public boolean getStatus(){
+        return statut_joueur;
+    }
+
+    public int getEquipe(){
+        return equipe;
+    }
+
+    private boolean other_player_is_touch_by_proj(Projectile proj){
         boolean touche=false;
-        for(Player player : players){
-            if(player!=ourplayer && (proj.getCouleur()!=player.getCouleur())){
-                if(player.is_touch_by(proj)){
-                    player.addHealth(proj.getDegat());
-                    touche =true;
+        int taille=Liste_Thread.get_size();
+        if(taille<=1) return false;
+        
+        for(int i=0; i<taille;i++){
+            if(i!=index.get()){
+                ThreadHostToClient tmp=Liste_Thread.recuperer(i);
+                if(tmp.getStatus() && (equipe!=tmp.getEquipe())){
+                    if(player.is_touch_by(proj)){
+                        player.addHealth(proj.getDegat());
+                        touche =true;
+                    }
                 }
             }
         }
@@ -46,19 +68,16 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected void update_projectile() {
-        list_projectile_a_supp =new ArrayList<>();
         for (Projectile projectile : ourprojectiles) {
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.ca_touche_ou_pas(projectile.get_simu_move(), projectile.getRadius()) || other_player_is_touch(projectile)) {
-                list_projectile_a_supp.add(projectile);
+            if (!projectile.is_alive() || carte.ca_touche_ou_pas(projectile.get_simu_move(), ourplayer.get_proj_radius()) || other_player_is_touch(projectile)) {
+                ourprojectiles.remove(projectile);
                 
             } else {
                 projectile.move();
             }
         }
-        ourprojectiles.removeAll(list_projectile_a_supp);
-        projectiles.remove(list_projectile_a_supp);
-
+        ourprojectilespartagee.iniitialise(ourprojectiles);
     }
 
     protected void update_player() {
@@ -77,11 +96,12 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected void remode_ourplayer(){
-        players.remove(ourplayer);
+        statut_joueur=false;
         ourplayer=null;
     }
 
     protected void create_player(){
+        if(statut_joueur) return;
         Random random = new Random();
         float x,y;
         x = random.nextFloat() * (taille_map-5);
@@ -91,8 +111,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
             y = random.nextFloat() * (taille_map-5);
         }
         ourplayer= new Player(100,x+(float)2.5,y+(float)2.5);
-        players.add(ourplayer);
-        
     }
 
 
@@ -100,14 +118,14 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         if(ourplayer != null){
             proj_tmp=ourplayer.tire();
             if(proj_tmp != null){
-                projectiles.add(proj_tmp);
                 ourprojectiles.add(proj_tmp);
+                ourprojectilespartagee.ajoute(proj_tmp.getX(), proj_tmp.getY());
             }
         }
     }
 
     protected boolean is_finish(){
-        return Host.is_close || (ourplayer==null && ourprojectiles.size()==0);
+        return Host.is_close || (ourplayer==null && ourprojectiles.size()==0);//a revoir dans le run
     }
     
     public abstract void run();

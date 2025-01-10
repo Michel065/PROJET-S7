@@ -1,8 +1,8 @@
 public class Obstacle {
-    private Tuple coord;
+    private CoordInt coord;
 
     public Obstacle(int x,int y){
-        coord=new Tuple(x,y);
+        coord=new CoordInt(x,y);
     }
 
     public int getx(){
@@ -21,7 +21,7 @@ public class Obstacle {
         coord.y=yy;
     }
 
-    public Tuple get(){
+    public CoordInt get(){
         return coord;
     }  
 

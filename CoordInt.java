@@ -1,12 +1,12 @@
-public class Tuple {
+public class CoordInt {
     public int x;
     public int y;
-    public Tuple(int val1,int val2){
+    public CoordInt(int val1,int val2){
         x=val1;
         y=val2;
     }
 
-    public Tuple(Tuple tmp){
+    public CoordInt(CoordInt tmp){
         x=tmp.x;
         y=tmp.y;
     }

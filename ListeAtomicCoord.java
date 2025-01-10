@@ -15,14 +15,16 @@ public class ListeAtomicCoord {
         return size.get();
     }
 
-    public boolean iniitialise(List<Rond> liste){
+    public boolean iniitialise(List<Projectile> liste){
         if(atomicArray.length()<liste.size()){
             System.out.println("trop de valeur");
             return false;
         }
         size.set(0);
-        for(Rond r: liste){
-            ajoute(r.getX(),r.getY());
+        CoordFloat tmp;
+        for(Projectile r: liste){
+            tmp=r.get_coord();
+            ajoute(tmp.x,tmp.y);
         }
         return true;
     }

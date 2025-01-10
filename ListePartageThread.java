@@ -41,8 +41,13 @@ public class ListePartageThread {
         return size.get();
     }
 
+    public int get_max_size(){
+        return max_size;
+    }
+
     public boolean vide(){
-        return size.get();
+        return size.get()==0;
     }
     
+
 }

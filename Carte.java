@@ -9,7 +9,7 @@ public class Carte {
     private double pourcentage_obstacle;
     private int nbr_actuel_obstacle;
 
-    private MatriceCarre<Tuple> carte;
+    private MatriceCarre<CoordInt> carte;
     private List<Obstacle> obstacles;
     
     public Carte(long taille, double pourcentage_obstacle,int nbr_moyen_obstacle_par_case) {
@@ -31,7 +31,7 @@ public class Carte {
         this.taille_reel=(long)(largeur_case*largeur_matrice);
         this.longeur_list_obstacle=largeur_case*largeur_matrice*largeur_matrice;
         this.nbr_max_obstacle_par_case=Math.max(largeur_case*largeur_case,nbr_moyen_obstacle_par_case*2);
-        carte=new MatriceCarre<Tuple>(largeur_matrice);
+        carte=new MatriceCarre<CoordInt>(largeur_matrice);
         obstacles = new ArrayList<>((int)longeur_list_obstacle);
     }
 
@@ -45,7 +45,7 @@ public class Carte {
         int indice_dans_liste=0;
         for(int x=0;x<largeur_matrice;x++){
             for(int y=0;y<largeur_matrice;y++){
-                carte.set(x,y,new Tuple(indice_dans_liste,indice_dans_liste));
+                carte.set(x,y,new CoordInt(indice_dans_liste,indice_dans_liste));
                 indice_dans_liste+=(largeur_case*largeur_case);
             }
         }
@@ -65,7 +65,7 @@ public class Carte {
         
     }
 
-    private boolean Obstacle_existe_deja(int x,int y,Tuple couple){
+    private boolean Obstacle_existe_deja(int x,int y,CoordInt couple){
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
             if(tmp.getx()==x && tmp.gety()==y){
@@ -77,7 +77,7 @@ public class Carte {
 
 
     public boolean ajoute_obstacle(int x,int y){
-        Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
+        CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
         if(!Obstacle_existe_deja(x,y,couple) && couple.y-couple.x<nbr_max_obstacle_par_case){
             obstacles.set(couple.y, new Obstacle(x, y));
             couple.y++;
@@ -98,7 +98,7 @@ public class Carte {
 
 
     public boolean retire_obstacle(int x,int y){
-        Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
+        CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
             if(tmp.getx()==x && tmp.gety()==y){
@@ -111,16 +111,16 @@ public class Carte {
         return false;
     }
 
-    private float calcul_distance_carre_obstacle(float x, float y, Tuple obstale){
+    private float calcul_distance_carre_obstacle(float x, float y, CoordInt obstale){
         float xx=Math.abs(x-(obstale.x));
         float yy=Math.abs(y-(obstale.y));
         return xx*xx+yy*yy;
     }
 
     public boolean ca_touche_ou_pas(float[] coord,float radius){
-        Tuple tmp1=get_Coordonnees_De_Reel_Vers_Grille((int)coord[0],(int)coord[1]);
+        CoordInt tmp1=get_Coordonnees_De_Reel_Vers_Grille((int)coord[0],(int)coord[1]);
         if(tmp1 == null) return true;
-        Tuple couple = carte.get(tmp1);
+        CoordInt couple = carte.get(tmp1);
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
             float distance_carre = calcul_distance_carre_obstacle(coord[0],coord[1],tmp.get());
@@ -132,7 +132,7 @@ public class Carte {
     }
 
     public boolean here_obstacle(float x,float y){
-        Tuple couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille((int)x,(int)y));
+        CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille((int)x,(int)y));
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
             if(tmp.is_egual((int)x,(int)y)){
@@ -175,7 +175,7 @@ public class Carte {
         System.out.println("Nombre d'obstacles par case dans la matrice :");
         for (int x = 0; x < largeur_matrice; x++) {
             for (int y = 0; y < largeur_matrice; y++) {
-                Tuple couple = carte.get(x, y);
+                CoordInt couple = carte.get(x, y);
                 int nbr_obstacles = couple.y - couple.x; // Nombre d'obstacles dans cette case
                 System.out.print(nbr_obstacles + "\t"); // Affiche avec tabulation
             }
@@ -188,12 +188,12 @@ public class Carte {
         return largeur_case;
     }
 
-    public Tuple get_Coordonnees_De_Reel_Vers_Grille(int x, int y) {
+    public CoordInt get_Coordonnees_De_Reel_Vers_Grille(int x, int y) {
 
         int xx=(x / largeur_case),yy=(y / largeur_case);
         if(xx>=largeur_matrice || yy>=largeur_matrice || xx<0 || yy<0) return null;
 
-        return new Tuple(xx,yy);
+        return new CoordInt(xx,yy);
     }
 
     public List<Obstacle> getObstacles(){

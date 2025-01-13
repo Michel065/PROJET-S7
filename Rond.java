@@ -33,7 +33,7 @@ public abstract class Rond {
     }
 
     public String getCoordString() {
-        return coord.x+":"+coord.y+":"+equipe;
+        return coord.x+":"+coord.y;
     }
 
     public void setPosition(int x, int y) {

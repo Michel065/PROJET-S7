@@ -22,4 +22,9 @@ public class CoordFloat {
         x=val1;
         y=val2;
     }
+
+    public void set(CoordFloat c){
+        x=c.x;
+        y=c.y;
+    }
 }

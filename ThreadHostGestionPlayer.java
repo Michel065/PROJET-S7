@@ -7,13 +7,16 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
     protected ListePartageThread Liste_Thread;
     private List<Projectile> ourprojectiles;
-    protected ListeAtomicCoord ourprojectilespartagee= new ListeAtomicCoord(30);//30 projectiles max par joueur
     protected Player ourplayer;
     private long taille_map=0;
     private Projectile proj_tmp;
-    protected boolean statut_joueur = false; // juste pour savoir si on est vivant ou pas
-    private int equipe=0;
+
+    //ce qui est visible des autres !!!
     private AtomicInteger index = new AtomicInteger(0);
+    protected ListeAtomicCoord ourprojectilespartagee= new ListeAtomicCoord(30);//30 projectiles max par joueur
+    protected boolean statut_joueur = false; // juste pour savoir si on est vivant ou pas
+    protected int equipe=-1;
+    protected CoordFloatAtomic coord_joueur;
 
 
     ThreadHostGestionPlayer(Carte carte,ListePartageThread Liste_Thread){
@@ -57,7 +60,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     private boolean player_touch(){
         for(Player player : players){
-            if(player!=ourplayer && (ourplayer.getCouleur()!=player.getCouleur())){
+            if(player!=ourplayer && (ourplayer.getCouleur()!=player.getEquipe())){
                 if(ourplayer.is_touch_in_simu(player)){
                     return true;
                 }

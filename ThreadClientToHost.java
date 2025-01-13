@@ -40,9 +40,9 @@ public class ThreadClientToHost  extends Thread {
         
     }
 
-    public void get_case_centre(Float[] val) {
-        val[0]=ourPlayer.getX();
-        val[1]=ourPlayer.getY();
+    public void get_case_centre(Float[] centre) {
+        centre[0]=ourPlayer.get_coord().x;
+        centre[1]=ourPlayer.get_coord().y;
     }
 
     public float get_orientation() {

@@ -4,9 +4,8 @@ public class Projectile extends Rond {
     private int degat;
 
     // Constructeur
-    public Projectile(int coul, float speed,int life, float radius,int proj_degat, float x, float y, float directionX, float directionY) {
+    public Projectile(float speed,int life, float radius,int proj_degat, float x, float y, float directionX, float directionY) {
         super(life, radius, x, y);
-        this.coul=coul;
         this.speed = speed;
         this.degat=proj_degat;
         this.directionX=directionX;
@@ -15,28 +14,24 @@ public class Projectile extends Rond {
 
     @Override
     public void move() {
-        this.x += directionX * speed;
-        this.y += directionY * speed;
+        coord.x += directionX * speed;
+        coord.y += directionY * speed;
         health--;
     }
 
     @Override
     public void simu_move() {
-        coord_simu[0] = x + directionX * speed;
-        coord_simu[1] = y + directionY * speed;
-        
-        
+        coord_simu.set(coord.x + directionX * speed, coord.y + directionY * speed);        
     }
 
     @Override
     public String toString() {
         return name+"{" +
-                "couleur=" + coul +
                 ", speed=" + speed +
                 ", life=" + health +
                 ", radius=" + radius +
                 ", degat=" + degat +
-                ", position=(" + x + ", " + y + ")" +
+                ", position=(" + coord.x + ", " + coord.y + ")" +
                 ", direction=(" + directionX + ", " + directionY + ")" +
                 '}';
     }

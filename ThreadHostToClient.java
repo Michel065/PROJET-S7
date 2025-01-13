@@ -69,6 +69,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         send("put ourplayer null\n\r");
     }
 
+    
 
     public String Analyse(String requete){
         if(requete.equals("")) return "";//pour eviter d'afficher du vide
@@ -109,8 +110,8 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     String suite="";
                     int x=0;
                     for(Player pl:players){
-                        if(pl.in_fentre(ourplayer, rayon_display_en_case)){
-                            suite+=pl.getCoordString()+",";
+                        if(pl.in_fentre(ourplayer.get_coord(), rayon_display_en_case)){
+                            suite+=pl.getCoordString()+":"+equipe+",";
                             x++;
                         }
                     }
@@ -138,8 +139,8 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else if(object.equals("color")) {
                         int couleur = Integer.parseInt(data);
-                        System.out.println("couleur chois!");
-                        if(ourplayer.setColor(couleur)){
+                        System.out.println("couleur choisi!");
+                        if(ourplayer.setEquipe(couleur)){
                             reponse="ourplayer enregistre";
                         }
                         else{

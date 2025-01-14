@@ -1,5 +1,5 @@
 import java.util.concurrent.atomic.AtomicLongArray;
-// AAAAAAAAABBCCCCCDDDDD
+
 public class AtomicArrayCoord {
     private AtomicLongArray  atomicArray;
 

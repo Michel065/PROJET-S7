@@ -19,7 +19,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     // Ce qui est visible des autres !!!
     protected AtomicInteger index = new AtomicInteger(0);
-    protected AtomicInteger vie_joueur = new AtomicInteger(100);
+    protected AtomicInteger degat_en_attente = new AtomicInteger(0);
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30); // 30 projectiles max par joueur
     protected boolean statut_joueur = false; // Juste pour savoir si on est vivant ou pas
     protected int equipe =- 1;
@@ -40,8 +40,8 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         this.index.set(index);
     }
 
-    public void add_vie_joueur(int index) {
-        this.vie_joueur.addAndGet(index);
+    public void add_degat_joueur(int index) {
+        this.degat_en_attente.addAndGet(index);
     }
 
     public boolean getStatus() {
@@ -66,7 +66,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                 if(tmp.getStatus() && (equipe != tmp.getEquipe())) {
                     tmp_coord_Float.set(tmp.getCoordJoueur());
                     if(proj.is_touch_by(tmp_coord_Float, radius_player)) {
-                        tmp.add_vie_joueur(proj.getDegat());
+                        tmp.add_degat_joueur(proj.getDegat());
                         // touche = true;
                         return true;
                     }
@@ -111,7 +111,8 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     protected void update_player() {
         if(ourplayer != null) {
-            ourplayer.setHealth(vie_joueur.get());
+            
+            ourplayer.addHealth(degat_en_attente.getAndSet(0));
             if(ourplayer.getHealth()>0){
                 ourplayer.setDeltaTime(delta_time);
                 ourplayer.simu_move();
@@ -122,7 +123,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                 else {
                     ourplayer.reset_speed();
                 }
-                vie_joueur.set(ourplayer.getHealth());
             }
             else remode_ourplayer(); 
         }

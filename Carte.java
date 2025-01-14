@@ -63,7 +63,7 @@ public class Carte {
         
     }
 
-    private boolean Obstacle_existe_deja(int x, int y, CoordInt couple) {
+    private boolean obstacle_existe_deja(int x, int y, CoordInt couple) {
         for(int i=couple.x; i < couple.y; i++) {
             Obstacle tmp=obstacles.get(i);
             if(tmp.getx() == x && tmp.gety() == y) {
@@ -75,7 +75,7 @@ public class Carte {
 
     public boolean ajoute_obstacle(int x,int y) {
         CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
-        if(!Obstacle_existe_deja(x,y,couple) && couple.y-couple.x<nbr_max_obstacle_par_case) {
+        if(!obstacle_existe_deja(x,y,couple) && couple.y-couple.x<nbr_max_obstacle_par_case) {
             obstacles.set(couple.y, new Obstacle(x, y));
             couple.y++;
             nbr_actuel_obstacle++;
@@ -111,7 +111,7 @@ public class Carte {
         return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     }
 
-    public boolean ca_touche_ou_pas(CoordFloat coord, float radius) {
+    public boolean test_collision_rond_obstacle(CoordFloat coord, float radius) {
         CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int) coord.x, (int) coord.y);
         if (tmp1 == null) return true;
         CoordInt couple = carte.get(tmp1);

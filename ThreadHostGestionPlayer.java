@@ -98,7 +98,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
         for (Projectile projectile : ourprojectiles) {
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.ca_touche_ou_pas(projectile.get_simu_move(), ourplayer.get_proj_radius()) || other_player_is_touch_by_proj(projectile)) {
+            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), ourplayer.get_proj_radius()) || other_player_is_touch_by_proj(projectile)) {
                
                 a_remove.add(projectile);
 
@@ -115,7 +115,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
             ourplayer.setHealth(vie_joueur.get());
             if(ourplayer.getHealth()>0){
                 ourplayer.simu_move();
-                if (!carte.ca_touche_ou_pas(ourplayer.get_simu_move(), ourplayer.getRadius()) && !player_touch() ) {
+                if (!carte.test_collision_rond_obstacle(ourplayer.get_simu_move(), ourplayer.getRadius()) && !player_touch() ) {
                     ourplayer.move();
                     coord_joueur.setCoords(ourplayer.getCoord());
                 } 

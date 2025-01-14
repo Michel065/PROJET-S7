@@ -21,7 +21,7 @@ public class Client extends Application {
     private ListShare<LightRond> projectiles;
     private Float[] centre=new Float[2];
 
-    private Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
+    private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
 
     public Client() {
         this.serverIp = "127.0.0.1";

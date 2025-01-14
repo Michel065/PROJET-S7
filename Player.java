@@ -3,8 +3,8 @@ public class Player extends Rond {
     private float max_speed=(float)0.9,speed;
 
     //info projectile:
-    private float proj_speed = (float)0.1; // 0.4 défaut
-    private int proj_life = 200; // 20 défaut
+    private float proj_speed = (float)0.4; // 0.4 défaut
+    private int proj_life = 20; // 20 défaut
     private float proj_radius = (float)0.2;
     private int proj_degat=15;
     

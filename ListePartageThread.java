@@ -45,6 +45,6 @@ public class ListePartageThread {
     }
 
     public boolean vide() {
-        return size.get() s== 0;
+        return size.get()==0;
     }
 }

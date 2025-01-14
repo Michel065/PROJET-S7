@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+//coucou
 public class Carte {
 
     private long taille_origine,taille_reel,nbr_obstacle_totale,longeur_list_obstacle;

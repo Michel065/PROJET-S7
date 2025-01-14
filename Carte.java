@@ -132,6 +132,11 @@ public class Carte {
         float t;
         float px, py;
 
+        if(radius == 0.2) {
+            cx += radius;
+            cy += radius;
+        }
+
         // Parcours des obstacles
         for (int i = couple.x; i < couple.y; i++) {
             Obstacle tmp = obstacles.get(i);

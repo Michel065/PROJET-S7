@@ -1,6 +1,6 @@
 public class Player extends Rond {
     private double orientation = 0;
-    private float max_speed=(float)1.5, speed;
+    private float max_speed = (float)1.5, speed;
     private int health = 100;
 
     // Infos projectile :
@@ -24,7 +24,7 @@ public class Player extends Rond {
         return health;
     }
     public void addHealth(int val) {
-        if(!invincibilite)health -= val;
+        if(!invincibilite) health -= val;
     }
 
     public void setHealth(int health) {
@@ -33,7 +33,7 @@ public class Player extends Rond {
 
     @Override
     public boolean is_alive() {
-        return health>0;
+        return health > 0;
     }
 
     public void rotate(int angle) {

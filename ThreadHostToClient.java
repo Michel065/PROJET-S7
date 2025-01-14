@@ -66,6 +66,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         }
         System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
         send("put ourplayer null\n\r");
+        Liste_Thread.supprimer(index.get());
     }
 
     

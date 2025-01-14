@@ -29,6 +29,7 @@ public class ListePartageThread {
         } else {
             liste[index] = null;
         }
+        System.out.println("nbr:"+size.get());
     }
     
 

@@ -50,7 +50,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 last_time = current_time;
 
                 message_transmit = "";
-                while (client_output.ready()) { // Pour eviter des acumulation
+                while (client_output.ready()) { // Pour eviter des acumulations
                     this.message_recu = client_output.readLine();
                     message_transmit += Analyse(this.message_recu);
                     is_client_alive(1);

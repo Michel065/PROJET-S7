@@ -31,7 +31,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
 			client_output = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             client_input = new PrintWriter(clientSocket.getOutputStream());
 		} catch (IOException e) {
-			System.err.println("Erreur\n"+e.getMessage());
+			System.err.println("Erreur\n" + e.getMessage());
 			e.printStackTrace();
 		}
     } 

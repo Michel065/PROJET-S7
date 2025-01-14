@@ -1,17 +1,17 @@
 public abstract class Rond {
-    protected int coul=-1;
+    protected int equipe=-1;
     protected int health; 
-    protected float x, y,speed;
+    protected CoordFloat coord;
+    protected float speed;
     protected float radius;
     protected String name="Rond";
-    protected float [] coord_simu=new float[2];
+    protected CoordFloat coord_simu=new CoordFloat();
     protected boolean invincibilite=false;
 
 
     public Rond(int health,float radius, float x, float y) {
         this.health = health;
-        this.x = x;
-        this.y = y;
+        this.coord=new CoordFloat(x,y);
         this.radius = radius;
         
     }
@@ -28,60 +28,59 @@ public abstract class Rond {
         this.health = health;
     }
 
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
+    public CoordFloat get_coord() {
+        return coord;
     }
 
     public String getCoordString() {
-        return x+":"+y+":"+coul;
+        return coord.x+":"+coord.y;
+    }
+
+    public CoordFloat getCoord() {
+        return coord;
     }
 
     public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+        coord.set((float)x,(float)y);
     }
 
     public void setPosition(float var1, float var2) {
-        this.x = var1;
-        this.y = var2;
+        coord.set(var1,var2);
      }
 
     @Override
     public String toString() {
-        return name+"{couleur='" + coul + "', health=" + health + ", position=(" + x + ", " + y + ")}";
+        return name+"{couleur='" + equipe + "', health=" + health + ", position=(" + coord.x + ", " + coord.y + ")}";
     }
 
     protected abstract void simu_move();
 
     protected abstract void move();
 
-    public float[] get_simu_move(){
+    public CoordFloat get_simu_move(){
         return coord_simu;
     }
 
 
-    public int getCouleur() {
-        return coul;
+    public int getEquipe() {
+        return equipe;
     }
 
     public float getRadius() {
         return radius;
     }
 
-    public boolean is_touch_by(Rond rond){
-        float xx=Math.abs(rond.getX()-x);
-        float yy=Math.abs(rond.getY()-y);
-        return xx*xx+yy*yy<((radius+rond.getRadius())*(radius+rond.getRadius()));
+    public boolean is_touch_by(CoordFloat coord_mechant,float radius_mechant){
+
+        float xx=Math.abs(coord_mechant.x-coord.x);
+        float yy=Math.abs(coord_mechant.y-coord.y);
+        return xx*xx+yy*yy<((radius+radius_mechant)*(radius+radius_mechant));
     }
 
-    public boolean is_touch_in_simu(Rond rond){
-        float xx=Math.abs(rond.getX()-coord_simu[0]);
-        float yy=Math.abs(rond.getY()-coord_simu[1]);
-        return xx*xx+yy*yy<((radius+rond.getRadius())*(radius+rond.getRadius()));
+    public boolean is_touch_in_simu(CoordFloat coord_mechant,float radius_mechant){
+        float xx=Math.abs(coord_mechant.x-coord_simu.x);
+        float yy=Math.abs(coord_mechant.y-coord_simu.y);
+        return xx*xx+yy*yy<((radius+radius_mechant)*(radius+radius_mechant));
     }
 
     public boolean is_alive(){
@@ -95,9 +94,4 @@ public abstract class Rond {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
-
-    public boolean in_fentre(Rond val,int rayon) {
-        return Math.abs(val.getX()-x)<rayon && Math.abs(val.getY()-y)<rayon;
-    }
-
 }

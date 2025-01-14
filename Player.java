@@ -42,14 +42,13 @@ public class Player extends Rond {
 
     @Override
     public void simu_move(){
-        coord_simu[0]=x+(float)(Math.cos(orientation)*speed);
-        coord_simu[1]=y+(float)(Math.sin(orientation)*speed);
+        coord_simu.set(coord.x+(float)(Math.cos(orientation)*speed),coord.y+(float)(Math.sin(orientation)*speed));
     }
 
     @Override
     public void move(){
-        x+=(float)(Math.cos(orientation)*speed);
-        y+=(float)(Math.sin(orientation)*speed);
+        coord.x+=(float)(Math.cos(orientation)*speed);
+        coord.y+=(float)(Math.sin(orientation)*speed);
         reduce_speed();
     }
 
@@ -65,13 +64,13 @@ public class Player extends Rond {
         end = System.nanoTime();
         if(end-start >=cooldown){
             start=end;
-            return new Projectile(coul, proj_speed,proj_life,proj_radius,proj_degat,x,y, (float) Math.cos(orientation), (float) Math.sin(orientation)); 
+            return new Projectile(proj_speed,proj_life,proj_radius,proj_degat,coord.x,coord.y, (float) Math.cos(orientation), (float) Math.sin(orientation)); 
         }
         return null;
     }
 
-    public boolean setColor(int val) {
-        coul=val;
+    public boolean setEquipe(int val) {
+        equipe=val;
         return true;
     }
 

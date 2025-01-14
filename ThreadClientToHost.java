@@ -41,9 +41,9 @@ public class ThreadClientToHost  extends Thread {
         
     }
 
-    public void get_case_centre(Float[] val) {
-        val[0]=ourPlayer.getX();
-        val[1]=ourPlayer.getY();
+    public void get_case_centre(Float[] centre) {
+        centre[0]=ourPlayer.get_coord().x;
+        centre[1]=ourPlayer.get_coord().y;
     }
 
     public float get_orientation() {
@@ -108,7 +108,7 @@ public class ThreadClientToHost  extends Thread {
             
             Random random = new Random();
             
-            send("put ourplayer color "+random.nextInt(4)+"\n\r");
+            send("put ourplayer equipe "+random.nextInt(4)+"\n\r");
             send("put ourplayer invincibilite false\n\r");
 
 
@@ -156,6 +156,7 @@ public class ThreadClientToHost  extends Thread {
         String[] words = requete.split(" ");
 
         if (words.length >= 2) {
+            System.out.println(requete);
             String action = words[0].toLowerCase();
             String target = words[1];
             String object="";

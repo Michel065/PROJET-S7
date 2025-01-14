@@ -5,14 +5,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ThreadHostToClient extends ThreadHostGestionPlayer {
+
     private Socket clientSocket=null;
     private BufferedReader client_output;
     private PrintWriter client_input;
     private int rayon_display_en_case=5;
     private String message_recu="",message_transmit="";
 
-    ThreadHostToClient(Socket client,Carte carte,ListShare<Player> players,ListShare<Projectile> projectiles){
-        super(carte, players, projectiles);
+    ThreadHostToClient(Socket client,Carte carte,ListePartageThread Liste_Thread){
+        super(carte, Liste_Thread);
         this.clientSocket=client;
     }
 
@@ -20,6 +21,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         if (client_input != null && !msg.isEmpty()) {
             client_input.println(msg);
             client_input.flush();
+            msg="";
         }
     }
 
@@ -52,7 +54,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 
                 update_projectile();
                 update_player();
-            
+
                 Thread.sleep(45);
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu.");
@@ -66,6 +68,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         send("put ourplayer null\n\r");
     }
 
+    
 
     public String Analyse(String requete){
         if(requete.equals("")) return "";//pour eviter d'afficher du vide
@@ -95,20 +98,42 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 else if (target.equals("projectiles")) {                    
                     String suite="";
                     int x=0;
-                    for(Projectile pro:projectiles){
-                        if(pro.in_fentre(ourplayer, rayon_display_en_case)){
-                            suite+=pro.getCoordString()+",";
-                            x++;
+                    
+                    CoordFloat coord_tmp = new CoordFloat();
+
+                    int taille=Liste_Thread.get_size();
+                    if(taille>=1){
+                        for(int i=0; i<taille;i++){
+                            ThreadHostToClient tmp=Liste_Thread.recuperer(i);
+                            ListeAtomicCoord projs = tmp.get_projectile();
+                            int size_proj=projs.get_size();
+                            for(int id_proj =0; id_proj<size_proj;id_proj++){
+                                projs.get(i, coord_tmp);
+                                if(objet_dans_fentre_client(coord_tmp)){
+                                    suite+=coord_tmp.x+":"+coord_tmp.y+":"+tmp.getEquipe()+",";
+                                    x++;
+                                }
+                            }
                         }
                     }
                     reponse="put projectiles "+x+" "+suite;
                 }else if (target.equals("players")) {                    
                     String suite="";
                     int x=0;
-                    for(Player pl:players){
-                        if(pl.in_fentre(ourplayer, rayon_display_en_case)){
-                            suite+=pl.getCoordString()+",";
-                            x++;
+
+                    CoordFloat coord_tmp = new CoordFloat();
+
+                    int taille=Liste_Thread.get_size();
+                    if(taille>=1){
+                        for(int i=0; i<taille;i++){
+                            ThreadHostToClient tmp=Liste_Thread.recuperer(i);
+                            if(tmp.getStatus()){
+                                coord_tmp.set(tmp.getCoordJoueur());
+                                if(objet_dans_fentre_client(coord_tmp)){
+                                    suite+=coord_tmp.x+":"+coord_tmp.y+":"+tmp.getEquipe()+",";
+                                    x++;
+                                }
+                            }
                         }
                     }
                     reponse="put players "+x+" "+suite;
@@ -133,10 +158,10 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }else if(object.equals("invincibilite")) {
                         ourplayer.setInvinvibilite(Boolean.parseBoolean(data));
                     }
-                    else if(object.equals("color")) {
-                        int couleur = Integer.parseInt(data);
-                        System.out.println("couleur chois!");
-                        if(ourplayer.setColor(couleur)){
+                    else if(object.equals("equipe")) {
+                        equipe = Integer.parseInt(data);
+                        System.out.println("equipe choisi!");
+                        if(ourplayer.setEquipe(equipe)){
                             reponse="ourplayer enregistre";
                         }
                         else{
@@ -150,5 +175,9 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         if(!reponse.equals(""))reponse+="\n\r";
         return reponse;
     }
-}
 
+    public boolean objet_dans_fentre_client(CoordFloat rond) {
+        CoordFloat centre=ourplayer.getCoord();
+        return Math.abs(centre.x-rond.x)<rayon_display_en_case && Math.abs(centre.y-rond.y)<rayon_display_en_case;
+    }
+}

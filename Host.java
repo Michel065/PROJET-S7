@@ -1,71 +1,50 @@
-import java.util.List;
-
-
 
 public class Host {
     
     public long map;
     private Carte carte;
-    private ListShare<Projectile> projectiles;
-    private ListShare<Player> players;
+    private ListePartageThread Liste_Thread;
     private ThreadHostConnexion recepteur;
     public static boolean is_close=false;
 
 
 
-    Host(int map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
+    Host(int nbr_joueur_max, int map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();
-        this.players= new ListShare<>();
-        this.projectiles= new ListShare<>();
+        Liste_Thread = new ListePartageThread(nbr_joueur_max);
     }    
-
-    public void print_projectile(){
-        for (Projectile pro : projectiles) {
-            System.out.println(pro.toString());
-        }
-    }
-
 
     //pour le display
     public boolean is_finish(){
-        return players.size()==0;
+        return Liste_Thread.get_size()==0;
     }
 
-    public ListShare<Projectile> getProjectiles(){
-        return projectiles;
-    }
-
-    public List<Obstacle> getObstacles(){
-        return carte.getObstacles();
-    }
-
-    public ListShare<Player> getPlayers(){
-        return players;
-    }
-
-    public void killAllPlayers(){
-        while(players.size()>0) {players.remove(0);}
+    public void killAllClient(){
+        while(Liste_Thread.get_size()>0) {Liste_Thread.supprimer(0);}
     }
 
     public void start(int port){
-        recepteur= new ThreadHostConnexion(port,carte,players,projectiles);
+        recepteur= new ThreadHostConnexion(port,carte,Liste_Thread);
         recepteur.start();
     }
 
     public static void main(String[] args) {
+        System.out.println("param : nbr_max_joueur , largeur_carte , % de remplissage , nbr d'obstacle moyen par case.");
         Host host;
-        if( args.length>0){
+        int port =5001;
+        if( args.length>=4){
             System.out.println("manuel ON ... \nOK");
-            host = new Host(Integer.parseInt(args[0]), Double.parseDouble(args[1]), Integer.parseInt(args[2])); // Initialisation de la logique
+            host = new Host(Integer.parseInt(args[0]),Integer.parseInt(args[1]), Double.parseDouble(args[2]), Integer.parseInt(args[3])); // Initialisation de la logique
+            if(args.length>4)port=Integer.parseInt(args[4]);
         }
         else{
             System.out.println("manuel OFF ... \nOK");
-            host = new Host(20, 0.05, 5); // Initialisation de la logique
+            host = new Host(10,20, 0.05, 5); // Initialisation de la logique
         }
         System.out.println("Host start ...\nOK");
-        host.start(12345);
+        host.start(port);
 
     }
 }

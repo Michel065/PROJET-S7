@@ -21,6 +21,7 @@ public class ListePartageThread {
     
 
     public synchronized void supprimer(int index) {
+        if(size.get()==0) return;
         int indexFin = size.decrementAndGet();
         if (index != indexFin) {
             liste[index] = liste[indexFin];
@@ -29,7 +30,6 @@ public class ListePartageThread {
         } else {
             liste[index] = null;
         }
-        System.out.println("nbr:"+size.get());
     }
     
 

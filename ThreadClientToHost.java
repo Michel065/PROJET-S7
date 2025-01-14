@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 public class ThreadClientToHost  extends Thread {
     private Socket serveur=null;
     private Stage primaryStage;
-    private int port=0;
+    private int port=5001;
     private int rayon_display_en_case=5;
     private String IP="", message_recu="",message_transmit="";
     private PrintWriter serveur_input;
@@ -156,7 +156,6 @@ public class ThreadClientToHost  extends Thread {
         String[] words = requete.split(" ");
 
         if (words.length >= 2) {
-            System.out.println(requete);
             String action = words[0].toLowerCase();
             String target = words[1];
             String object="";
@@ -164,10 +163,8 @@ public class ThreadClientToHost  extends Thread {
             if (words.length >= 3) object = words[2];
             if (words.length >= 4) data = words[3];
             
-            //System.out.println(action+" " +object+" "+target+" "+data);
-            
             if (action.equals("get")) {
-                System.out.println("coucou");
+                System.out.println("vide");
 
 
             } else if(action.equals("put")) {

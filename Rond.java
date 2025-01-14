@@ -2,6 +2,7 @@ public abstract class Rond {
     protected int equipe=-1;
     protected int health; 
     protected CoordFloat coord;
+    protected CoordFloat coord_offset;
     protected float speed;
     protected float radius;
     protected String name="Rond";
@@ -11,7 +12,8 @@ public abstract class Rond {
 
     public Rond(int health,float radius, float x, float y) {
         this.health = health;
-        this.coord=new CoordFloat(x,y);
+        this.coord=new CoordFloat(x-radius,y-radius);
+        this.coord_offset=new CoordFloat();
         this.radius = radius;
         
     }
@@ -29,7 +31,8 @@ public abstract class Rond {
     }
 
     public CoordFloat get_coord() {
-        return coord;
+        coord_offset.set(x+radius, y+radius);
+        return coord_offset;
     }
 
     public String getCoordString() {

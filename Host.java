@@ -1,4 +1,3 @@
-
 public class Host {
     public long map;
     private Carte carte;
@@ -13,7 +12,7 @@ public class Host {
         Liste_Thread = new ListePartageThread(nbr_joueur_max);
     }    
 
-    //pour le display
+    // Pour le display
     public boolean is_finish() {
         return Liste_Thread.get_size() == 0;
     }

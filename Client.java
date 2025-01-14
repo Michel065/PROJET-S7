@@ -142,9 +142,6 @@ public class Client extends Application {
             }
         }
     }
-    
-    
-    
 
     private void drawProjectiles() {
         if (carte == null || gc == null) {

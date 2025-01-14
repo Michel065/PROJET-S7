@@ -12,7 +12,6 @@ public class Player extends Rond {
     private long cooldown = 500 * 1000 * 1000; // En ns
     private long start = System.nanoTime(), end;
 
-
     public Player(int health, float x, float y) {
         super((float)0.5, x, y);
         name = "Player";

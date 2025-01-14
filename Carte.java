@@ -126,7 +126,6 @@ public class Carte {
         if (tmp1 == null) return true;
         CoordInt couple = carte.get(tmp1);
 
-        CoordFloat s0, s1, s2, s3;
         float[] distances = new float[4];
         CoordFloat[] sommets = new CoordFloat[4];
 

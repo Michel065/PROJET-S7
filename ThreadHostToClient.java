@@ -11,6 +11,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
     private PrintWriter client_input;
     private int rayon_display_en_case=5;
     private String message_recu="",message_transmit="";
+    private long dernier_msg_recu = System.nanoTime(), dernier_msg_recu_tmp, current_time, last_time,delta_time;
 
     ThreadHostToClient(Socket client,Carte carte,ListePartageThread Liste_Thread){
         super(carte, Liste_Thread);
@@ -45,16 +46,21 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         send("put fenetre rayon "+rayon_display_en_case+"\n\r");
         while(!is_finish()){
             try {
+                current_time=System.nanoTime();
+                delta_time=last_time-last_time;
+                last_time=current_time;
+
                 message_transmit="";
                 while (client_output.ready()) { //pour eviter des acumulation
-                    message_recu=client_output.readLine();
-                    message_transmit += Analyse(message_recu);
+                    this.message_recu=client_output.readLine();
+                    message_transmit += Analyse(this.message_recu);
+                    is_client_alive(1);
                 }
                 send(message_transmit);
-                
                 update_projectile();
                 update_player();
 
+                is_client_alive(0);
                 Thread.sleep(45);
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu.");
@@ -69,7 +75,18 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         Liste_Thread.supprimer(index.get());
     }
 
-    
+    public void is_client_alive(int val){
+        dernier_msg_recu_tmp = System.nanoTime();
+        if(Math.abs(dernier_msg_recu_tmp-dernier_msg_recu) >=2000*1000*1000){
+            Liste_Thread.supprimer(index.get());
+            statut_joueur=false;
+            ourplayer=null;
+        }
+        if(val==1){
+            dernier_msg_recu=dernier_msg_recu_tmp;
+        }
+    }
+
 
     public String Analyse(String requete){
         if(requete.equals("")) return "";//pour eviter d'afficher du vide

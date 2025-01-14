@@ -1,7 +1,7 @@
 public class Player extends Rond {
     private double orientation = 0;
-    private float max_speed = (float)1.5, speed;
-    private int health = 100;
+    private float max_speed=(float)1.5, speed;
+    private int health = 100,max_health=100;
 
     // Infos projectile :
     private float proj_speed = (float)1;
@@ -23,8 +23,13 @@ public class Player extends Rond {
     public int getHealth() {
         return health;
     }
+
+    public int get_pourcentage_vie() {
+        return (int)Math.ceil((float)health / (float)(max_health*100));
+    }
+
     public void addHealth(int val) {
-        if(!invincibilite) health -= val;
+        if(!invincibilite)health -= val;
     }
 
     public void setHealth(int health) {
@@ -33,7 +38,7 @@ public class Player extends Rond {
 
     @Override
     public boolean is_alive() {
-        return health > 0;
+        return health>0;
     }
 
     public void rotate(int angle) {
@@ -79,9 +84,9 @@ public class Player extends Rond {
         orientation = val;
     }
 
-    public Projectile tire() {
+    public Projectile tire(){
         end = System.nanoTime();
-        if(end - start >=cooldown) {
+        if(end - start >=cooldown){
             start = end;
             return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x + radius - proj_radius, coord.y + radius - proj_radius, (float)Math.cos(orientation), (float)Math.sin(orientation)); 
         }

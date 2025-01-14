@@ -24,6 +24,9 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected boolean statut_joueur = false; // Juste pour savoir si on est vivant ou pas
     protected int equipe =- 1;
     protected CoordFloatAtomic coord_joueur= new CoordFloatAtomic();
+    protected AtomicInteger pourcentage_vie= new AtomicInteger();
+
+    
 
     ThreadHostGestionPlayer(Carte carte, ListePartageThread Liste_Thread) {
         this.carte = carte;
@@ -34,6 +37,10 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     public ListeAtomicCoord get_projectile() {
         return ourprojectilespartagee;
+    }
+
+    public int get_pourcentage_vie() {
+        return pourcentage_vie.get();
     }
     
     public void setIndex(int index) {
@@ -113,6 +120,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         if(ourplayer != null) {
             
             ourplayer.addHealth(degat_en_attente.getAndSet(0));
+            pourcentage_vie.set(ourplayer.get_pourcentage_vie());
             if(ourplayer.getHealth()>0){
                 ourplayer.setDeltaTime(delta_time);
                 ourplayer.simu_move();

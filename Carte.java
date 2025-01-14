@@ -162,7 +162,7 @@ public class Carte {
                 mini = 1;
             }
 
-            // À ce stade, distances[minimini] < distances[mini], avec minimini et mini des éléments de {0, 1}
+            // À ce stade, distances[minimini] < distances[mini], avec minimini et mini des éléments distincts de {0, 1}
 
             for(int j=2; j<4; j++) {
                 if(distances[j] < distances[minimini]) {

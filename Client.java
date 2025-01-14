@@ -19,7 +19,7 @@ public class Client extends Application {
     private Carte carte;
     private ListShare<LightRond> players;
     private ListShare<LightRond> projectiles;
-    private Float[] centre=new Float[2];
+    private Float[] centre = new Float[2];
 
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
 
@@ -31,7 +31,7 @@ public class Client extends Application {
     }
 
     public void connect(Stage primaryStage) {
-        toServer = new ThreadClientToHost(primaryStage, serverIp, port,players,projectiles);
+        toServer = new ThreadClientToHost(primaryStage, serverIp, port, players, projectiles);
         toServer.start();
     }
 
@@ -50,7 +50,6 @@ public class Client extends Application {
     // Méthode pour démarrer la logique principale
     public void startClient() {
         recupCarteFromThread();
-        
     }
 
     @Override
@@ -78,7 +77,6 @@ public class Client extends Application {
         });
 
         startClient();
-
         startAnimation(primaryStage);
     }
 
@@ -114,7 +112,7 @@ public class Client extends Application {
         }
     
         // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / (rayon_display_en_case*2);
+        double caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
         double caseHeight = caseWidth; // Cases carrées
     
         // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
@@ -126,20 +124,20 @@ public class Client extends Application {
         double offsetY = (centreY - (int)centreY) * caseHeight;
     
         // Calcul de la zone visible autour du centre
-        int startX = Math.max(0, (int) Math.floor(centreX - rayon_display_en_case-3));
-        int startY = Math.max(0, (int) Math.floor(centreY - rayon_display_en_case-3));
-        int endX = Math.min((int)carte.getTailleReel(), (int)(centreX + rayon_display_en_case+3));
-        int endY = Math.min((int)carte.getTailleReel(), (int)(centreY + rayon_display_en_case+3));
+        int startX = Math.max(0, (int) Math.floor(centreX - rayon_display_en_case - 3));
+        int startY = Math.max(0, (int) Math.floor(centreY - rayon_display_en_case - 3));
+        int endX = Math.min((int)carte.getTailleReel(), (int)(centreX + rayon_display_en_case + 3));
+        int endY = Math.min((int)carte.getTailleReel(), (int)(centreY + rayon_display_en_case + 3));
     
         // Dessiner les obstacles visibles dans la zone spécifiée
         gc.setFill(Color.RED);
-        for (int x = startX; x < endX; x++) {
+        for (int x=startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 if (carte.here_obstacle(x, y)) {
                     // Calcul des positions en pixels en appliquant le décalage
                     double drawX = (x - (int)centreX + rayon_display_en_case) * caseWidth - offsetX;
                     double drawY = (y - (int)centreY + rayon_display_en_case) * caseHeight - offsetY;
-                    gc.fillRect(drawX-sizeWindow/2, drawY-sizeWindow/2, caseWidth, caseHeight);
+                    gc.fillRect(drawX - sizeWindow / 2, drawY - sizeWindow / 2, caseWidth, caseHeight);
                 }
             }
         }
@@ -180,7 +178,7 @@ public class Client extends Application {
                 double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
     
                 // Dessiner le rond
-                gc.fillOval(drawX-sizeWindow/2, drawY-sizeWindow/2, projectileSize, projectileSize);
+                gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
             }
         }
     }
@@ -217,13 +215,12 @@ public class Client extends Application {
                 double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
     
                 // Dessiner le rond
-                gc.fillOval(drawX-sizeWindow/2, drawY-sizeWindow/2, projectileSize, projectileSize);
+                gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
             }
         }
     }
     
     public static void main(String[] args) {
-
         //Host host = new Host(20, 0.05, 5); // Initialisation de la logique
         //host.start(5001);
         Application.launch(Client.class, args);

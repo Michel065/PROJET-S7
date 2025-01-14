@@ -142,7 +142,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                             if(tmp.getStatus()) {
                                 coord_tmp.set(tmp.getCoordJoueur());
                                 if(objet_dans_fentre_client(coord_tmp)) {
-                                    suite += coord_tmp.x + ":" + coord_tmp.y + ":" + tmp.getEquipe() + ",";
+                                    suite += coord_tmp.x + ":" + coord_tmp.y + ":" + tmp.getEquipe() + ":" + tmp.get_pourcentage_vie() + ",";
                                     x++;
                                 }
                             }

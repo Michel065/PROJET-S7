@@ -115,18 +115,18 @@ public class Carte {
         return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     }
 
-    public boolean ca_touche_ou_pas(float[] coord, float radius) {
-        Tuple tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int) coord[0], (int) coord[1]);
+    public boolean ca_touche_ou_pas(CoordFloat coord, float radius) {
+        CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int) coord.x, (int) coord.y);
         if (tmp1 == null) return true;
-        Tuple couple = carte.get(tmp1);
+        CoordInt couple = carte.get(tmp1);
 
-        TupleFloat s0, s1, s2, s3;
+        CoordFloat s0, s1, s2, s3;
         float[] distances = new float[4];
-        TupleFloat[] sommets = new TupleFloat[4];
+        CoordFloat[] sommets = new CoordFloat[4];
 
         int minimini = 0, mini = -1;
 
-        float cx = coord[0], cy = coord[1];
+        float cx = coord.x, cy = coord.y;
         float x1, x2, y1, y2;
         float dx, dy;
         float fx, fy;
@@ -140,10 +140,10 @@ public class Carte {
             int y = tmp.gety();
 
             // Calcul des sommets du carré représentant l'obstacle
-            sommets[0] = new TupleFloat(x - 0.5f, y - 0.5f);
-            sommets[1] = new TupleFloat(x + 0.5f, y - 0.5f);
-            sommets[2] = new TupleFloat(x + 0.5f, y + 0.5f);
-            sommets[3] = new TupleFloat(x - 0.5f, y + 0.5f);
+            sommets[0] = new CoordFloat(x - 0.5f, y - 0.5f);
+            sommets[1] = new CoordFloat(x + 0.5f, y - 0.5f);
+            sommets[2] = new CoordFloat(x + 0.5f, y + 0.5f);
+            sommets[3] = new CoordFloat(x - 0.5f, y + 0.5f);
 
             // Calcul des distances au carré entre chaque sommet et le centre du cercle
             distances[0] = distance_euclidienne_carre(sommets[0].x, sommets[0].y, cx, cy);

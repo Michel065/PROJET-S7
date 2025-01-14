@@ -31,7 +31,7 @@ public abstract class Rond {
     }
 
     public CoordFloat get_coord() {
-        coord_offset.set(x+radius, y+radius);
+        coord_offset.set(coord.x+radius, coord.y+radius);
         return coord_offset;
     }
 

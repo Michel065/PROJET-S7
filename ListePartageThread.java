@@ -1,6 +1,5 @@
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 public class ListePartageThread {
     private ThreadHostToClient[] liste;
     private AtomicInteger size = new AtomicInteger(0);
@@ -18,10 +17,10 @@ public class ListePartageThread {
         liste[index] = client;
         return true;
     }
-    
 
     public synchronized void supprimer(int index) {
-        if(size.get()==0) return;
+        if(size.get() == 0) return;
+
         int indexFin = size.decrementAndGet();
         if (index != indexFin) {
             liste[index] = liste[indexFin];
@@ -32,23 +31,20 @@ public class ListePartageThread {
         }
     }
     
-
     public synchronized ThreadHostToClient recuperer(int index) {
         if (index >= size.get()) return null;
         return liste[index];
     }
 
-    public int get_size(){
+    public int get_size() {
         return size.get();
     }
 
-    public int get_max_size(){
+    public int get_max_size() {
         return max_size;
     }
 
-    public boolean vide(){
-        return size.get()==0;
+    public boolean vide() {
+        return size.get() s== 0;
     }
-    
-
 }

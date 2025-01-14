@@ -1,10 +1,11 @@
 public class Player extends Rond {
     private double orientation=0;
-    private float max_speed=(float)0.9,speed;
+    private float max_speed=(float)1.5,speed;
+    private int health = 100;
 
     //info projectile:
-    private float proj_speed = (float)0.4;
-    private int proj_life = 20;
+    private float proj_speed = (float)1;
+    private float proj_life = (float)3.5;//en seconde
     private float proj_radius = (float)0.2;
     private int proj_degat=15;
     
@@ -13,9 +14,27 @@ public class Player extends Rond {
 
 
     public Player(int health, float x, float y) {
-        super(health, (float)0.5, x, y);
+        super((float)0.5, x, y);
         name="Player";
+        this.health=health;
         invincibilite=true;
+    }
+
+    
+    public int getHealth() {
+        return health;
+    }
+    public void addHealth(int val) {
+        if(!invincibilite)health-=val;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    @Override
+    public boolean is_alive(){
+        return health>0;
     }
 
     public void rotate(int angle){
@@ -42,13 +61,13 @@ public class Player extends Rond {
 
     @Override
     public void simu_move(){
-        coord_simu.set(coord.x+(float)(Math.cos(orientation)*speed),coord.y+(float)(Math.sin(orientation)*speed));
+        coord_simu.set(coord.x+(float)(Math.cos(orientation)*speed*delta_time),coord.y+(float)(Math.sin(orientation)*speed*delta_time));
     }
 
     @Override
     public void move(){
-        coord.x+=(float)(Math.cos(orientation)*speed);
-        coord.y+=(float)(Math.sin(orientation)*speed);
+        coord.x+=(float)(Math.cos(orientation)*speed*delta_time);
+        coord.y+=(float)(Math.sin(orientation)*speed*delta_time);
         reduce_speed();
     }
 

@@ -11,6 +11,8 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     private long taille_map=0;
     private Projectile proj_tmp;
     private float radius_player=(float)0.5;
+    protected long  current_time, last_time;
+    protected float delta_time;//en seconde
 
     //variable de tmp allouer une seul fois
     private CoordFloat tmp_coord_Float=new CoordFloat();
@@ -95,8 +97,8 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     protected void update_projectile() {
         List<Projectile> a_remove= new ArrayList<>();
-
         for (Projectile projectile : ourprojectiles) {
+            projectile.setDeltaTime(delta_time);
             projectile.simu_move();
             if (!projectile.is_alive() || carte.ca_touche_ou_pas(projectile.get_simu_move(), ourplayer.get_proj_radius()) || other_player_is_touch_by_proj(projectile)) {
                
@@ -114,6 +116,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         if(ourplayer !=null){
             ourplayer.setHealth(vie_joueur.get());
             if(ourplayer.getHealth()>0){
+                ourplayer.setDeltaTime(delta_time);
                 ourplayer.simu_move();
                 if (!carte.ca_touche_ou_pas(ourplayer.get_simu_move(), ourplayer.getRadius()) && !player_touch() ) {
                     ourplayer.move();

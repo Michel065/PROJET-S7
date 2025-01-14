@@ -11,7 +11,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
     private PrintWriter client_input;
     private int rayon_display_en_case=5;
     private String message_recu="",message_transmit="";
-    private long dernier_msg_recu = System.nanoTime(), dernier_msg_recu_tmp, current_time, last_time,delta_time;
+    private long dernier_msg_recu = System.nanoTime(),dernier_msg_recu_tmp;
 
     ThreadHostToClient(Socket client,Carte carte,ListePartageThread Liste_Thread){
         super(carte, Liste_Thread);
@@ -47,7 +47,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         while(!is_finish()){
             try {
                 current_time=System.nanoTime();
-                delta_time=last_time-last_time;
+                delta_time=Math.abs((last_time-current_time)/(float)(1000*1000*1000));
                 last_time=current_time;
 
                 message_transmit="";
@@ -162,13 +162,13 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
             } else if(action.equals("put")) {
                 if (target.equals("ourplayer")) {
                     if (object.equals("avance")) {
-                        ourplayer.addToSpeed((float) 0.2);
+                        ourplayer.addToSpeed((float) 0.5);
                     } else if(object.equals("recule")) {
-                        ourplayer.addToSpeed((float) -0.2);
+                        ourplayer.addToSpeed((float) -0.5);
                     }else if(object.equals("rotation_gauche")) {
-                        ourplayer.rotate(-10);
+                        ourplayer.rotate(-5);
                     }else if(object.equals("rotation_droite")) {
-                        ourplayer.rotate(10);
+                        ourplayer.rotate(5);
                     }else if(object.equals("tirer")) {
                         tire();
                     }else if(object.equals("null")) {

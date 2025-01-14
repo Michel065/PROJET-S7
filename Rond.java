@@ -36,6 +36,10 @@ public abstract class Rond {
         return coord.x+":"+coord.y;
     }
 
+    public CoordFloat getCoord() {
+        return coord;
+    }
+
     public void setPosition(int x, int y) {
         coord.set((float)x,(float)y);
     }
@@ -90,9 +94,4 @@ public abstract class Rond {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
-
-    public boolean in_fentre(CoordFloat centre,int rayon) {
-        return Math.abs(centre.x-coord.x)<rayon && Math.abs(centre.y-coord.y)<rayon;
-    }
-
 }

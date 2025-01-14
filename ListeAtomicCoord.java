@@ -37,8 +37,19 @@ public class ListeAtomicCoord {
         return Float.intBitsToFloat((int) (atomicArray.get(index) >>> 32));
     }
 
+    public void get(int index,CoordFloat val){
+        val.set(atomicArray.get(index));
+    }
+
+
+
     public void ajoute(float x, float y) {
         int index=size.getAndIncrement();
         atomicArray.set(index, ((long) Float.floatToIntBits(y) << 32) | (Float.floatToIntBits(x) & 0xFFFFFFFFL)); 
+    }
+
+    public void ajoute(CoordFloat tmp) {
+        int index=size.getAndIncrement();
+        atomicArray.set(index, ((long) Float.floatToIntBits(tmp.y) << 32) | (Float.floatToIntBits(tmp.x) & 0xFFFFFFFFL)); 
     }
 }

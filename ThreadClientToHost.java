@@ -107,7 +107,7 @@ public class ThreadClientToHost  extends Thread {
             
             Random random = new Random();
             
-            send("put ourplayer color "+random.nextInt(4)+"\n\r");
+            send("put ourplayer equipe "+random.nextInt(4)+"\n\r");
             send("put ourplayer invincibilite false\n\r");
 
 
@@ -155,6 +155,7 @@ public class ThreadClientToHost  extends Thread {
         String[] words = requete.split(" ");
 
         if (words.length >= 2) {
+            System.out.println(requete);
             String action = words[0].toLowerCase();
             String target = words[1];
             String object="";

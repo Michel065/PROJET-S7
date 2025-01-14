@@ -12,6 +12,9 @@ all:
 	rm *.class
 	clear
 
+make:
+	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml *.java
+
 run:
 	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml -Dprism.order=sw $(MAIN)
 	clear

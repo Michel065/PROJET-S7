@@ -117,13 +117,13 @@ public class Carte {
         return xx*xx+yy*yy;
     }
 
-    public boolean ca_touche_ou_pas(float[] coord,float radius){
-        CoordInt tmp1=get_Coordonnees_De_Reel_Vers_Grille((int)coord[0],(int)coord[1]);
+    public boolean ca_touche_ou_pas(CoordFloat coord,float radius){
+        CoordInt tmp1=get_Coordonnees_De_Reel_Vers_Grille((int)coord.x,(int)coord.y);
         if(tmp1 == null) return true;
         CoordInt couple = carte.get(tmp1);
         for(int i =couple.x;i<couple.y;i++){
             Obstacle tmp=obstacles.get(i);
-            float distance_carre = calcul_distance_carre_obstacle(coord[0],coord[1],tmp.get());
+            float distance_carre = calcul_distance_carre_obstacle(coord.x,coord.y,tmp.get());
             if(distance_carre<(radius*2)){
                 return true;
             }

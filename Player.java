@@ -1,43 +1,30 @@
 public class Player extends Rond {
-<<<<<<< HEAD
     private double orientation = 0;
-    private float max_speed = (float)0.9, speed;
-
-    //info projectile:
-    private float proj_speed = (float)0.4; // 0.4 défaut
-    private int proj_life = 20; // 20 défaut
-=======
-    private double orientation=0;
-    private float max_speed=(float)1.5,speed;
+    private float max_speed=(float)1.5, speed;
     private int health = 100;
 
-    //info projectile:
+    // Infos projectile :
     private float proj_speed = (float)1;
-    private float proj_life = (float)3.5;//en seconde
->>>>>>> origin/Gabriel
+    private float proj_life = (float)3.5; // En secondes
     private float proj_radius = (float)0.2;
     private int proj_degat = 15;
     
-    private long cooldown = 500 * 1000 * 1000;//en ns
+    private long cooldown = 500 * 1000 * 1000; // En ns
     private long start = System.nanoTime(), end;
 
 
     public Player(int health, float x, float y) {
         super((float)0.5, x, y);
-        name="Player";
-        this.health=health;
-        invincibilite=true;
+        name = "Player";
+        this.health = health;
+        invincibilite = true;
     }
 
-<<<<<<< HEAD
-    public void rotate(int angle) {
-=======
-    
     public int getHealth() {
         return health;
     }
     public void addHealth(int val) {
-        if(!invincibilite)health-=val;
+        if(!invincibilite)health -= val;
     }
 
     public void setHealth(int health) {
@@ -45,12 +32,11 @@ public class Player extends Rond {
     }
 
     @Override
-    public boolean is_alive(){
+    public boolean is_alive() {
         return health>0;
     }
 
-    public void rotate(int angle){
->>>>>>> origin/Gabriel
+    public void rotate(int angle) {
         orientation+=(angle*0.01745329253);
     }
 
@@ -74,25 +60,14 @@ public class Player extends Rond {
     }
 
     @Override
-<<<<<<< HEAD
-    public void simu_move() {
-        coord_simu.set(coord.x + (float)(Math.cos(orientation) * speed), coord.y + (float)(Math.sin(orientation) * speed));
-    }
-
-    @Override
-    public void move() {
-        coord.x += (float)(Math.cos(orientation) * speed);
-        coord.y += (float)(Math.sin(orientation) * speed);
-=======
     public void simu_move(){
-        coord_simu.set(coord.x+(float)(Math.cos(orientation)*speed*delta_time),coord.y+(float)(Math.sin(orientation)*speed*delta_time));
+        coord_simu.set(coord.x + (float)(Math.cos(orientation) * speed * delta_time), coord.y + (float)(Math.sin(orientation) * speed * delta_time));
     }
 
     @Override
     public void move(){
-        coord.x+=(float)(Math.cos(orientation)*speed*delta_time);
-        coord.y+=(float)(Math.sin(orientation)*speed*delta_time);
->>>>>>> origin/Gabriel
+        coord.x += (float)(Math.cos(orientation) * speed * delta_time);
+        coord.y += (float)(Math.sin(orientation) * speed * delta_time);
         reduce_speed();
     }
 

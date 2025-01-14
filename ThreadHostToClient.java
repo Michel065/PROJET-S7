@@ -122,7 +122,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                             ListeAtomicCoord projs = tmp.get_projectile();
                             int size_proj = projs.get_size();
                             for(int id_proj=0; id_proj < size_proj; id_proj++) {
-                                projs.get(i, coord_tmp);
+                                projs.get(id_proj, coord_tmp);
                                 if(objet_dans_fentre_client(coord_tmp)) {
                                     suite += coord_tmp.x + ":" + coord_tmp.y + ":" + tmp.getEquipe() + ",";
                                     x++;

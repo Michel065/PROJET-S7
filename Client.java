@@ -166,6 +166,7 @@ public class Client extends Application {
         // Dessiner les LightRond
         for (LightRond rond : projectiles) {
             synchronized (rond) {
+                //System.out.println(rond.getX());
                 //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
                 Color projectileColor = colors[rond.getCouleur()];
                 gc.setFill(projectileColor);

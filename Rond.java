@@ -1,19 +1,19 @@
 public abstract class Rond {
-    protected int equipe=-1;
+    protected int equipe = -1;
     protected int health; 
     protected CoordFloat coord;
     protected CoordFloat coord_offset;
     protected float speed;
     protected float radius;
-    protected String name="Rond";
-    protected CoordFloat coord_simu=new CoordFloat();
-    protected boolean invincibilite=false;
+    protected String name = "Rond";
+    protected CoordFloat coord_simu = new CoordFloat();
+    protected boolean invincibilite = false;
 
 
-    public Rond(int health,float radius, float x, float y) {
+    public Rond(int health, float radius, float x, float y) {
         this.health = health;
-        this.coord=new CoordFloat(x-radius,y-radius);
-        this.coord_offset=new CoordFloat();
+        this.coord = new CoordFloat(x - radius, y - radius);
+        this.coord_offset = new CoordFloat();
         this.radius = radius;
         
     }
@@ -23,7 +23,7 @@ public abstract class Rond {
     }
 
     public void addHealth(int val) {
-        if(!invincibilite)health-=val;
+        if(!invincibilite) health -= val;
     }
 
     public void setHealth(int health) {
@@ -31,12 +31,12 @@ public abstract class Rond {
     }
 
     public CoordFloat get_coord() {
-        coord_offset.set(coord.x+radius, coord.y+radius);
+        coord_offset.set(coord.x + radius, coord.y + radius);
         return coord_offset;
     }
 
     public String getCoordString() {
-        return coord.x+":"+coord.y;
+        return coord.x + ":" + coord.y;
     }
 
     public CoordFloat getCoord() {
@@ -44,12 +44,12 @@ public abstract class Rond {
     }
 
     public void setPosition(int x, int y) {
-        coord.set((float)x,(float)y);
+        coord.set((float)x, (float)y);
     }
 
     public void setPosition(float var1, float var2) {
-        coord.set(var1,var2);
-     }
+        coord.set(var1, var2);
+    }
 
     @Override
     public String toString() {
@@ -64,7 +64,6 @@ public abstract class Rond {
         return coord_simu;
     }
 
-
     public int getEquipe() {
         return equipe;
     }
@@ -73,21 +72,20 @@ public abstract class Rond {
         return radius;
     }
 
-    public boolean is_touch_by(CoordFloat coord_mechant,float radius_mechant){
-
-        float xx=Math.abs(coord_mechant.x-coord.x);
-        float yy=Math.abs(coord_mechant.y-coord.y);
-        return xx*xx+yy*yy<((radius+radius_mechant)*(radius+radius_mechant));
+    public boolean is_touch_by(CoordFloat coord_mechant, float radius_mechant) {
+        float xx = Math.abs(coord_mechant.x - coord.x);
+        float yy = Math.abs(coord_mechant.y - coord.y);
+        return xx * xx + yy * yy < ((radius + radius_mechant) * (radius + radius_mechant));
     }
 
-    public boolean is_touch_in_simu(CoordFloat coord_mechant,float radius_mechant){
-        float xx=Math.abs(coord_mechant.x-coord_simu.x);
-        float yy=Math.abs(coord_mechant.y-coord_simu.y);
-        return xx*xx+yy*yy<((radius+radius_mechant)*(radius+radius_mechant));
+    public boolean is_touch_in_simu(CoordFloat coord_mechant, float radius_mechant) {
+        float xx = Math.abs(coord_mechant.x - coord_simu.x);
+        float yy = Math.abs(coord_mechant.y - coord_simu.y);
+        return xx * xx + yy * yy < ((radius + radius_mechant) * (radius + radius_mechant));
     }
 
-    public boolean is_alive(){
-        return health>0;
+    public boolean is_alive() {
+        return health > 0;
     }
     
     public float getSpeed() {

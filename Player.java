@@ -1,7 +1,7 @@
 public class Player extends Rond {
     private double orientation = 0;
     private float max_speed=(float)1.5, speed;
-    private int health = 100,max_health=100;
+    private int health = 100,max_health = 100;
 
     // Infos projectile :
     private float proj_speed = (float)1;
@@ -25,7 +25,7 @@ public class Player extends Rond {
     }
 
     public int get_pourcentage_vie() {
-        return (int)Math.ceil((float)health / (float)(max_health*100));
+        return (int)Math.ceil((float)health / (float)(max_health * 100));
     }
 
     public void addHealth(int val) {

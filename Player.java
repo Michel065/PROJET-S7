@@ -37,7 +37,7 @@ public class Player extends Rond {
     }
 
     public void rotate(int angle) {
-        orientation+=(angle*0.01745329253);
+        orientation+=(angle * 0.01745329253);
     }
 
     public void addToSpeed(float val) {

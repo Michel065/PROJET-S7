@@ -132,7 +132,8 @@ public class Carte {
         float t;
         float px, py;
 
-        if(radius == 0.2) {
+        int test = 0;
+        if(radius == 0.2 && test == 1) {
             cx += radius;
             cy += radius;
         }

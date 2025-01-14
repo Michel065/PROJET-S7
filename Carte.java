@@ -111,12 +111,6 @@ public class Carte {
         return false;
     }
 
-    private float calcul_distance_carre_obstacle(float x, float y, CoordInt obstale){
-        float xx=Math.abs(x-(obstale.x));
-        float yy=Math.abs(y-(obstale.y));
-        return xx*xx+yy*yy;
-    }
-
     private float distance_euclidienne_carre(float x1, float y1, float x2, float y2) {
         return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     }
@@ -126,7 +120,6 @@ public class Carte {
         if (tmp1 == null) return true;
         CoordInt couple = carte.get(tmp1);
 
-        CoordFloat s0, s1, s2, s3;
         float[] distances = new float[4];
         CoordFloat[] sommets = new CoordFloat[4];
 

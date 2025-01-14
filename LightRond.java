@@ -8,19 +8,19 @@ public class LightRond {
 
     public LightRond(float x,float y,float radius, float health,int coul) {
         this.health = health;
-        this.x = x;
-        this.y = y;
+        this.x = x-radius;
+        this.y = y-radius;
         this.radius = radius;
         this.coul=coul;
         
     }
 
     public float getX(){
-        return x;
+        return x+radius;
     }
 
     public float getY(){
-        return y;
+        return y+radius;
     }
 
     public float getHealth(){

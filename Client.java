@@ -24,7 +24,7 @@ public class Client extends Application {
     private Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
 
     public Client() {
-        this.serverIp = "127.0.0.1";
+        this.serverIp = "172.20.166.69";
         this.port = 5001;
         this.players = new ListShare<>();
         this.projectiles = new ListShare<>();

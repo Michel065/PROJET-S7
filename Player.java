@@ -64,7 +64,7 @@ public class Player extends Rond {
         end = System.nanoTime();
         if(end-start >=cooldown){
             start=end;
-            return new Projectile(proj_speed,proj_life,proj_radius,proj_degat,coord.x,coord.y, (float) Math.cos(orientation), (float) Math.sin(orientation)); 
+            return new Projectile(proj_speed,proj_life,proj_radius,proj_degat,coord.x+radius,coord.y+radius, (float) Math.cos(orientation), (float) Math.sin(orientation)); 
         }
         return null;
     }

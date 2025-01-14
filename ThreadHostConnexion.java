@@ -31,7 +31,6 @@ public class ThreadHostConnexion extends Thread  {
             }
             
             maSocketEcoute.setSoTimeout(2000); 
-
             System.out.println("Serveur pret et ecoute sur le port "+port);
             int premiere_connx=0;
             while(!(Host.is_close|| (Liste_Thread.vide() && premiere_connx>0) )) {

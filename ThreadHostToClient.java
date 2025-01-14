@@ -46,7 +46,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
         while(!is_finish()) {
             try {
                 current_time = System.nanoTime();
-                delta_time = Math.abs((last_time - current_time) / (float)(1000 * 1000 * 1000));
+                delta_time = Math.abs((last_time - current_time) / (long)(1000 * 1000 * 1000));
                 last_time = current_time;
 
                 message_transmit = "";

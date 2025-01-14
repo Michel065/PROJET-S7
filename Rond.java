@@ -1,54 +1,23 @@
 public abstract class Rond {
-<<<<<<< HEAD
-    protected int equipe = -1;
-    protected int health; 
-=======
-    protected int equipe=-1;
->>>>>>> origin/Gabriel
+    protected int equipe =- 1;
     protected CoordFloat coord;
     protected CoordFloat coord_offset;
     protected float speed;
     protected float radius;
-<<<<<<< HEAD
     protected String name = "Rond";
     protected CoordFloat coord_simu = new CoordFloat();
     protected boolean invincibilite = false;
-
-
-    public Rond(int health, float radius, float x, float y) {
-        this.health = health;
-        this.coord = new CoordFloat(x - radius, y - radius);
-        this.coord_offset = new CoordFloat();
-        this.radius = radius;
-        
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void addHealth(int val) {
-        if(!invincibilite) health -= val;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-=======
-    protected String name="Rond";
-    protected CoordFloat coord_simu=new CoordFloat();
-    protected boolean invincibilite=false;
-    protected float delta_time; // en s
+    protected float delta_time; // En s
 
 
     public Rond(float radius, float x, float y) {
-        this.coord=new CoordFloat(x-radius,y-radius);
+        this.coord=new CoordFloat(x - radius, y - radius);
         this.coord_offset=new CoordFloat();
         this.radius = radius;   
     }
 
     public void setDeltaTime(float delta) {
-        delta_time=delta;
->>>>>>> origin/Gabriel
+        delta_time = delta;
     }
 
     public CoordFloat get_coord() {
@@ -105,13 +74,6 @@ public abstract class Rond {
         float yy = Math.abs(coord_mechant.y - coord_simu.y);
         return xx * xx + yy * yy < ((radius + radius_mechant) * (radius + radius_mechant));
     }
-<<<<<<< HEAD
-
-    public boolean is_alive() {
-        return health > 0;
-    }
-=======
->>>>>>> origin/Gabriel
     
     public float getSpeed() {
         return speed;

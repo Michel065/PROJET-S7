@@ -24,7 +24,7 @@ public class Player extends Rond {
     }
 
     public int get_pourcentage_vie() {
-        return (int)Math.ceil(100*((float)health / (float)max_health));
+        return (int)Math.ceil(100 * ((float)health / (float)max_health));
     }
 
     public void addHealth(int val) {

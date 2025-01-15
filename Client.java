@@ -236,8 +236,6 @@ public class Client extends Application {
         }
     
     public static void main(String[] args) {
-        //Host host = new Host(20, 0.05, 5); // Initialisation de la logique
-        //host.start(5001);
         Application.launch(Client.class, args);
     }
 }

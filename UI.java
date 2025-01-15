@@ -5,10 +5,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
 import java.net.*;
 import java.util.*;
-
 import javafx.application.Platform;
 
 public class UI extends Application {

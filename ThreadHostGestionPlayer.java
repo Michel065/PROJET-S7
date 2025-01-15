@@ -102,7 +102,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected void update_projectiles() {
         List<Projectile> a_remove= new ArrayList<>();
         float rayon_proj;
-        if(ourplayer != null)rayon_proj=ourplayer.get_proj_radius();//sinon on risque des erreurs
+        if(ourplayer != null)rayon_proj=ourplayer.get_proj_radius(); // Sinon on risque des erreurs
         else rayon_proj=(float)0.2;
 
         for (Projectile projectile : ourprojectiles) {

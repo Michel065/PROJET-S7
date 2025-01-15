@@ -123,6 +123,7 @@ public class ThreadClientToHost extends Thread {
                 send(message_transmit);
                 while (serveur_output.ready()) { // Pour éviter des accumulations
                     message_recu = serveur_output.readLine();
+                    System.out.println(message_recu);
                     message_transmit += Analyse(message_recu);
                 }
                 send(message_transmit);

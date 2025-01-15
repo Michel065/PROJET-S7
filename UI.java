@@ -11,10 +11,6 @@ import javafx.scene.layout.*;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import java.util.Optional;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextInputDialog;
 
 import java.net.*;
 import java.util.*;
@@ -24,6 +20,7 @@ import javafx.application.Platform;
 public class UI extends Application {
 
     private Stage stage;
+    private String[] args = new String[0];
 
     @Override
     public void start(Stage primaryStage) {
@@ -35,6 +32,7 @@ public class UI extends Application {
         showRoleSelection();
         System.out.println("code d'erreur : 8");
     }
+
 
     public static void main(String[] args) {
         // Directement appeler launch() sans Platform.runLater()
@@ -122,22 +120,23 @@ public class UI extends Application {
 
     private void startHost(int port) {
         try {
+            System.out.println("coucou");
             // Démarrer l'hôte sur le port
             Host server = new Host(10, 20, 0.05, 5); // Ajoutez les bons paramètres pour correspondre au constructeur
 
             server.start(port);  // Méthode pour commencer à écouter sur le port
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);
-            
+            /*
             System.out.println("param : nbr_max_joueur, largeur_carte, % de remplissage, nbr d'obstacle moyen par case.");
             Host host;
-
+            
             System.out.println("manuel OFF ... \nOK");
             host = new Host(10, 20, 0.05, 5);
 
             // Lancer l'hôte sur le port donné
             host.start(port);
-
+            */
         } catch (Exception e) {
             // Si une erreur survient (par exemple, port déjà utilisé)
             showAlert("Erreur", "Impossible de démarrer l'hôte sur le port " + port + ". Le port est-il déjà utilisé ?");
@@ -147,9 +146,10 @@ public class UI extends Application {
     private void startClient(String serverAddress, int serverPort) {
         Platform.runLater(() -> {
             try {
-                // Créez une instance de votre client sans relancer Application.launch()
-                Client client = new Client(serverAddress, serverPort);
-                client.connect(serverAddress, serverPort); // Méthode spécifique à votre classe Client
+                // Créez une nouvelle instance de Client manuellement
+                Client clientApp = new Client(serverAddress, serverPort);
+                Stage clientStage = new Stage();
+                clientApp.start(clientStage);
             } catch (Exception e) {
                 e.printStackTrace();
                 showError("Erreur lors de la connexion au serveur : " + e.getMessage());

@@ -7,17 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-
-import java.util.Optional;
-
-import java.net.*;
-import java.io.*;
-
 public class Client extends Application {
     private final int sizeWindow = 750;
     private GraphicsContext gc;
@@ -32,10 +21,14 @@ public class Client extends Application {
     private ListShare<LightRond> projectiles;
     private Float[] centre = new Float[2];
 
-    private String serverAddress;
-    private int serverPort;
-
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
+
+    public Client() {
+        this.serverIp = "127.0.0.1";
+        this.port = 5001;
+        this.players = new ListShare<>();
+        this.projectiles = new ListShare<>();
+    }
 
     public Client(String serverAddress, int serverPort) {
         this.serverIp = serverAddress;
@@ -44,34 +37,10 @@ public class Client extends Application {
         this.projectiles = new ListShare<>();
     }
 
-    public void connect(String serverAddress, int serverPort) {
-        try {
-            Socket socket = new Socket(serverAddress, serverPort);
-            System.out.println("Connexion réussie au serveur " + serverAddress + " sur le port " + serverPort);
-            // Continuez avec la logique de connexion...
-        } catch (ConnectException e) {
-            System.err.println("Connexion refusée : le serveur n'est pas disponible.");
-            showError("Impossible de se connecter au serveur. Vérifiez que le serveur est en cours d'exécution.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showError("Erreur réseau : " + e.getMessage());
-        }
-    }
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erreur");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    /*
     public void connect(Stage primaryStage) {
         toServer = new ThreadClientToHost(primaryStage, serverIp, port, players, projectiles);
         toServer.start();
     }
-    */
 
     private void recupCarteFromThread() {
         while (carte == null) {
@@ -85,106 +54,63 @@ public class Client extends Application {
         }
     }
 
-    /*
-    private void startClient(String ip, int port) {
-        System.out.println("Connexion au serveur " + ip + " sur le port : " + port);
-        // Appel à la méthode main de UI (et non pas à Client.main)
-        UI.main(new String[]{});
-    }
-    */
-
+    // Méthode pour démarrer la logique principale
     public void startClient() {
-        try {
-            // Attendez que la carte soit correctement récupérée
-            while (carte == null) {
-                System.out.println("Attente de la réception de la carte...");
-                Thread.sleep(1000); // Attendez un peu avant de vérifier à nouveau
-            }
-            
-            // Démarrer l'interface graphique après que la carte a été reçue
-            UI.main(new String[]{});
-        } catch (Exception e) {
-            System.err.println("Erreur lors du démarrage du client : " + e);
-            e.printStackTrace();
-        }
-    }
-
-    private void showHostSetup(Stage primaryStage) {
-        // Code pour la configuration de l'hôte
-        TextInputDialog portDialog = new TextInputDialog("5001");
-        portDialog.setTitle("Configuration de l'Hôte");
-        portDialog.setHeaderText("Configurer l'Hôte");
-        portDialog.setContentText("Entrez le numéro de port :");
-
-        Optional<String> portResult = portDialog.showAndWait();
-        portResult.ifPresent(port -> {
-            try {
-                int portNumber = Integer.parseInt(port);
-                System.out.println("Démarrage de l'hôte sur le port " + portNumber);
-                // Insérez la logique pour démarrer l'hôte ici
-            } catch (NumberFormatException e) {
-                showAlert("Erreur", "Le port doit être un nombre valide !");
-            }
-        });
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        recupCarteFromThread();
     }
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Sélection du mode");
+        // Création de l'interface graphique
+        Pane root = new Pane();
 
-        VBox root = new VBox(10);
-        root.setPadding(new Insets(20));
-        root.setAlignment(Pos.CENTER);
+        // Initialisation du Canvas et de GraphicsContext
+        Canvas canvas = new Canvas(sizeWindow, sizeWindow);
+        gc = canvas.getGraphicsContext2D();
+        gc.translate(sizeWindow / 2, sizeWindow / 2);
+        gc.rotate(-90);
+        root.getChildren().add(canvas);
 
-        Label label = new Label("Choisissez un mode :");
-        Button hostButton = new Button("Host");
-        Button clientButton = new Button("Client");
+        primaryStage.setTitle("Fenêtre Client");
+        primaryStage.setScene(new Scene(root, sizeWindow, sizeWindow));
+        primaryStage.show();
 
-        // hostButton.setOnAction(e -> showHostSetup());
+        connect(primaryStage);
 
-        hostButton.setOnAction(e -> showHostSetup(primaryStage));
-        clientButton.setOnAction(e -> {
-            // Demander les informations IP et port
-            TextInputDialog ipDialog = new TextInputDialog("127.0.0.1");
-            ipDialog.setTitle("Adresse IP");
-            ipDialog.setHeaderText("Entrez l'adresse IP de l'host :");
-            ipDialog.setContentText("IP :");
-
-            Optional<String> ipResult = ipDialog.showAndWait();
-            ipResult.ifPresent(ip -> {
-                TextInputDialog portDialog = new TextInputDialog("5001");
-                portDialog.setTitle("Port");
-                portDialog.setHeaderText("Entrez le port de l'host :");
-                portDialog.setContentText("Port :");
-
-                Optional<String> portResult = portDialog.showAndWait();
-                portResult.ifPresent(port -> {
-                    try {
-                        int portNumber = Integer.parseInt(port);
-                        startClient();
-                    } catch (NumberFormatException ex) {
-                        showAlert("Erreur", "Le port doit être un nombre valide !");
-                    }
-                });
-            });
+        // Gestion de la fermeture
+        primaryStage.setOnCloseRequest(event -> {
+            System.out.println("La fermeture ...");
+            is_close = true;
         });
 
-        root.getChildren().addAll(label, hostButton, clientButton);
-        System.out.println("code d'erreur : 13");
-        Scene scene = new Scene(root, 300, 200);
-        System.out.println("code d'erreur : 12");
-        primaryStage.setScene(scene);
-        System.out.println("code d'erreur : 11");
-        primaryStage.show();
-        System.out.println("code d'erreur : 10");
+        startClient();
+        startAnimation(primaryStage);
+    }
+
+    private void startAnimation(Stage primaryStage) {
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                int val=sizeWindow/2;
+                gc.clearRect(-val,-val, sizeWindow, sizeWindow); // Effacer l'écran
+
+                toServer.get_case_centre(centre);
+
+                gc.save();
+                float orientation = toServer.get_orientation();
+                gc.rotate(-Math.toDegrees(orientation));
+                drawObstacles();
+                drawProjectiles();
+                drawPlayers();
+
+                gc.restore();
+
+                if (Client.is_close) {
+                    stop(); 
+                    primaryStage.close(); 
+                }
+            }
+        }.start();
     }
 
     private void drawObstacles() {
@@ -223,6 +149,9 @@ public class Client extends Application {
             }
         }
     }
+    
+    
+    
 
     private void drawProjectiles() {
         if (carte == null || gc == null) {
@@ -298,11 +227,10 @@ public class Client extends Application {
             }
         }
     }
-
-    public static void main(String[] args) {
-        System.out.println("code d'erreur : 2");
-        UI.main(args); // Appel à la méthode main de UI
-        // launch(args);
-        System.out.println("code d'erreur : 3");
-    }
+    
+    /*public static void main(String[] args) {
+        //Host host = new Host(20, 0.05, 5); // Initialisation de la logique
+        //host.start(5001);
+        Application.launch(Client.class, args);
+    }*/
 }

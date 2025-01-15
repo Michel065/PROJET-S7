@@ -37,7 +37,7 @@ public class Player extends Rond {
 
     @Override
     public boolean is_alive() {
-        return health>0;
+        return health > 0;
     }
 
     public void rotate(int angle) {

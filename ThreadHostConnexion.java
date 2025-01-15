@@ -27,9 +27,9 @@ public class ThreadHostConnexion extends Thread  {
                 System.out.println("Adresse IP disponible : " + addr.getHostAddress());
             }
             maSocketEcoute.setSoTimeout(2000); 
-            System.out.println("Serveur pret et ecoute sur le port " + port);
+            System.out.println("Serveur prêt et écoute sur le port " + port);
             while(!(Host.is_close) ) {
-                System.out.println("nombre de joueur connecte :" + Liste_Thread.get_size() + "!");
+                System.out.println("Nombre de joueurs connectés :" + Liste_Thread.get_size());
                 try{
                     Socket clientSocket = null;
                     clientSocket = maSocketEcoute.accept();

@@ -16,7 +16,7 @@ public class ThreadClientToHost extends Thread {
     private Stage primaryStage;
     private int port = 5001;
     private int rayon_display_en_case = 5;
-    private String IP = "", message_recu = "",message_transmit = "";
+    private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
 

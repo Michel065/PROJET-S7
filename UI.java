@@ -99,9 +99,6 @@ public class UI extends Application {
 
                 // Lancer l'hôte dans un thread séparé
                 new Thread(() -> startHost(portNumber)).start();
-
-                // Afficher un message à l'utilisateur indiquant que l'hôte attend une connexion
-                showAlert("Hôte démarré", "L'hôte écoute sur le port " + portNumber + ". Attendez qu'un joueur se connecte.");
             } catch (NumberFormatException e) {
                 showAlert("Erreur", "Le port doit être un nombre valide !");
             }
@@ -110,30 +107,31 @@ public class UI extends Application {
 
     private void startHost(int port) {
         try {
-            // Démarrer l'hôte sur le port
-            Host server = new Host(10, 20, 0.05, 5); // Ajoutez les bons paramètres pour correspondre au constructeur
-
-            server.start(port);  // Méthode pour commencer à écouter sur le port
+            Host server = new Host(10, 20, 0.05, 5);
+            server.start(port);
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);
+
+            // Affiche un message à l'utilisateur et ferme la fenêtre principale
+            Platform.runLater(() -> showAlert("Hôte démarré", "L'hôte écoute sur le port " + port + "."));
         } catch (Exception e) {
-            // Si une erreur survient (par exemple, port déjà utilisé)
-            showAlert("Erreur", "Impossible de démarrer l'hôte sur le port " + port + ". Le port est-il déjà utilisé ?");
+            Platform.runLater(() -> showAlert("Erreur", "Impossible de démarrer l'hôte sur le port " + port + ". Le port est-il déjà utilisé ?"));
         }
     }
 
     private void startClient(String serverAddress, int serverPort) {
-        Platform.runLater(() -> {
-            try {
-                // Créez une nouvelle instance de Client manuellement
-                Client clientApp = new Client(serverAddress, serverPort);
-                Stage clientStage = new Stage();
-                clientApp.start(clientStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-                showError("Erreur lors de la connexion au serveur : " + e.getMessage());
-            }
-        });
+        try {
+            // Créez une nouvelle instance de Client manuellement
+            Client clientApp = new Client(serverAddress, serverPort);
+            Stage clientStage = new Stage();
+            clientApp.start(clientStage);
+
+            // Ferme la fenêtre actuelle une fois que la connexion est réussie
+            Platform.runLater(() -> stage.close());
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Erreur lors de la connexion au serveur : " + e.getMessage());
+        }
     }
 
     private String getLocalIPAddress() {
@@ -171,10 +169,18 @@ public class UI extends Application {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+
+            // Ajouter un événement de fermeture
+            alert.setOnHidden(e -> {
+                stage.close(); // Ferme la fenêtre principale
+            });
+
+            alert.showAndWait();
+        });
     }
 }

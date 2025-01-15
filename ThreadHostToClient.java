@@ -170,7 +170,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else if(object.equals("equipe")) {
                         equipe = Integer.parseInt(data);
-                        System.out.println("equipe choisi!");
+                        System.out.println("Équipe choisie");
                         if(ourplayer.setEquipe(equipe)) {
                             reponse = "ourplayer enregistre";
                         }

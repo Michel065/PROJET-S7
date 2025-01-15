@@ -74,8 +74,8 @@ public class Carte {
     }
 
     public boolean ajoute_obstacle(int x, int y) {
-        CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
-        if(!obstacle_existe_deja(x,y,couple) && couple.y-couple.x<nbr_max_obstacle_par_case) {
+        CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x, y));
+        if(!obstacle_existe_deja(x, y, couple) && couple.y-couple.x < nbr_max_obstacle_par_case) {
             obstacles.set(couple.y, new Obstacle(x, y));
             couple.y++;
             nbr_actuel_obstacle++;

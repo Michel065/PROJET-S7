@@ -112,10 +112,31 @@ public class Carte {
     }
 
     public boolean test_collision_rond_obstacle(CoordFloat coord, float radius) {
-        CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int) coord.x, (int) coord.y);
-        if (tmp1 == null) return true;
-        CoordInt couple = carte.get(tmp1);
+        CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y);
+        CoordInt tmp2 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x +1, (int)coord.y+1);
+        CoordInt tmp3 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x -1, (int)coord.y+1);
+        CoordInt tmp4 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x -1, (int)coord.y-1);
+        CoordInt tmp5 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x +1, (int)coord.y-1);
 
+        /*
+        System.out.println("1) X : " + tmp1.x + " , Y : " + tmp1.y);
+        System.out.println("2) X : " + tmp2.x + " , Y : " + tmp2.y);
+        System.out.println("3) X : " + tmp3.x + " , Y : " + tmp3.y);
+        System.out.println("4) X : " + tmp4.x + " , Y : " + tmp4.y);
+        System.out.println("5) X : " + tmp5.x + " , Y : " + tmp5.y);
+        */
+
+        if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null) return true;
+
+        if(test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp1))) return true;
+        else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp2))) return true;
+        else if(!tmp3.eq(tmp1) && !tmp3.eq(tmp2) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp3))) return true;
+        else if(!tmp4.eq(tmp1) && !tmp4.eq(tmp2) && !tmp4.eq(tmp3) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp4))) return true;
+        else if(!tmp5.eq(tmp1) && !tmp5.eq(tmp2) && !tmp5.eq(tmp3) && !tmp5.eq(tmp4) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp5))) return true;
+        else return false;
+    }
+
+    public boolean test_collision_rond_obstacle_sur_chunk(CoordFloat coord, float radius, CoordInt couple) {
         float[] distances = new float[4];
         CoordFloat[] sommets = new CoordFloat[4];
 
@@ -200,6 +221,7 @@ public class Carte {
         }
 
         return false;
+
     }
 
     public boolean here_obstacle(float x, float y) {

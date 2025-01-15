@@ -26,6 +26,7 @@ public class Host {
         recepteur.start();
     }
 
+    /*
     public static void main(String[] args) {
         System.out.println("param : nbr_max_joueur , largeur_carte , % de remplissage , nbr d'obstacle moyen par case.");
         Host host;
@@ -41,5 +42,6 @@ public class Host {
         }
         System.out.println("Host start ...\nOK");
         host.start(port);
+    */
     }
 }

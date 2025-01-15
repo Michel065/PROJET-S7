@@ -92,7 +92,7 @@ public class Client extends Application {
             @Override
             public void handle(long now) {
                 int val=sizeWindow/2;
-                gc.clearRect(-val,-val, sizeWindow, sizeWindow); // Effacer l'écran
+                gc.clearRect(-val, -val, sizeWindow, sizeWindow); // Effacer l'écran
 
                 toServer.get_case_centre(centre);
 
@@ -149,9 +149,6 @@ public class Client extends Application {
             }
         }
     }
-    
-    
-    
 
     private void drawProjectiles() {
         if (carte == null || gc == null) {
@@ -227,10 +224,4 @@ public class Client extends Application {
             }
         }
     }
-    
-    /*public static void main(String[] args) {
-        //Host host = new Host(20, 0.05, 5); // Initialisation de la logique
-        //host.start(5001);
-        Application.launch(Client.class, args);
-    }*/
 }

@@ -24,21 +24,12 @@ public class UI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        System.out.println("code d'erreur : 6");
         this.stage = primaryStage; // Initialisation du stage
-        // Exemple d'interface simple
-        System.out.println("code d'erreur : 7");
-        
         showRoleSelection();
-        System.out.println("code d'erreur : 8");
     }
 
-
     public static void main(String[] args) {
-        // Directement appeler launch() sans Platform.runLater()
-        System.out.println("code d'erreur : 4");
         launch(args);
-        System.out.println("code d'erreur : 5");
     }
 
     private void showRoleSelection() {
@@ -96,7 +87,7 @@ public class UI extends Application {
         TextInputDialog portDialog = new TextInputDialog("5001");
         portDialog.setTitle("Configuration de l'Hôte");
         portDialog.setHeaderText("Configurer l'Hôte");
-        portDialog.setContentText("Entrez le numéro de port :");
+        portDialog.setContentText("Entrez le numéro de port :"); // ligne à supprimer?????
 
         // Ajouter l'adresse IP locale dans le message
         portDialog.setContentText("Entrez le numéro de port : (Votre adresse IP est : " + localIp + ")");
@@ -120,23 +111,12 @@ public class UI extends Application {
 
     private void startHost(int port) {
         try {
-            System.out.println("coucou");
             // Démarrer l'hôte sur le port
             Host server = new Host(10, 20, 0.05, 5); // Ajoutez les bons paramètres pour correspondre au constructeur
 
             server.start(port);  // Méthode pour commencer à écouter sur le port
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);
-            /*
-            System.out.println("param : nbr_max_joueur, largeur_carte, % de remplissage, nbr d'obstacle moyen par case.");
-            Host host;
-            
-            System.out.println("manuel OFF ... \nOK");
-            host = new Host(10, 20, 0.05, 5);
-
-            // Lancer l'hôte sur le port donné
-            host.start(port);
-            */
         } catch (Exception e) {
             // Si une erreur survient (par exemple, port déjà utilisé)
             showAlert("Erreur", "Impossible de démarrer l'hôte sur le port " + port + ". Le port est-il déjà utilisé ?");
@@ -197,11 +177,5 @@ public class UI extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }   
-
-    /*
-    public static void main(String[] args) {
-        launch(args);
     }
-    */
 }

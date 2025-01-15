@@ -2,7 +2,7 @@
 JAVAC = javac
 JAVA = java
 JAVAFX_PATH = /usr/share/openjfx/lib
-MAIN = UI
+MAIN = Host
 BIS = Client
 
 # Cibles

@@ -60,8 +60,7 @@ public class Carte {
                 y = random.nextInt((int)taille_reelle);
             }
         }
-
-        System.out.println("Obstacles créés : " + obstacles.size());        
+        
     }
 
     private boolean obstacle_existe_deja(int x, int y, CoordInt couple) {

@@ -1,12 +1,11 @@
-
 public class LightRond {
     private int coul;
-    private float health; 
+    private float health_en_pourcentage; 
     private float x, y;
     private float radius;
 
-    public LightRond(float x, float y, float radius, float health, int coul) {
-        this.health = health;
+    public LightRond(float x, float y, float radius, float health_en_pourcentage, int coul) {
+        this.health_en_pourcentage=health_en_pourcentage/(float)100;
         this.x = x - radius;
         this.y = y - radius;
         this.radius = radius;
@@ -21,15 +20,15 @@ public class LightRond {
         return y + radius;
     }
 
-    public float getHealth() {
-        return health;
-    }
-
     public float getRadius() {
         return radius;
     }
 
     public int getCouleur() {
         return coul;
+    }
+    
+    public float get_vie_pourcentage() {
+        return health_en_pourcentage;
     }
 }

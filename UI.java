@@ -87,7 +87,6 @@ public class UI extends Application {
         TextInputDialog portDialog = new TextInputDialog("5001");
         portDialog.setTitle("Configuration de l'Hôte");
         portDialog.setHeaderText("Configurer l'Hôte");
-        portDialog.setContentText("Entrez le numéro de port :"); // ligne à supprimer?????
 
         // Ajouter l'adresse IP locale dans le message
         portDialog.setContentText("Entrez le numéro de port : (Votre adresse IP est : " + localIp + ")");

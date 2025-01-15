@@ -120,7 +120,7 @@ public class UI extends Application {
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
-        Label messageLabel = new Label("L'hôte écoute sur le port : " + port + "\nVotre adresse IP est : " + getLocalIPAddress());
+        Label messageLabel = new Label("Votre adresse IP est : " + getLocalIPAddress() + "\nL'hôte écoute sur le port : " + port);
         Button okButton = new Button("OK");
 
         okButton.setOnAction(e -> stage.close()); // Ferme la fenêtre principale

@@ -5,8 +5,8 @@ public class LightRond {
     private float radius;
 
     public LightRond(float x, float y, float radius, float health_en_pourcentage, int coul) {
-        this.health_en_pourcentage=health_en_pourcentage/(float)100;
-        coord=new CoordFloat(x,y);
+        this.health_en_pourcentage = health_en_pourcentage / (float)100;
+        coord = new CoordFloat(x,y);
         this.radius = radius;
         this.coul=coul;
     }

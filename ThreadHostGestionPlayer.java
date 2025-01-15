@@ -108,7 +108,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         for (Projectile projectile : ourprojectiles) {
             projectile.setDeltaTime(delta_time);
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(),rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
+            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
                 a_remove.add(projectile);
             } else {
                 projectile.move();

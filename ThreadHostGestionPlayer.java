@@ -101,12 +101,16 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         return false;
     }
 
-    protected void update_projectile() {
+    protected void update_projectiles() {
         List<Projectile> a_remove= new ArrayList<>();
+        float rayon_proj;
+        if(ourplayer != null)rayon_proj=ourplayer.get_proj_radius();//sinon on risque des erreurs
+        else rayon_proj=(float)0.2;
+
         for (Projectile projectile : ourprojectiles) {
             projectile.setDeltaTime(delta_time);
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), ourplayer.get_proj_radius()) || other_player_is_touch_by_proj(projectile)) { 
+            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(),rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
                 a_remove.add(projectile);
             } else {
                 projectile.move();

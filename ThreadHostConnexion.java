@@ -28,13 +28,11 @@ public class ThreadHostConnexion extends Thread  {
             }
             maSocketEcoute.setSoTimeout(2000); 
             System.out.println("Serveur pret et ecoute sur le port " + port);
-            int premiere_connx = 0;
-            while(!(Host.is_close|| (Liste_Thread.vide() && premiere_connx>0) )) {
+            while(!(Host.is_close) ) {
                 System.out.println("nombre de joueur connecte :" + Liste_Thread.get_size() + "!");
                 try{
                     Socket clientSocket = null;
                     clientSocket = maSocketEcoute.accept();
-                    if(clientSocket != null) premiere_connx++;
                     System.out.println("Connexion de : " + clientSocket.getInetAddress() + " : port " + clientSocket.getPort()); //On précise qui se connecte
                     if(Liste_Thread.get_size()<max_client){
                         ThreadHostToClient ThreadClient = new ThreadHostToClient(clientSocket, carte, Liste_Thread);

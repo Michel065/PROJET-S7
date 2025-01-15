@@ -57,7 +57,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 }
 
                 send(message_transmit);
-                update_projectile();
+                update_projectiles();
                 update_player();
 
                 is_client_alive(0);

@@ -88,7 +88,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         for(int i=0; i < taille; i++) {
             if(i != index.get()) {
                 ThreadHostToClient tmp = Liste_Thread.recuperer(i);
-                if(tmp.getStatus() && (equipe!=tmp.getEquipe())) {
+                if(tmp.getStatus() && (equipe != tmp.getEquipe())) {
                     tmp_coord_Float.set(tmp.getCoordJoueur());
                     if(ourplayer.is_touch_in_simu(tmp_coord_Float, radius_player)) {
                         return true;

@@ -22,7 +22,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected AtomicInteger degat_en_attente = new AtomicInteger(0);
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30); // 30 projectiles max par joueur
     protected boolean statut_joueur = false; // Juste pour savoir si on est vivant ou pas
-    protected int equipe =- 1;
+    protected int equipe = -1;
     protected CoordFloatAtomic coord_joueur= new CoordFloatAtomic();
     protected AtomicInteger pourcentage_vie= new AtomicInteger();
 
@@ -99,12 +99,16 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         return false;
     }
 
-    protected void update_projectile() {
+    protected void update_projectiles() {
         List<Projectile> a_remove= new ArrayList<>();
+        float rayon_proj;
+        if(ourplayer != null)rayon_proj=ourplayer.get_proj_radius();//sinon on risque des erreurs
+        else rayon_proj=(float)0.2;
+
         for (Projectile projectile : ourprojectiles) {
             projectile.setDeltaTime(delta_time);
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), ourplayer.get_proj_radius()) || other_player_is_touch_by_proj(projectile)) { 
+            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(),rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
                 a_remove.add(projectile);
             } else {
                 projectile.move();

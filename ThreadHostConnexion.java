@@ -28,9 +28,8 @@ public class ThreadHostConnexion extends Thread  {
             }
             maSocketEcoute.setSoTimeout(2000); 
             System.out.println("Serveur pret et ecoute sur le port " + port);
-            int premiere_connx = 0;
-            while(!(Host.is_close|| (Liste_Thread.vide() && premiere_connx>0) )) {
-                System.out.println("Nombre de joueurs connectés : " + Liste_Thread.get_size());
+            while(!(Host.is_close) ) {
+                System.out.println("nombre de joueur connecte :" + Liste_Thread.get_size() + "!");
                 try{
                     Socket clientSocket = null;
                     clientSocket = maSocketEcoute.accept();

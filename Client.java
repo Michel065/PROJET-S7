@@ -5,10 +5,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import javafx.animation.AnimationTimer;
 
 public class Client extends Application {
-    private final int sizeWindow = 750;
+    private final int sizeWindow = 500;
     private GraphicsContext gc;
 
     private String serverIp;
@@ -23,11 +24,16 @@ public class Client extends Application {
 
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
 
+
+    //petit test
+    private double caseWidth;
+
     public Client() {
         this.serverIp = "127.0.0.1";
         this.port = 5001;
         this.players = new ListShare<>();
         this.projectiles = new ListShare<>();
+
     }
 
     public Client(String serverAddress, int serverPort) {
@@ -58,6 +64,7 @@ public class Client extends Application {
     public void startClient() {
         recupCarteFromThread();
     }
+        
 
     @Override
     public void start(Stage primaryStage) {
@@ -99,11 +106,15 @@ public class Client extends Application {
                 gc.save();
                 float orientation = toServer.get_orientation();
                 gc.rotate(-Math.toDegrees(orientation));
+
+                caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
+
                 drawObstacles();
                 drawProjectiles();
                 drawPlayers();
-
                 gc.restore();
+
+                //create_life_bar();
 
                 if (Client.is_close) {
                     stop(); 
@@ -118,17 +129,13 @@ public class Client extends Application {
             return;
         }
     
-        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
-        double caseHeight = caseWidth; // Cases carrées
-    
         // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
         float centreX = centre[0];
         float centreY = centre[1];
     
         // Décalage à appliquer pour centrer précisément le joueur
         double offsetX = (centreX - (int)centreX) * caseWidth; // Partie fractionnaire * taille d'une case
-        double offsetY = (centreY - (int)centreY) * caseHeight;
+        double offsetY = (centreY - (int)centreY) * caseWidth;
     
         // Calcul de la zone visible autour du centre
         int startX = Math.max(0, (int) Math.floor(centreX - rayon_display_en_case - 3));
@@ -143,8 +150,8 @@ public class Client extends Application {
                 if (carte.here_obstacle(x, y)) {
                     // Calcul des positions en pixels en appliquant le décalage
                     double drawX = (x - (int)centreX + rayon_display_en_case) * caseWidth - offsetX;
-                    double drawY = (y - (int)centreY + rayon_display_en_case) * caseHeight - offsetY;
-                    gc.fillRect(drawX - sizeWindow / 2, drawY - sizeWindow / 2, caseWidth, caseHeight);
+                    double drawY = (y - (int)centreY + rayon_display_en_case) * caseWidth - offsetY;
+                    gc.fillRect(drawX - sizeWindow / 2, drawY - sizeWindow / 2, caseWidth, caseWidth);
                 }
             }
         }
@@ -154,18 +161,13 @@ public class Client extends Application {
         if (carte == null || gc == null) {
             return;
         }
-    
-        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
-        double caseHeight = caseWidth; // Cases carrées
-    
         // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
         float centreX = centre[0];
         float centreY = centre[1];
     
         // Décalage à appliquer pour centrer précisément le joueur
         double offsetX = (centreX - (int) centreX) * caseWidth; // Partie fractionnaire * taille d'une case
-        double offsetY = (centreY - (int) centreY) * caseHeight;
+        double offsetY = (centreY - (int) centreY) * caseWidth;
     
         // Dessiner les LightRond
         for (LightRond rond : projectiles) {
@@ -177,10 +179,10 @@ public class Client extends Application {
     
                 // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
                 double drawX = (rond.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
-                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseHeight - offsetY;
+                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseWidth - offsetY;
     
                 // Taille du rond (fixée à une fraction de la case)
-                double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
+                double projectileSize = Math.min(caseWidth, caseWidth) * rond.getRadius() * 2;
     
                 // Dessiner le rond
                 gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
@@ -192,36 +194,50 @@ public class Client extends Application {
         if (carte == null || gc == null) {
             return;
         }
-    
-        // Taille de chaque case en fonction de la taille de la fenêtre et de la carte
-        double caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
-        double caseHeight = caseWidth; // Cases carrées
-    
         // Récupérer les coordonnées exactes (fractionnaires) du centre de la zone à afficher
         float centreX = centre[0];
         float centreY = centre[1];
     
         // Décalage à appliquer pour centrer précisément le joueur
         double offsetX = (centreX - (int) centreX) * caseWidth; // Partie fractionnaire * taille d'une case
-        double offsetY = (centreY - (int) centreY) * caseHeight;
+        double offsetY = (centreY - (int) centreY) * caseWidth;
     
         // Dessiner les LightRond
         for (LightRond rond : players) {
             synchronized (rond) {
                 //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
-                Color projectileColor = colors[rond.getCouleur()];
-                gc.setFill(projectileColor);
-    
+                Color playerColor = colors[rond.getCouleur()];
+                gc.setFill(playerColor);
+                
                 // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
                 double drawX = (rond.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
-                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseHeight - offsetY;
-    
+                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseWidth - offsetY;
+                
                 // Taille du rond (fixée à une fraction de la case)
-                double projectileSize = Math.min(caseWidth, caseHeight) * rond.getRadius() * 2;
+                double projectileSize = Math.min(caseWidth, caseWidth) * rond.getRadius() * 2;
     
                 // Dessiner le rond
                 gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
+                
+                one_create_life_bar(drawX- sizeWindow / 2,drawY- sizeWindow / 2,rond.get_vie_pourcentage());
+
             }
         }
+    }
+
+    public void one_create_life_bar(double centerX, double centerY, float pourcentage) {
+        if (gc == null) {
+            return;
+        }
+        double largeur_blanc = 0.9 * (1-pourcentage);
+        double offset = (caseWidth*(1-largeur_blanc))/2;
+        gc.setFill(Color.WHITE);
+        gc.fillOval(centerX+offset, centerY+offset, caseWidth*largeur_blanc,caseWidth*largeur_blanc);
+        }
+    
+    public static void main(String[] args) {
+        //Host host = new Host(20, 0.05, 5); // Initialisation de la logique
+        //host.start(5001);
+        Application.launch(Client.class, args);
     }
 }

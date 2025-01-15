@@ -40,7 +40,7 @@ public class UI extends Application {
         // Récupérer l'adresse IP locale
         String localIp = getLocalIPAddress();
 
-        Scene scene = new Scene(root, 600, 300);
+        Scene scene = new Scene(root, 400, 200);
         stage.setScene(scene);
         stage.setTitle("Sélection du rôle (" + localIp + ")"); // Ajout d'un titre pour la fenêtre
         stage.show();
@@ -72,7 +72,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(ipLabel, ipField, portLabel, portField, connectButton, cancelButton);
 
-        Scene scene = new Scene(root, 600, 300);
+        Scene scene = new Scene(root, 400, 200);
         stage.setScene(scene);
     }
 
@@ -99,7 +99,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(portLabel, portField, startButton, cancelButton);
 
-        Scene scene = new Scene(root, 600, 300);
+        Scene scene = new Scene(root, 400, 200);
         stage.setScene(scene);
     }
 
@@ -128,7 +128,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(messageLabel, okButton);
 
-        Scene scene = new Scene(root, 600, 300);
+        Scene scene = new Scene(root, 400, 200);
         stage.setScene(scene);
     }
 

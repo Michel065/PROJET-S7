@@ -33,7 +33,6 @@ public class ThreadHostConnexion extends Thread  {
                 try{
                     Socket clientSocket = null;
                     clientSocket = maSocketEcoute.accept();
-                    if(clientSocket != null) premiere_connx++;
                     System.out.println("Connexion de : " + clientSocket.getInetAddress() + " : port " + clientSocket.getPort()); // On précise qui se connecte
                     if(Liste_Thread.get_size()<max_client){
                         ThreadHostToClient ThreadClient = new ThreadHostToClient(clientSocket, carte, Liste_Thread);

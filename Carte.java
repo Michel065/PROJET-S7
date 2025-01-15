@@ -286,7 +286,7 @@ public class Carte {
         /*
          * le msg doit etre de type taille:val/lepourcentage d'obstacle:val/le nbr de obstales_par case/liste des obstacle
          * avec la liste des obstacle sous former de exemple : 1:2,2:5,2:4,end
-         */
+        */
 
         String[]liste_info = msg.split("/");
         

@@ -37,12 +37,9 @@ public class UI extends Application {
 
         root.getChildren().addAll(label, hostButton, clientButton);
 
-        // Récupérer l'adresse IP locale
-        String localIp = getLocalIPAddress();
-
         Scene scene = new Scene(root, 400, 200);
         stage.setScene(scene);
-        stage.setTitle("Sélection du rôle (" + localIp + ")"); // Ajout d'un titre pour la fenêtre
+        stage.setTitle("Sélection du rôle"); // Ajout d'un titre pour la fenêtre
         stage.show();
     }
 
@@ -73,6 +70,7 @@ public class UI extends Application {
         root.getChildren().addAll(ipLabel, ipField, portLabel, portField, connectButton, cancelButton);
 
         Scene scene = new Scene(root, 400, 200);
+        stage.setTitle("Client setup");
         stage.setScene(scene);
     }
 
@@ -100,6 +98,7 @@ public class UI extends Application {
         root.getChildren().addAll(portLabel, portField, startButton, cancelButton);
 
         Scene scene = new Scene(root, 400, 200);
+        stage.setTitle("Host setup");
         stage.setScene(scene);
     }
 
@@ -121,7 +120,7 @@ public class UI extends Application {
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
-        Label messageLabel = new Label("L'hôte écoute sur le port : " + port);
+        Label messageLabel = new Label("L'hôte écoute sur le port : " + port + "\nVotre adresse IP est : " + getLocalIPAddress());
         Button okButton = new Button("OK");
 
         okButton.setOnAction(e -> stage.close()); // Ferme la fenêtre principale
@@ -129,6 +128,7 @@ public class UI extends Application {
         root.getChildren().addAll(messageLabel, okButton);
 
         Scene scene = new Scene(root, 400, 200);
+        stage.setTitle("Host démarré");
         stage.setScene(scene);
     }
 

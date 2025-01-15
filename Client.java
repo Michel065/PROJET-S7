@@ -55,7 +55,7 @@ public class Client extends Application {
                 carte = toServer.get_carte();
                 rayon_display_en_case = toServer.get_rayon_display_en_case();
             } catch (InterruptedException e) {
-                System.out.println("Le thread a été interrompu.");
+                System.out.println("Le thread a été interrompu");
             }
         }
     }
@@ -86,7 +86,7 @@ public class Client extends Application {
 
         // Gestion de la fermeture
         primaryStage.setOnCloseRequest(event -> {
-            System.out.println("La fermeture ...");
+            System.out.println("Fermeture du client");
             is_close = true;
         });
 

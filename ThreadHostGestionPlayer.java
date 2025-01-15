@@ -159,17 +159,19 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         ourplayer = new Player(100, x + (float)2.5, y + (float)2.5);
         ourplayer = new Player(100, x, y);
         */
-       
+
         System.out.println("Taille map : " + taille_map);
         // Zone de jeu : (1, 1) - (taille_map - 2, taille_map - 2)
+        // Marge de 1 (pas collé aux murs du contour)
+        // Zone de spawn : (2, 2) - (taille_map - 3, taille_map - 3)
         int x, y;
-        x = 1 + random.nextInt((int)taille_map - 3);
-        y = 1 + random.nextInt((int)taille_map - 3);
+        x = 2 + random.nextInt((int)taille_map - 5);
+        y = 2 + random.nextInt((int)taille_map - 5);
 
         while(carte.here_obstacle(x + 0.5f, y + 0.5f)) {
             System.out.println("Tentative de génération de joueur en x:" + x + "; y:" + y + "avortée");
-            x = 2 + random.nextInt((int)taille_map - 4);
-            y = 2 + random.nextInt((int)taille_map - 4);
+            x = 2 + random.nextInt((int)taille_map - 5);
+            y = 2 + random.nextInt((int)taille_map - 5);
         }
         ourplayer = new Player(100, x + 0.5f, y + 0.5f);
         System.out.println("Player généré en x:" + x + "; y:" + y);

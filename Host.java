@@ -36,7 +36,7 @@ public class Host {
             if(args.length > 4)port = Integer.parseInt(args[4]);
         }
         else{
-            System.out.println("Msanuel OFF ... \nOK");
+            System.out.println("Manuel OFF ... \nOK");
             host = new Host(10,20, 0.05, 5); // Initialisation de la logique
         }
         System.out.println("Host start ...\nOK");

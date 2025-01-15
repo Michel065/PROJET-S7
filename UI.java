@@ -6,12 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-
 import java.net.*;
 import java.util.*;
 
@@ -46,9 +40,12 @@ public class UI extends Application {
 
         root.getChildren().addAll(label, hostButton, clientButton);
 
-        Scene scene = new Scene(root, 300, 200);
+        // Récupérer l'adresse IP locale
+        String localIp = getLocalIPAddress();
+
+        Scene scene = new Scene(root, 600, 300);
         stage.setScene(scene); // Utilisation correcte du stage
-        stage.setTitle("Sélection du rôle"); // Ajout d'un titre pour la fenêtre
+        stage.setTitle("Sélection du rôle (" + localIp + ")"); // Ajout d'un titre pour la fenêtre
         stage.show();
     }
 
@@ -75,21 +72,18 @@ public class UI extends Application {
 
         root.getChildren().addAll(ipLabel, ipField, portLabel, portField, connectButton);
 
-        Scene scene = new Scene(root, 300, 200);
+        Scene scene = new Scene(root, 600, 300);
         stage.setScene(scene);
     }
 
     private void showHostSetup() {
-        // Récupérer l'adresse IP locale
-        String localIp = getLocalIPAddress();
-
         // Créer un TextInputDialog pour le port
         TextInputDialog portDialog = new TextInputDialog("5001");
         portDialog.setTitle("Configuration de l'Hôte");
         portDialog.setHeaderText("Configurer l'Hôte");
 
         // Ajouter l'adresse IP locale dans le message
-        portDialog.setContentText("Entrez le numéro de port : (Votre adresse IP est : " + localIp + ")");
+        portDialog.setContentText("Entrez le numéro de port :");
 
         Optional<String> portResult = portDialog.showAndWait();
         portResult.ifPresent(port -> {

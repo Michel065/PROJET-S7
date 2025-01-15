@@ -91,7 +91,7 @@ public class UI extends Application {
                 int port = Integer.parseInt(portField.getText());
                 new Thread(() -> startHost(port)).start();
             } catch (NumberFormatException ex) {
-                showError("Le port doit être un nombre valide !");
+                showError("Le port doit être un nombre valide.");
             }
         });
 

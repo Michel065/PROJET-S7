@@ -3,7 +3,7 @@ public class Host {
     private Carte carte;
     private ListePartageThread Liste_Thread;
     private ThreadHostConnexion recepteur;
-    public static boolean is_close=false;
+    public static boolean is_close = false;
 
     Host(int nbr_joueur_max, int map, double pourcentageObstacle, int nbrMoyenObstacleParCase) {
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
@@ -26,22 +26,12 @@ public class Host {
         recepteur.start();
     }
 
-    /*
-    public static void main(String[] args) {
-        System.out.println("param : nbr_max_joueur , largeur_carte , % de remplissage , nbr d'obstacle moyen par case.");
-        Host host;
-        int port = 5001;
-        if( args.length >= 4) {
-            System.out.println("Manuel ON ... \nOK");
-            host = new Host(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Double.parseDouble(args[2]), Integer.parseInt(args[3])); // Initialisation de la logique
-            if(args.length > 4)port = Integer.parseInt(args[4]);
+    public void stop() {
+        is_close = true; // Marquer le serveur comme arrêté
+        if (recepteur != null) {
+            recepteur.interrupt(); // Interrompre le thread d'écoute
         }
-        else{
-            System.out.println("Manuel OFF ... \nOK");
-            host = new Host(10,20, 0.05, 5); // Initialisation de la logique
-        }
-        System.out.println("Host start ...\nOK");
-        host.start(port);
+        killAllClient(); // Terminer tous les threads clients
+        System.out.println("Serveur arrêté");
     }
-    */
 }

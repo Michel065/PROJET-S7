@@ -64,4 +64,12 @@ public class ThreadHostConnexion extends Thread  {
             }
         }
     }
+
+    public void stopServer() {
+        try {
+            maSocketEcoute.close(); // Fermer le socket principal
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

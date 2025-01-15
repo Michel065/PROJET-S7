@@ -109,21 +109,24 @@ public class UI extends Application {
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);
 
-            Platform.runLater(() -> showHostStartedMessage(port));
+            Platform.runLater(() -> showHostStartedMessage(port, server));
         } catch (Exception e) {
             Platform.runLater(() -> showError("Impossible de démarrer l'hôte sur le port " + port + ". Le port est-il déjà utilisé ?"));
         }
     }
 
-    private void showHostStartedMessage(int port) {
+    private void showHostStartedMessage(int port, Host server) {
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
         Label messageLabel = new Label("Votre adresse IP est : " + getLocalIPAddress() + "\nL'hôte écoute sur le port : " + port);
-        Button okButton = new Button("OK");
+        Button okButton = new Button("Éteindre serveur");
 
-        okButton.setOnAction(e -> stage.close()); // Ferme la fenêtre principale
+        okButton.setOnAction(e ->
+            {server.stop();
+            stage.close();
+        });
 
         root.getChildren().addAll(messageLabel, okButton);
 

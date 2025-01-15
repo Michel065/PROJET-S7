@@ -26,8 +26,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected CoordFloatAtomic coord_joueur= new CoordFloatAtomic();
     protected AtomicInteger pourcentage_vie= new AtomicInteger();
 
-    
-
     ThreadHostGestionPlayer(Carte carte, ListePartageThread Liste_Thread) {
         this.carte = carte;
         this.Liste_Thread = Liste_Thread;

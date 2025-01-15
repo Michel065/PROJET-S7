@@ -38,7 +38,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
 
     @Override
     public void run() { 
-        System.out.println("demarage du thread : " + Thread.currentThread().getName() + "!");
+        System.out.println("Démarrage du thread : " + Thread.currentThread().getName());
         create_player();
         creation_interface_client();
 
@@ -50,7 +50,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 last_time = current_time;
 
                 message_transmit = "";
-                while (client_output.ready()) { // Pour eviter des acumulations
+                while (client_output.ready()) { // Pour éviter des accumulations
                     this.message_recu = client_output.readLine();
                     message_transmit += Analyse(this.message_recu);
                     is_client_alive(1);
@@ -70,7 +70,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 e.printStackTrace();
             }
         }
-        System.out.println("fermeture du thread: " + Thread.currentThread().getName() + "!");
+        System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
         send("put ourplayer null\n\r");
         Liste_Thread.supprimer(index.get());
     }

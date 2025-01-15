@@ -82,7 +82,6 @@ public class ThreadClientToHost extends Thread {
         return message_sortant;
     }
     
-
     private void send(String msg) {
         if (serveur_input != null && !msg.isEmpty()) {
             serveur_input.println(msg);

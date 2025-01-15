@@ -147,29 +147,23 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         if(statut_joueur) return;
         Random random = new Random();
 
-        /*
-        float x, y; // Générés aléatoirement entre 0 et (taille_map - 5)
-        x = random.nextFloat() * (taille_map - 5);
-        y = random.nextFloat() * (taille_map - 5);
-
-        while(carte.here_obstacle((x + (float)2.5), (y + (float)2.5))) {
-            x = random.nextFloat() * (taille_map - 5);
-            y = random.nextFloat() * (taille_map - 5);
-        }
-        ourplayer = new Player(100, x + (float)2.5, y + (float)2.5);
-        ourplayer = new Player(100, x, y);
-        */
-
         System.out.println("Taille map : " + taille_map);
+
         // Zone de jeu : (1, 1) - (taille_map - 2, taille_map - 2)
         // Marge de 1 (pas collé aux murs du contour)
         // Zone de spawn : (2, 2) - (taille_map - 3, taille_map - 3)
+        // Pour taille_map = 20, x et y sont dans [[2, 17]]
+
         int x, y;
         x = 2 + random.nextInt((int)taille_map - 5);
         y = 2 + random.nextInt((int)taille_map - 5);
 
-        while(carte.here_obstacle(x + 0.5f, y + 0.5f)) {
-            System.out.println("Tentative de génération de joueur en x:" + x + "; y:" + y + "avortée");
+        while(carte.here_obstacle(x, y) || carte.here_obstacle(x, y + 1)
+        || carte.here_obstacle(x, y - 1) || carte.here_obstacle(x + 1, y)
+        || carte.here_obstacle(x + 1, y + 1) || carte.here_obstacle(x + 1, y - 1)
+        || carte.here_obstacle(x - 1, y) || carte.here_obstacle(x - 1, y + 1)
+        || carte.here_obstacle(x - 1, y - 1)) {
+            System.out.println("Tentative de génération de joueur en x:" + x + "; y:" + y + " avortée");
             x = 2 + random.nextInt((int)taille_map - 5);
             y = 2 + random.nextInt((int)taille_map - 5);
         }

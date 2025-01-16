@@ -19,13 +19,24 @@ public class ThreadClientToHost extends Thread {
     private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
+    
 
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
     // Pour la carte
     private Carte carte;
-    private ListShare<LightRond> players;
-    private ListShare<LightRond> projectiles;
+    private List<LightRond> players;
+    private List<LightRond> projectiles;
+
+    //partage:
+    protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30);
+
+
+
+    public ListeAtomicCoord get_projectile() {
+        return ourprojectilespartagee;
+    }
+
     private Player ourPlayer;
     
     ThreadClientToHost(Stage primaryStage, String ip, int port, ListShare<LightRond> pl, ListShare<LightRond> pr) {
@@ -99,7 +110,11 @@ public class ThreadClientToHost extends Thread {
 
             send("get carte\n\r");
             Analyse(serveur_output.readLine());
-            
+            send("get player radius\n\r");
+            Analyse(serveur_output.readLine());
+            send("get projectile radius\n\r");
+            Analyse(serveur_output.readLine());
+
             Random random = new Random();
             
             send("put ourplayer equipe " + random.nextInt(4) + "\n\r");
@@ -178,6 +193,7 @@ public class ThreadClientToHost extends Thread {
                         coord = liste_Projectiles[i].split(":");
                         projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1, Integer.parseInt(coord[2])));
                     }
+                    ourprojectilespartagee.iniitialise(projectiles);
                 }
                 else if (target.equals("players")) {
                     players.clear();

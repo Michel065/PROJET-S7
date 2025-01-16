@@ -10,7 +10,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected Player ourplayer; // Rayon de base est toujours à 0.5
     private long taille_map = 0;
     private Projectile proj_tmp;
-    private float radius_player = (float)0.5;
     protected long  current_time, last_time;
     protected float delta_time; // En secondes
 
@@ -70,7 +69,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                 ThreadHostToClient tmp = Liste_Thread.recuperer(i);
                 if(tmp.getStatus() && (equipe != tmp.getEquipe())) {
                     tmp_coord_Float.set(tmp.getCoordJoueur());
-                    if(proj.is_touch_by(tmp_coord_Float, radius_player)) {
+                    if(proj.is_touch_by(tmp_coord_Float, ourplayer.getRadius())) {
                         tmp.add_degat_joueur(proj.getDegat());
                         // touche = true;
                         return true;
@@ -90,7 +89,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                 ThreadHostToClient tmp = Liste_Thread.recuperer(i);
                 if(tmp.getStatus() && (equipe != tmp.getEquipe())) {
                     tmp_coord_Float.set(tmp.getCoordJoueur());
-                    if(ourplayer.is_touch_in_simu(tmp_coord_Float, radius_player)) {
+                    if(ourplayer.is_touch_in_simu(tmp_coord_Float, ourplayer.getRadius())) {
                         return true;
                     }
                 }
@@ -155,9 +154,10 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         // Pour taille_map = 20, x et y sont dans [[2, 17]]
 
         int x, y;
+
+        do{
         x = 2 + random.nextInt((int)taille_map - 5);
         y = 2 + random.nextInt((int)taille_map - 5);
-
         while(carte.here_obstacle(x, y) || carte.here_obstacle(x, y + 1)
         || carte.here_obstacle(x, y - 1) || carte.here_obstacle(x + 1, y)
         || carte.here_obstacle(x + 1, y + 1) || carte.here_obstacle(x + 1, y - 1)
@@ -167,7 +167,8 @@ public abstract class ThreadHostGestionPlayer extends Thread {
             x = 2 + random.nextInt((int)taille_map - 5);
             y = 2 + random.nextInt((int)taille_map - 5);
         }
-        ourplayer = new Player(100, x + 0.5f, y + 0.5f);
+        ourplayer = new Player(100, x, y);
+        }while(player_touch());
         System.out.println("Player généré en x:" + x + "; y:" + y);
         statut_joueur = true;
         coord_joueur.setCoords(ourplayer.getCoord());

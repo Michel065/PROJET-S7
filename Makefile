@@ -17,5 +17,9 @@ runui:
 	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
 	rm -f *.class
 
+run:
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
+	rm -f *.class
+
 clean:
 	rm -f *.class

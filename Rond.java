@@ -11,7 +11,7 @@ public abstract class Rond {
 
 
     public Rond(float radius, float x, float y) {
-        this.coord=new CoordFloat(x - radius, y - radius);
+        this.coord=new CoordFloat(x, y);
         this.coord_offset=new CoordFloat();
         this.radius = radius;   
     }

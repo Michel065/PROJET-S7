@@ -6,6 +6,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import javafx.animation.AnimationTimer;
 
 public class Client extends Application {
@@ -18,8 +20,9 @@ public class Client extends Application {
     private ThreadClientToHost toServer;
     public static boolean is_close = false;
     private Carte carte;
-    private ListShare<LightRond> players;
-    private ListShare<LightRond> projectiles;
+
+    private ConcurrentLinkedQueue<LightRond> players = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<LightRond> projectiles = new ConcurrentLinkedQueue<>();
     private Float[] centre = new Float[2];
 
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
@@ -31,16 +34,11 @@ public class Client extends Application {
     public Client() {
         this.serverIp = "127.0.0.1";
         this.port = 5001;
-        this.players = new ListShare<>();
-        this.projectiles = new ListShare<>();
-
     }
 
     public Client(String serverAddress, int serverPort) {
         this.serverIp = serverAddress;
         this.port = serverPort;
-        this.players = new ListShare<>();
-        this.projectiles = new ListShare<>();
     }
 
     public void connect(Stage primaryStage) {
@@ -66,56 +64,25 @@ public class Client extends Application {
     }
         
 
-    @Override
-    public void start(Stage primaryStage) {
-        // Création de l'interface graphique
-        Pane root = new Pane();
-
-        // Initialisation du Canvas et de GraphicsContext
-        Canvas canvas = new Canvas(sizeWindow, sizeWindow);
-        gc = canvas.getGraphicsContext2D();
-        gc.translate(sizeWindow / 2, sizeWindow / 2);
-        gc.rotate(-90);
-        root.getChildren().add(canvas);
-
-        primaryStage.setTitle("Fenêtre Client");
-        primaryStage.setScene(new Scene(root, sizeWindow, sizeWindow));
-        primaryStage.show();
-
-        connect(primaryStage);
-
-        // Gestion de la fermeture
-        primaryStage.setOnCloseRequest(event -> {
-            System.out.println("Fermeture du client");
-            is_close = true;
-        });
-
-        startClient();
-        startAnimation(primaryStage);
-    }
-
     private void startAnimation(Stage primaryStage) {
         new AnimationTimer() {
+            int val = sizeWindow / 2;
             @Override
             public void handle(long now) {
-                int val=sizeWindow/2;
-                gc.clearRect(-val, -val, sizeWindow, sizeWindow); // Effacer l'écran
-
-                toServer.get_case_centre(centre);
-
+                
+    
+                gc.setTransform(1, 0, 0, 1, val, val); 
                 gc.save();
-                float orientation = toServer.get_orientation();
+                gc.clearRect(-val, -val, sizeWindow, sizeWindow);
+                toServer.get_case_centre(centre);
+                double orientation = toServer.get_orientation();
                 gc.rotate(-Math.toDegrees(orientation));
-
                 caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
-
                 drawObstacles();
                 drawProjectiles();
                 drawPlayers();
                 gc.restore();
-
-                //create_life_bar();
-
+    
                 if (Client.is_close) {
                     stop(); 
                     primaryStage.close(); 
@@ -123,6 +90,40 @@ public class Client extends Application {
             }
         }.start();
     }
+    
+    @Override
+    public void start(Stage primaryStage) {
+        // Création de l'interface graphique
+        Pane root = new Pane();
+    
+        // Initialisation du Canvas et du GraphicsContext
+        Canvas canvas = new Canvas(sizeWindow, sizeWindow);
+        gc = canvas.getGraphicsContext2D();
+    
+        // Positionner l'origine au centre et appliquer la rotation initiale
+        gc.setTransform(1, 0, 0, 1, sizeWindow / 2, sizeWindow / 2);
+        gc.rotate(-90);
+        gc.save();
+    
+        root.getChildren().add(canvas);
+    
+        primaryStage.setTitle("Fenêtre Client");
+        primaryStage.setScene(new Scene(root, sizeWindow, sizeWindow));
+        primaryStage.show();
+    
+        connect(primaryStage);
+    
+        // Gestion de la fermeture
+        primaryStage.setOnCloseRequest(event -> {
+            System.out.println("Fermeture du client");
+            is_close = true;
+        });
+    
+        // Démarrage du client et de l'animation
+        startClient();
+        startAnimation(primaryStage);
+    }
+    
 
     private void drawObstacles() {
         if (carte == null || gc == null) {

@@ -223,9 +223,8 @@ public class Client extends Application {
             return;
         }
         double largeur_blanc = 0.9 * (1 - pourcentage);
-        double offset = (caseWidth * (1 - largeur_blanc)) / 2;
         gc.setFill(Color.WHITE);
-        gc.fillOval(centerX + offset, centerY+offset, caseWidth * largeur_blanc, caseWidth * largeur_blanc);
+        gc.fillOval(centerX , centerY, caseWidth * largeur_blanc, caseWidth * largeur_blanc);
         }
     
     public static void main(String[] args) {

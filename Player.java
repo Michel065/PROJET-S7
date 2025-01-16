@@ -1,6 +1,6 @@
 public class Player extends Rond {
     private double orientation = 0;
-    private float max_speed=(float)2.5, speed;
+    private float max_speed=(float)10, speed_x,speed_y;
     private int health = 100,max_health = 100;
 
     // Infos projectile :
@@ -45,33 +45,45 @@ public class Player extends Rond {
     }
 
     public void addToSpeed(float val) {
-        speed += val;
+        speed_x+=Math.abs(Math.cos(orientation))*val;
+        speed_y+=Math.abs(Math.sin(orientation))*val;
 
-        if(speed>0)
-            Math.min(speed, max_speed);
-        else if(speed<0)
-            Math.max(speed, -max_speed);
+        if(speed_x>0)
+            speed_x=Math.min(speed_x, max_speed);
+        else if(speed_x<0)
+            speed_x=Math.max(speed_x, -max_speed);
+        if(speed_y>0)
+            speed_y=Math.min(speed_y, max_speed);
+        else if(speed_y<0)
+            speed_y=Math.max(speed_y, -max_speed);
+
+        
     }
 
     private void reduce_speed() {
-        if(Math.abs(speed) > 0.1)
-        speed *= 0.9;
-        else speed = 0;
+        if(Math.abs(speed_x) > 0.11)
+            speed_x *= 0.95;
+        else speed_x = 0;
+        if(Math.abs(speed_y) > 0.11)
+            speed_y *= 0.95;
+        else speed_y = 0;
     }
 
     public void reset_speed() {
-        speed = 0;
+        speed_y = 0;
+        speed_x=0;
     }
 
     @Override
     public void simu_move(){
-        coord_simu.set(coord.x + (float)(Math.cos(orientation) * speed * delta_time), coord.y + (float)(Math.sin(orientation) * speed * delta_time));
+        coord_simu.set(coord.x + (float)(Math.cos(orientation) * speed_x * delta_time), coord.y + (float)(Math.sin(orientation) * speed_y * delta_time));
     }
 
     @Override
     public void move(){
-        coord.x += (float)(Math.cos(orientation) * speed * delta_time);
-        coord.y += (float)(Math.sin(orientation) * speed * delta_time);
+        //System.out.println("en x:"+speed_x+" en y:"+speed_y);
+        coord.x += (float)(Math.cos(orientation) * speed_x * delta_time);
+        coord.y += (float)(Math.sin(orientation) * speed_y * delta_time);
         reduce_speed();
     }
 
@@ -87,7 +99,7 @@ public class Player extends Rond {
         end = System.nanoTime();
         if(end - start >=cooldown){
             start = end;
-            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x - proj_radius, coord.y - proj_radius, (float)Math.cos(orientation), (float)Math.sin(orientation)); 
+            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x , coord.y , (float)Math.cos(orientation), (float)Math.sin(orientation)); 
         }
         return null;
     }

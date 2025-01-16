@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javafx.scene.input.KeyCode;
 
@@ -25,8 +26,8 @@ public class ThreadClientToHost extends Thread {
 
     // Pour la carte
     private Carte carte;
-    private List<LightRond> players;
-    private List<LightRond> projectiles;
+    private ConcurrentLinkedQueue<LightRond> players;
+    private ConcurrentLinkedQueue<LightRond> projectiles;
 
     //partage:
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30);
@@ -39,7 +40,7 @@ public class ThreadClientToHost extends Thread {
 
     private Player ourPlayer;
     
-    ThreadClientToHost(Stage primaryStage, String ip, int port, ListShare<LightRond> pl, ListShare<LightRond> pr) {
+    ThreadClientToHost(Stage primaryStage, String ip, int port, ConcurrentLinkedQueue<LightRond> pl, ConcurrentLinkedQueue<LightRond> pr) {
         this.primaryStage = primaryStage;
         this.port = port;
         this.IP = ip;
@@ -193,7 +194,6 @@ public class ThreadClientToHost extends Thread {
                         coord = liste_Projectiles[i].split(":");
                         projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1, Integer.parseInt(coord[2])));
                     }
-                    ourprojectilespartagee.iniitialise(projectiles);
                 }
                 else if (target.equals("players")) {
                     players.clear();

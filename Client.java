@@ -62,34 +62,6 @@ public class Client extends Application {
     public void startClient() {
         recupCarteFromThread();
     }
-        
-
-    private void startAnimation(Stage primaryStage) {
-        new AnimationTimer() {
-            int val = sizeWindow / 2;
-            @Override
-            public void handle(long now) {
-                
-    
-                gc.setTransform(1, 0, 0, 1, val, val); 
-                gc.save();
-                gc.clearRect(-val, -val, sizeWindow, sizeWindow);
-                toServer.get_case_centre(centre);
-                double orientation = toServer.get_orientation();
-                gc.rotate(-Math.toDegrees(orientation));
-                caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
-                drawObstacles();
-                drawProjectiles();
-                drawPlayers();
-                gc.restore();
-    
-                if (Client.is_close) {
-                    stop(); 
-                    primaryStage.close(); 
-                }
-            }
-        }.start();
-    }
     
     @Override
     public void start(Stage primaryStage) {
@@ -99,12 +71,6 @@ public class Client extends Application {
         // Initialisation du Canvas et du GraphicsContext
         Canvas canvas = new Canvas(sizeWindow, sizeWindow);
         gc = canvas.getGraphicsContext2D();
-    
-        // Positionner l'origine au centre et appliquer la rotation initiale
-        gc.setTransform(1, 0, 0, 1, sizeWindow / 2, sizeWindow / 2);
-        gc.rotate(-90);
-        gc.save();
-    
         root.getChildren().add(canvas);
     
         primaryStage.setTitle("Fenêtre Client");
@@ -123,7 +89,33 @@ public class Client extends Application {
         startClient();
         startAnimation(primaryStage);
     }
+
+    private void startAnimation(Stage primaryStage) {
+        new AnimationTimer() {
+            int val = sizeWindow / 2;
+            @Override
+            public void handle(long now) {
+                
     
+                gc.setTransform(1, 0, 0, 1, val, val); 
+                gc.save();
+                gc.clearRect(-val, -val, sizeWindow, sizeWindow);
+                toServer.get_case_centre(centre);
+                double orientation = toServer.get_orientation();
+                gc.rotate(-90-Math.toDegrees(orientation));
+                caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
+                drawObstacles();
+                drawProjectiles();
+                drawPlayers();
+                gc.restore();
+    
+                if (Client.is_close) {
+                    stop(); 
+                    primaryStage.close(); 
+                }
+            }
+        }.start();
+    }
 
     private void drawObstacles() {
         if (carte == null || gc == null) {

@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 
 public class Client extends Application {
-    private final int sizeWindow = 500;
+    private final int sizeWindow = 700;
     private GraphicsContext gc;
 
     private String serverIp;

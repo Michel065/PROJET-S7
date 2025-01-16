@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+/*
 public class QuadTree {
     private static final int CAPACITE_MAX = 4;
     private static final int PROFONDEUR_MAX = 10;

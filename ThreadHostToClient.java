@@ -39,7 +39,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
     @Override
     public void run() { 
         System.out.println("Démarrage du thread : " + Thread.currentThread().getName());
-        create_player();
+        
         creation_interface_client();
 
         send("put fenetre rayon " + rayon_display_en_case + "\n\r");
@@ -168,14 +168,14 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     } else if(object.equals("invincibilite")) {
                         ourplayer.setInvinvibilite(Boolean.parseBoolean(data));
                     }
-                    else if(object.equals("equipe")) {
-                        equipe = Integer.parseInt(data);
-                        System.out.println("Équipe choisie");
+                    else if(object.equals("new")) {
+                        create_player();
+                        int equipe = Liste_Thread.recup_meuilleur_equipe();
                         if(ourplayer.setEquipe(equipe)) {
                             reponse = "ourplayer enregistre";
                         }
                         else {
-                            reponse = "erreur couleur indisponible";
+                            reponse = "erreur serveur plein";
                         }
                     }
                     else reponse = msg_erreur;

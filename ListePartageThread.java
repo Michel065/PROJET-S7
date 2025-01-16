@@ -4,10 +4,13 @@ public class ListePartageThread {
     private ThreadHostToClient[] liste;
     private AtomicInteger size = new AtomicInteger(0);
     private int max_size;
+    private int nbr_equipe=5;
+    private int[] personne_par_equipe = new int[nbr_equipe];
 
     ListePartageThread(int n) { 
         liste = new ThreadHostToClient[n];
         max_size=n;
+        init_equipe();
     }
 
     public synchronized boolean ajouter(ThreadHostToClient client) { 
@@ -47,4 +50,39 @@ public class ListePartageThread {
     public boolean vide() {
         return size.get()==0;
     }
+
+    private void init_equipe(){
+        for(int i =0;i<nbr_equipe;i++){
+            personne_par_equipe[i]=0;
+        }
+    }
+
+    private synchronized void maj_liste_equipe(){
+        for(int i=0;i<get_size();i++){
+            personne_par_equipe[liste[i].getEquipe()] +=1;
+        }
+    }
+
+    public int recup_meuilleur_equipe() {
+        int somme=0;
+        for(int i =0;i<nbr_equipe;i++){
+            somme+=personne_par_equipe[i];
+        }
+
+        if(somme != (get_size()-1) ){
+            init_equipe();
+            maj_liste_equipe();
+        }
+
+        int id_min=0,score=personne_par_equipe[0];
+        for(int i =1;i<nbr_equipe;i++){
+            if(personne_par_equipe[i]<score){
+                id_min=i;
+                score=personne_par_equipe[i];
+            }
+        }
+
+        return id_min;
+    }
+
 }

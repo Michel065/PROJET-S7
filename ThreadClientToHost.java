@@ -109,6 +109,8 @@ public class ThreadClientToHost extends Thread {
             serveur_output = new BufferedReader(new InputStreamReader(serveur.getInputStream()));
             init();
 
+            send("put ourplayer new\n\r");//et set l'equipe du joueur et donc indirectement ca couleur
+            
             send("get carte\n\r");
             Analyse(serveur_output.readLine());
             send("get player radius\n\r");
@@ -118,7 +120,7 @@ public class ThreadClientToHost extends Thread {
 
             Random random = new Random();
             
-            send("put ourplayer equipe " + random.nextInt(4) + "\n\r");
+            
             send("put ourplayer invincibilite false\n\r");
         }
         catch (IOException e) {

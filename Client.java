@@ -194,12 +194,16 @@ public class Client extends Application {
         // Décalage à appliquer pour centrer précisément le joueur
         double offsetX = (centreX - (int) centreX) * caseWidth; // Partie fractionnaire * taille d'une case
         double offsetY = (centreY - (int) centreY) * caseWidth;
-    
+        
+        Color playerColor;
         // Dessiner les LightRond
         for (LightRond rond : players) {
             synchronized (rond) {
                 //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
-                Color playerColor = colors[rond.getCouleur()];
+                if(rond.getCouleur()==-1)
+                    playerColor = Color.WHITE;
+                else
+                    playerColor = colors[rond.getCouleur()];
                 gc.setFill(playerColor);
                 
                 // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage

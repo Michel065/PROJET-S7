@@ -27,39 +27,47 @@ public class ThreadHostConnexion extends Thread  {
                 System.out.println("Adresse IP disponible : " + addr.getHostAddress());
             }
             maSocketEcoute.setSoTimeout(2000); 
-            System.out.println("Serveur pret et ecoute sur le port " + port);
+            System.out.println("Serveur prêt et écoute sur le port " + port);
             while(!(Host.is_close) ) {
-                System.out.println("nombre de joueur connecte :" + Liste_Thread.get_size() + "!");
+                System.out.println("Nombre de joueurs connectés : " + Liste_Thread.get_size());
                 try{
                     Socket clientSocket = null;
                     clientSocket = maSocketEcoute.accept();
-                    System.out.println("Connexion de : " + clientSocket.getInetAddress() + " : port " + clientSocket.getPort()); //On précise qui se connecte
+                    System.out.println("Connexion de : " + clientSocket.getInetAddress() + " : port " + clientSocket.getPort()); // On précise qui se connecte
                     if(Liste_Thread.get_size()<max_client){
                         ThreadHostToClient ThreadClient = new ThreadHostToClient(clientSocket, carte, Liste_Thread);
                         ThreadClient.start();
                         Liste_Thread.ajouter(ThreadClient);
                     }
                     else {
-                        System.out.println("Connexion refuse serveur plein!");
+                        System.out.println("Connexion refusée, serveur plein");
                         PrintWriter client_input = new PrintWriter(clientSocket.getOutputStream());
-                        client_input.println("erreur host plein\n\r");
+                        client_input.println("Erreur, host plein\n\r");
                         client_input.flush();
                     }
                 } catch (SocketTimeoutException e) {}		  
             }
-            System.out.println("fermeture du thread de co : " + Thread.currentThread().getName() + "!");
+            System.out.println("Fermeture du thread host : " + Thread.currentThread().getName());
         }
         catch (Exception e) { 
-            System.err.println("Erreur : "+e);
+            System.err.println("Erreur : " + e);
             e.printStackTrace();
         }
         finally {
             try {
                 if(maSocketEcoute != null) maSocketEcoute.close();
             } catch (IOException e) {
-                System.err.println("Erreur : "+e);
+                System.err.println("Erreur : " + e);
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void stopServer() {
+        try {
+            maSocketEcoute.close(); // Fermer le socket principal
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

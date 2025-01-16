@@ -73,9 +73,9 @@ public class Carte {
         return false;
     }
 
-    public boolean ajoute_obstacle(int x,int y) {
-        CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x,y));
-        if(!obstacle_existe_deja(x,y,couple) && couple.y-couple.x<nbr_max_obstacle_par_case) {
+    public boolean ajoute_obstacle(int x, int y) {
+        CoordInt couple = carte.get(get_Coordonnees_De_Reel_Vers_Grille(x, y));
+        if(!obstacle_existe_deja(x, y, couple) && couple.y-couple.x < nbr_max_obstacle_par_case) {
             obstacles.set(couple.y, new Obstacle(x, y));
             couple.y++;
             nbr_actuel_obstacle++;
@@ -112,10 +112,31 @@ public class Carte {
     }
 
     public boolean test_collision_rond_obstacle(CoordFloat coord, float radius) {
-        CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int) coord.x, (int) coord.y);
-        if (tmp1 == null) return true;
-        CoordInt couple = carte.get(tmp1);
+        CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y);
+        CoordInt tmp2 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y + 1);
+        CoordInt tmp3 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y - 1);
+        CoordInt tmp4 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x + 1, (int)coord.y);
+        CoordInt tmp5 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x + 1, (int)coord.y + 1);
+        CoordInt tmp6 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x + 1, (int)coord.y - 1);
+        CoordInt tmp7 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y);
+        CoordInt tmp8 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y + 1);
+        CoordInt tmp9 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y - 1);
 
+        if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null || tmp6 == null || tmp7 == null || tmp8 == null || tmp9 == null) return true;
+
+        if(test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp1))) return true;
+        else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp2))) return true;
+        else if(!tmp3.eq(tmp1) && !tmp3.eq(tmp2) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp3))) return true;
+        else if(!tmp4.eq(tmp1) && !tmp4.eq(tmp2) && !tmp4.eq(tmp3) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp4))) return true;
+        else if(!tmp5.eq(tmp1) && !tmp5.eq(tmp2) && !tmp5.eq(tmp3) && !tmp5.eq(tmp4) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp5))) return true;
+        else if(!tmp6.eq(tmp1) && !tmp6.eq(tmp2) && !tmp6.eq(tmp3) && !tmp6.eq(tmp4) && !tmp6.eq(tmp5) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp6))) return true;
+        else if(!tmp7.eq(tmp1) && !tmp7.eq(tmp2) && !tmp7.eq(tmp3) && !tmp7.eq(tmp4) && !tmp7.eq(tmp5) && !tmp7.eq(tmp6) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp7))) return true;
+        else if(!tmp8.eq(tmp1) && !tmp8.eq(tmp2) && !tmp8.eq(tmp3) && !tmp8.eq(tmp4) && !tmp8.eq(tmp5) && !tmp8.eq(tmp6) && !tmp8.eq(tmp7) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp8))) return true;
+        else if(!tmp9.eq(tmp1) && !tmp9.eq(tmp2) && !tmp9.eq(tmp3) && !tmp9.eq(tmp4) && !tmp9.eq(tmp5) && !tmp9.eq(tmp6) && !tmp9.eq(tmp7) && !tmp9.eq(tmp8) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp9))) return true;
+        else return false;
+    }
+
+    public boolean test_collision_rond_obstacle_sur_chunk(CoordFloat coord, float radius, CoordInt couple) {
         float[] distances = new float[4];
         CoordFloat[] sommets = new CoordFloat[4];
 
@@ -200,6 +221,7 @@ public class Carte {
         }
 
         return false;
+
     }
 
     public boolean here_obstacle(float x, float y) {
@@ -286,7 +308,7 @@ public class Carte {
         /*
          * le msg doit etre de type taille:val/lepourcentage d'obstacle:val/le nbr de obstales_par case/liste des obstacle
          * avec la liste des obstacle sous former de exemple : 1:2,2:5,2:4,end
-         */
+        */
 
         String[]liste_info = msg.split("/");
         

@@ -11,4 +11,8 @@ public class CoordInt {
         x = tmp.x;
         y = tmp.y;
     }
+
+    public boolean eq(CoordInt tmp) {
+        return (x == tmp.x && y == tmp.y);
+    }
 }

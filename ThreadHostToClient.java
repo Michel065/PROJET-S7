@@ -31,14 +31,14 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
 			client_output = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             client_input = new PrintWriter(clientSocket.getOutputStream());
 		} catch (IOException e) {
-			System.err.println("Erreur\n"+e.getMessage());
+			System.err.println("Erreur\n" + e.getMessage());
 			e.printStackTrace();
 		}
     } 
 
     @Override
     public void run() { 
-        System.out.println("demarage du thread : " + Thread.currentThread().getName() + "!");
+        System.out.println("Démarrage du thread : " + Thread.currentThread().getName());
         create_player();
         creation_interface_client();
 
@@ -50,7 +50,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 last_time = current_time;
 
                 message_transmit = "";
-                while (client_output.ready()) { // Pour eviter des acumulation
+                while (client_output.ready()) { // Pour éviter des accumulations
                     this.message_recu = client_output.readLine();
                     message_transmit += Analyse(this.message_recu);
                     is_client_alive(1);
@@ -70,20 +70,20 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 e.printStackTrace();
             }
         }
-        System.out.println("fermeture du thread: " + Thread.currentThread().getName() + "!");
+        System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
         send("put ourplayer null\n\r");
         Liste_Thread.supprimer(index.get());
     }
 
     public void is_client_alive(int val) {
         dernier_msg_recu_tmp = System.nanoTime();
-        if(Math.abs(dernier_msg_recu_tmp - dernier_msg_recu) >=2000*1000*1000) {
+        if(Math.abs(dernier_msg_recu_tmp - dernier_msg_recu) >=2000 * 1000 * 1000) {
             Liste_Thread.supprimer(index.get());
             statut_joueur=false;
             ourplayer=null;
         }
         if(val==1) {
-            dernier_msg_recu=dernier_msg_recu_tmp;
+            dernier_msg_recu = dernier_msg_recu_tmp;
         }
     }
 
@@ -170,7 +170,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else if(object.equals("equipe")) {
                         equipe = Integer.parseInt(data);
-                        System.out.println("equipe choisi!");
+                        System.out.println("Équipe choisie");
                         if(ourplayer.setEquipe(equipe)) {
                             reponse = "ourplayer enregistre";
                         }

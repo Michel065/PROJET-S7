@@ -1,7 +1,7 @@
 public class Player extends Rond {
     private double orientation = 0;
     private float max_speed=(float)1.5, speed;
-    private int health = 100,max_health=100;
+    private int health = 100,max_health = 100;
 
     // Infos projectile :
     private float proj_speed = (float)2;
@@ -11,7 +11,6 @@ public class Player extends Rond {
     
     private long cooldown = 500 * 1000 * 1000; // En ns
     private long start = System.nanoTime(), end;
-
 
     public Player(int health, float x, float y) {
         super((float)0.5, x, y);
@@ -25,7 +24,7 @@ public class Player extends Rond {
     }
 
     public int get_pourcentage_vie() {
-        return (int)Math.ceil(100*((float)health / (float)max_health));
+        return (int)Math.ceil(100 * ((float)health / (float)max_health));
     }
 
     public void addHealth(int val) {
@@ -38,7 +37,7 @@ public class Player extends Rond {
 
     @Override
     public boolean is_alive() {
-        return health>0;
+        return health > 0;
     }
 
     public void rotate(int angle) {

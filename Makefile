@@ -2,24 +2,20 @@
 JAVAC = javac
 JAVA = java
 JAVAFX_PATH = /usr/share/openjfx/lib
-MAIN = Host
-BIS = Client
+JAVAFX_MODULES = javafx.controls,javafx.fxml
+DPRISM = -Dprism.order
+MAIN = UI
 
 # Cibles
 all:
-	echo "Votre adresse IP locale est : $(ifconfig | grep -oP 'inet \K[\d.]+')"
-	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml *.java
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml -Dprism.order=sw $(MAIN)
-	rm *.class
+	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
+	rm -f *.class
 
-make:
-	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml *.java
-
-run:
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml -Dprism.order=sw $(MAIN)
-
-runb:
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules javafx.controls,javafx.fxml -Dprism.order=sw $(BIS)
+runui:
+	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
+	rm -f *.class
 
 clean:
 	rm -f *.class

@@ -36,6 +36,13 @@ public class Client extends Application {
 
     }
 
+    public Client(String serverAddress, int serverPort) {
+        this.serverIp = serverAddress;
+        this.port = serverPort;
+        this.players = new ListShare<>();
+        this.projectiles = new ListShare<>();
+    }
+
     public void connect(Stage primaryStage) {
         toServer = new ThreadClientToHost(primaryStage, serverIp, port, players, projectiles);
         toServer.start();
@@ -48,7 +55,7 @@ public class Client extends Application {
                 carte = toServer.get_carte();
                 rayon_display_en_case = toServer.get_rayon_display_en_case();
             } catch (InterruptedException e) {
-                System.out.println("Le thread a été interrompu.");
+                System.out.println("Le thread a été interrompu");
             }
         }
     }
@@ -79,7 +86,7 @@ public class Client extends Application {
 
         // Gestion de la fermeture
         primaryStage.setOnCloseRequest(event -> {
-            System.out.println("La fermeture ...");
+            System.out.println("Fermeture du client");
             is_close = true;
         });
 
@@ -92,7 +99,7 @@ public class Client extends Application {
             @Override
             public void handle(long now) {
                 int val=sizeWindow/2;
-                gc.clearRect(-val,-val, sizeWindow, sizeWindow); // Effacer l'écran
+                gc.clearRect(-val, -val, sizeWindow, sizeWindow); // Effacer l'écran
 
                 toServer.get_case_centre(centre);
 
@@ -149,9 +156,6 @@ public class Client extends Application {
             }
         }
     }
-    
-    
-    
 
     private void drawProjectiles() {
         if (carte == null || gc == null) {
@@ -225,15 +229,13 @@ public class Client extends Application {
         if (gc == null) {
             return;
         }
-        double largeur_blanc = 0.9 * (1-pourcentage);
-        double offset = (caseWidth*(1-largeur_blanc))/2;
+        double largeur_blanc = 0.9 * (1 - pourcentage);
+        double offset = (caseWidth * (1 - largeur_blanc)) / 2;
         gc.setFill(Color.WHITE);
-        gc.fillOval(centerX+offset, centerY+offset, caseWidth*largeur_blanc,caseWidth*largeur_blanc);
+        gc.fillOval(centerX + offset, centerY+offset, caseWidth * largeur_blanc, caseWidth * largeur_blanc);
         }
     
     public static void main(String[] args) {
-        //Host host = new Host(20, 0.05, 5); // Initialisation de la logique
-        //host.start(5001);
         Application.launch(Client.class, args);
     }
 }

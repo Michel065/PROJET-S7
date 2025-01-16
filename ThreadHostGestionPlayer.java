@@ -22,11 +22,9 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected AtomicInteger degat_en_attente = new AtomicInteger(0);
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30); // 30 projectiles max par joueur
     protected boolean statut_joueur = false; // Juste pour savoir si on est vivant ou pas
-    protected int equipe =- 1;
+    protected int equipe = -1;
     protected CoordFloatAtomic coord_joueur= new CoordFloatAtomic();
     protected AtomicInteger pourcentage_vie= new AtomicInteger();
-
-    
 
     ThreadHostGestionPlayer(Carte carte, ListePartageThread Liste_Thread) {
         this.carte = carte;
@@ -90,7 +88,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         for(int i=0; i < taille; i++) {
             if(i != index.get()) {
                 ThreadHostToClient tmp = Liste_Thread.recuperer(i);
-                if(tmp.getStatus() && (equipe!=tmp.getEquipe())) {
+                if(tmp.getStatus() && (equipe != tmp.getEquipe())) {
                     tmp_coord_Float.set(tmp.getCoordJoueur());
                     if(ourplayer.is_touch_in_simu(tmp_coord_Float, radius_player)) {
                         return true;
@@ -102,15 +100,15 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected void update_projectiles() {
-        List<Projectile> a_remove= new ArrayList<>();
+        List<Projectile> a_remove = new ArrayList<>();
         float rayon_proj;
-        if(ourplayer != null)rayon_proj=ourplayer.get_proj_radius();//sinon on risque des erreurs
-        else rayon_proj=(float)0.2;
+        if(ourplayer != null)rayon_proj = ourplayer.get_proj_radius(); // Sinon on risque des erreurs
+        else rayon_proj = (float)0.2;
 
         for (Projectile projectile : ourprojectiles) {
             projectile.setDeltaTime(delta_time);
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(),rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
+            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
                 a_remove.add(projectile);
             } else {
                 projectile.move();
@@ -148,14 +146,29 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected void create_player() {
         if(statut_joueur) return;
         Random random = new Random();
-        float x, y;
-        x = random.nextFloat() * (taille_map - 5);
-        y = random.nextFloat() * (taille_map - 5);
-        while(carte.here_obstacle((x + (float)2.5), (y + (float)2.5))) {
-            x = random.nextFloat() * (taille_map - 5);
-            y = random.nextFloat() * (taille_map - 5);
+
+        System.out.println("Taille map : " + taille_map);
+
+        // Zone de jeu : (1, 1) - (taille_map - 2, taille_map - 2)
+        // Marge de 1 (pas collé aux murs du contour)
+        // Zone de spawn : (2, 2) - (taille_map - 3, taille_map - 3)
+        // Pour taille_map = 20, x et y sont dans [[2, 17]]
+
+        int x, y;
+        x = 2 + random.nextInt((int)taille_map - 5);
+        y = 2 + random.nextInt((int)taille_map - 5);
+
+        while(carte.here_obstacle(x, y) || carte.here_obstacle(x, y + 1)
+        || carte.here_obstacle(x, y - 1) || carte.here_obstacle(x + 1, y)
+        || carte.here_obstacle(x + 1, y + 1) || carte.here_obstacle(x + 1, y - 1)
+        || carte.here_obstacle(x - 1, y) || carte.here_obstacle(x - 1, y + 1)
+        || carte.here_obstacle(x - 1, y - 1)) {
+            System.out.println("Tentative de génération de joueur en x:" + x + "; y:" + y + " avortée");
+            x = 2 + random.nextInt((int)taille_map - 5);
+            y = 2 + random.nextInt((int)taille_map - 5);
         }
-        ourplayer = new Player(100, x + (float)2.5, y + (float)2.5);
+        ourplayer = new Player(100, x + 0.5f, y + 0.5f);
+        System.out.println("Player généré en x:" + x + "; y:" + y);
         statut_joueur = true;
         coord_joueur.setCoords(ourplayer.getCoord());
     }

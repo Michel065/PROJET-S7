@@ -16,7 +16,7 @@ public class ThreadClientToHost extends Thread {
     private Stage primaryStage;
     private int port = 5001;
     private int rayon_display_en_case = 5;
-    private String IP = "", message_recu = "",message_transmit = "";
+    private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
 
@@ -51,7 +51,7 @@ public class ThreadClientToHost extends Thread {
             primaryStage.getScene().setOnKeyPressed(event -> activeKeys.add(event.getCode()));
             primaryStage.getScene().setOnKeyReleased(event -> activeKeys.remove(event.getCode()));
         } else {
-            System.err.println("Erreur : La scène n'est pas définie pour le stage.");
+            System.err.println("Erreur : la scène n'est pas définie pour le stage");
         }
     }
 
@@ -82,7 +82,6 @@ public class ThreadClientToHost extends Thread {
         return message_sortant;
     }
     
-
     private void send(String msg) {
         if (serveur_input != null && !msg.isEmpty()) {
             serveur_input.println(msg);
@@ -111,7 +110,7 @@ public class ThreadClientToHost extends Thread {
             e.printStackTrace();
         }
 
-        System.out.println("initialisation terminé!");
+        System.out.println("Initialisation terminée");
         // Notre boucle
         while(!Client.is_close) {
             try {
@@ -128,13 +127,13 @@ public class ThreadClientToHost extends Thread {
                 send(message_transmit);
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                System.out.println("Le thread a été interrompu.");
+                System.out.println("Le thread a été interrompu");
             }catch (IOException e) {
                 System.err.println("Erreur : " + e.getMessage());
                 e.printStackTrace();
             }
         }        
-        System.out.println("fermeture du thread: " + Thread.currentThread().getName()+"!");
+        System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
         send("put ourplayer null\n\r");
     }
 

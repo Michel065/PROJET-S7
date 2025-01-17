@@ -13,7 +13,7 @@ public class Player extends Rond {
     private long start = System.nanoTime(), end;
 
     public Player(int health, float x, float y) {
-        super((float)0.45, x, y);
+        super((float)0.2, x, y);
         name = "Player";
         this.health = health;
         invincibilite = true;
@@ -99,7 +99,7 @@ public class Player extends Rond {
         end = System.nanoTime();
         if(end - start >=cooldown){
             start = end;
-            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x , coord.y , (float)Math.cos(orientation), (float)Math.sin(orientation)); 
+            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x - 0.2f , coord.y - 0.2f, (float)Math.cos(orientation), (float)Math.sin(orientation)); 
         }
         return null;
     }

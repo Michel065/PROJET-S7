@@ -179,6 +179,9 @@ public class ThreadClientToHost extends Thread {
                     if (object.equals("coord")) {
                         String[] coord = data.split(":");
                         ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
+                        /////////////////////////////////////
+                        System.out.println("player en x:" + coord[0] + " ; y:" + coord[1]);
+                        /////////////////////////////////////
                     }else if(object.equals("null")){
                         Client.is_close = true;
                     }else if(object.equals("orientation")){

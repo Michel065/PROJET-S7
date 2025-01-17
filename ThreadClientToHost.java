@@ -18,8 +18,7 @@ public class ThreadClientToHost extends Thread {
     private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
-    private boolean host_ouvert=true;
-    
+    private boolean host_ouvert = true;
 
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
@@ -28,10 +27,8 @@ public class ThreadClientToHost extends Thread {
     private ConcurrentLinkedQueue<LightRond> players;
     private ConcurrentLinkedQueue<LightRond> projectiles;
 
-    //partage:
+    // Partagé :
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30);
-
-
 
     public ListeAtomicCoord get_projectile() {
         return ourprojectilespartagee;
@@ -200,7 +197,7 @@ public class ThreadClientToHost extends Thread {
                     int nbr = Integer.parseInt(object);
                     String[] liste_Projectiles = data.split(",");
                     String[] coord;
-                    for(int i=0; i < nbr; i++){
+                    for(int i=0; i < nbr; i++) {
                         coord = liste_Projectiles[i].split(":");
                         projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1, Integer.parseInt(coord[2])));
                     }
@@ -210,7 +207,7 @@ public class ThreadClientToHost extends Thread {
                     int nbr = Integer.parseInt(object);
                     String[] liste_Projectiles = data.split(",");
                     String[] data_player;
-                    for(int i=0; i < nbr;i++) {
+                    for(int i=0; i < nbr; i++) {
                         data_player = liste_Projectiles[i].split(":");
                         LightRond rond=new LightRond(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), ourPlayer.getRadius(), Integer.parseInt(data_player[3]), Integer.parseInt(data_player[2]));
                         players.add(rond);
@@ -219,13 +216,13 @@ public class ThreadClientToHost extends Thread {
                 }
                 else if (target.equals("host")) {
                     if (object.equals("fermeture")) {
-                        host_ouvert=false;
+                        host_ouvert = false;
                     }
                 }
                 else reponse = msg_erreur;
             } else reponse = msg_erreur;
         }
-        if(!reponse.equals(""))reponse += "\n\r";
+        if(!reponse.equals("")) reponse += "\n\r";
         return reponse;
     }
 }

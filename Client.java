@@ -27,8 +27,6 @@ public class Client extends Application {
 
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
 
-
-    //petit test
     private double caseWidth;
 
     public Client() {

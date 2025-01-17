@@ -7,7 +7,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
     protected ListePartageThread Liste_Thread;
     private List<Projectile> ourprojectiles;
-    protected Player ourplayer; // Rayon de base est toujours à 0.5
+    protected Player ourplayer;
     private long taille_map = 0;
     private Projectile proj_tmp;
     protected long  current_time, last_time;
@@ -147,8 +147,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         if(statut_joueur) return;
         Random random = new Random();
 
-        System.out.println("Taille map : " + taille_map);
-
         // Zone de jeu : (1, 1) - (taille_map - 2, taille_map - 2)
         // Marge de 1 (pas collé aux murs du contour)
         // Zone de spawn : (2, 2) - (taille_map - 3, taille_map - 3)
@@ -156,21 +154,20 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
         int x, y;
 
-        do{
-        x = 2 + random.nextInt((int)taille_map - 5);
-        y = 2 + random.nextInt((int)taille_map - 5);
-        while(carte.here_obstacle(x, y) || carte.here_obstacle(x, y + 1)
-        || carte.here_obstacle(x, y - 1) || carte.here_obstacle(x + 1, y)
-        || carte.here_obstacle(x + 1, y + 1) || carte.here_obstacle(x + 1, y - 1)
-        || carte.here_obstacle(x - 1, y) || carte.here_obstacle(x - 1, y + 1)
-        || carte.here_obstacle(x - 1, y - 1)) {
-            System.out.println("Tentative de génération de joueur en x:" + x + "; y:" + y + " avortée");
+        do {
             x = 2 + random.nextInt((int)taille_map - 5);
             y = 2 + random.nextInt((int)taille_map - 5);
-        }
-        ourplayer = new Player(100, x, y);
-        }while(player_touch());
-        System.out.println("Player généré en x:" + x + "; y:" + y);
+            while(carte.here_obstacle(x, y) || carte.here_obstacle(x, y + 1)
+            || carte.here_obstacle(x, y - 1) || carte.here_obstacle(x + 1, y)
+            || carte.here_obstacle(x + 1, y + 1) || carte.here_obstacle(x + 1, y - 1)
+            || carte.here_obstacle(x - 1, y) || carte.here_obstacle(x - 1, y + 1)
+            || carte.here_obstacle(x - 1, y - 1)) {
+                x = 2 + random.nextInt((int)taille_map - 5);
+                y = 2 + random.nextInt((int)taille_map - 5);
+            }
+            ourplayer = new Player(100, x, y);
+        } while(player_touch());
+
         statut_joueur = true;
         coord_joueur.setCoords(ourplayer.getCoord());
     }

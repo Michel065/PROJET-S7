@@ -4,7 +4,7 @@ public class ListePartageThread {
     private ThreadHostToClient[] liste;
     private AtomicInteger size = new AtomicInteger(0);
     private int max_size;
-    private int nbr_equipe=5;
+    private int nbr_equipe=4;
     private int[] personne_par_equipe = new int[nbr_equipe];
 
     ListePartageThread(int n) { 

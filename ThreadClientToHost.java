@@ -8,8 +8,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javafx.scene.input.KeyCode;
-
-import java.util.Random;
 import javafx.stage.Stage;
 
 public class ThreadClientToHost extends Thread {
@@ -20,6 +18,7 @@ public class ThreadClientToHost extends Thread {
     private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
+    private boolean host_ouvert=true;
     
 
     private final Set<KeyCode> activeKeys = new HashSet<>();
@@ -58,7 +57,7 @@ public class ThreadClientToHost extends Thread {
         return ourPlayer.getOrientation();
     }
 
-    private void init() {
+    private void init_key_input() {
         if (primaryStage.getScene() != null) {
             primaryStage.getScene().setOnKeyPressed(event -> activeKeys.add(event.getCode()));
             primaryStage.getScene().setOnKeyReleased(event -> activeKeys.remove(event.getCode()));
@@ -107,21 +106,17 @@ public class ThreadClientToHost extends Thread {
             serveur = new Socket(IP, port);
             serveur_input = new PrintWriter(serveur.getOutputStream());
             serveur_output = new BufferedReader(new InputStreamReader(serveur.getInputStream()));
-            init();
+            init_key_input();
 
-            send("put ourplayer new\n\r");//et set l'equipe du joueur et donc indirectement ca couleur
-            
-            send("get carte\n\r");
-            Analyse(serveur_output.readLine());
-            send("get player radius\n\r");
-            Analyse(serveur_output.readLine());
-            send("get projectile radius\n\r");
-            Analyse(serveur_output.readLine());
+            message_transmit="put ourplayer new\n\r";
+            message_transmit+="get carte\n\r";
+            message_transmit+="get player radius\n\r";
+            message_transmit+="get projectile radius\n\r";
+            message_transmit+="put ourplayer invincibilite false\n\r";
 
-            Random random = new Random();
-            
-            
-            send("put ourplayer invincibilite false\n\r");
+            envoie_et_analyse(message_transmit);
+
+            System.out.println("equipe:"+ourPlayer.getEquipe());
         }
         catch (IOException e) {
             System.err.println("Erreur\n"+e.getMessage());
@@ -130,34 +125,43 @@ public class ThreadClientToHost extends Thread {
 
         System.out.println("Initialisation terminée");
         // Notre boucle
-        while(!Client.is_close) {
+        while(!Client.is_close && host_ouvert) {
             try {
                 message_transmit = "get ourplayer coord\n\r";
                 message_transmit += "get ourplayer orientation\n\r";
                 message_transmit += "get projectiles\n\r";
                 message_transmit += "get players\n\r";
+                //message_transmit += "get ourplayer status\n\r";
                 message_transmit = stringifie_action(message_transmit);
-                send(message_transmit);
-                while (serveur_output.ready()) { // Pour éviter des accumulations
-                    message_recu = serveur_output.readLine();
-                    message_transmit += Analyse(message_recu);
-                }
-                send(message_transmit);
+
+                envoie_et_analyse(message_transmit);
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu");
-            }catch (IOException e) {
-                System.err.println("Erreur : " + e.getMessage());
-                e.printStackTrace();
             }
         }        
         System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
-        send("put ourplayer null\n\r");
+        send("put client fermeture\n\r");
+    }
+
+    public void envoie_et_analyse(String msg){
+        try {
+            send(msg);
+            while (serveur_output.ready()) { // Pour éviter des accumulations
+                message_recu = serveur_output.readLine();
+                message_transmit += Analyse(message_recu);
+            }
+            send(message_transmit);
+            message_transmit="";
+        }
+        catch (IOException e) {
+            System.err.println("Erreur : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public String Analyse(String requete) {
         if(requete.equals("")) return ""; // Pour éviter d'afficher du vide
-
         String reponse = "", msg_erreur = "";
         String[] words = requete.split(" ");
 
@@ -183,6 +187,10 @@ public class ThreadClientToHost extends Thread {
                     }else if(object.equals("orientation")){
                         ourPlayer.setOrientation(Float.parseFloat(data));
                     }
+                    else if(object.equals("equipe")){
+                        ourPlayer.setEquipe(Integer.parseInt(data));
+                        System.out.println("coucou"+Integer.parseInt(data));
+                    }
                 } else if (target.equals("fenetre")) {
                     if (object.equals("rayon")) {
                         rayon_display_en_case = Integer.parseInt(data);
@@ -204,7 +212,14 @@ public class ThreadClientToHost extends Thread {
                     String[] data_player;
                     for(int i=0; i < nbr;i++) {
                         data_player = liste_Projectiles[i].split(":");
-                        players.add(new LightRond(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), ourPlayer.getRadius(), Integer.parseInt(data_player[3]), Integer.parseInt(data_player[2])));
+                        LightRond rond=new LightRond(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), ourPlayer.getRadius(), Integer.parseInt(data_player[3]), Integer.parseInt(data_player[2]));
+                        players.add(rond);
+                        
+                    }
+                }
+                else if (target.equals("host")) {
+                    if (object.equals("fermeture")) {
+                        host_ouvert=false;
                     }
                 }
                 else reponse = msg_erreur;

@@ -71,7 +71,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
             }
         }
         System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
-        send("put ourplayer null\n\r");
+        send("put host fermeture\n\r");
         Liste_Thread.supprimer(index.get());
     }
 
@@ -109,6 +109,9 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                         reponse="put ourplayer coord " + ourplayer.getCoordString();
                     } else if (object.equals("orientation")) {
                         reponse="put ourplayer orientation " + (float)ourplayer.getOrientation();
+                    }
+                    else if (object.equals("equipe")) {
+                        reponse="put ourplayer equipe " + ourplayer.getEquipe();
                     }
                 }
                 else if (target.equals("projectiles")) {                    
@@ -170,7 +173,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else if(object.equals("new")) {
                         create_player();
-                        int equipe = Liste_Thread.recup_meuilleur_equipe();
+                        equipe = Liste_Thread.recup_meuilleur_equipe();
                         if(ourplayer.setEquipe(equipe)) {
                             reponse = "ourplayer enregistre";
                         }
@@ -180,6 +183,11 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else reponse = msg_erreur;
                 } 
+                if (target.equals("client")) {
+                    if(object.equals("fermeture")) {
+                        client_ouvert=false;
+                    }
+                }
             } else reponse = msg_erreur;
         }
         if(!reponse.equals("")) reponse += "\n\r";

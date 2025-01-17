@@ -12,6 +12,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     private Projectile proj_tmp;
     protected long  current_time, last_time;
     protected float delta_time; // En secondes
+    protected boolean client_ouvert=true;
 
     // Variable de tmp allouée une seule fois
     private CoordFloat tmp_coord_Float = new CoordFloat();
@@ -185,7 +186,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected boolean is_finish() {
-        return Host.is_close || (ourplayer == null && ourprojectiles.size() == 0); // À revoir dans le run
+        return Host.is_close || (!client_ouvert && ourplayer == null && ourprojectiles.size() == 0); // À revoir dans le run
     }
 
     public abstract void run();

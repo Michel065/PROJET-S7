@@ -1,6 +1,6 @@
 public class Player extends Rond {
     private double orientation = 0;
-    private float max_speed=(float)10, speed_x,speed_y;
+    private float max_speed=(float)10, speed_x, speed_y;
     private int health = 100,max_health = 100;
 
     // Infos projectile :
@@ -97,7 +97,7 @@ public class Player extends Rond {
         end = System.nanoTime();
         if(end - start >= cooldown){
             start = end;
-            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x , coord.y, (float)Math.cos(orientation), (float)Math.sin(orientation)); 
+            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x + 0.45f/2 - proj_radius, coord.y + 0.45f/2 - proj_radius, (float)Math.cos(orientation), (float)Math.sin(orientation)); 
         }
         return null;
     }

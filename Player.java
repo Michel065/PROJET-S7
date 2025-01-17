@@ -45,19 +45,17 @@ public class Player extends Rond {
     }
 
     public void addToSpeed(float val) {
-        speed_x+=Math.abs(Math.cos(orientation))*val;
-        speed_y+=Math.abs(Math.sin(orientation))*val;
+        speed_x += Math.abs(Math.cos(orientation)) * val;
+        speed_y += Math.abs(Math.sin(orientation)) * val;
 
-        if(speed_x>0)
-            speed_x=Math.min(speed_x, max_speed);
-        else if(speed_x<0)
-            speed_x=Math.max(speed_x, -max_speed);
-        if(speed_y>0)
-            speed_y=Math.min(speed_y, max_speed);
-        else if(speed_y<0)
-            speed_y=Math.max(speed_y, -max_speed);
-
-        
+        if(speed_x > 0)
+            speed_x = Math.min(speed_x, max_speed);
+        else if(speed_x < 0)
+            speed_x = Math.max(speed_x, -max_speed);
+        if(speed_y > 0)
+            speed_y = Math.min(speed_y, max_speed);
+        else if(speed_y < 0)
+            speed_y = Math.max(speed_y, -max_speed);        
     }
 
     private void reduce_speed() {
@@ -97,7 +95,7 @@ public class Player extends Rond {
 
     public Projectile tire(){
         end = System.nanoTime();
-        if(end - start >=cooldown){
+        if(end - start >= cooldown){
             start = end;
             return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x , coord.y, (float)Math.cos(orientation), (float)Math.sin(orientation)); 
         }

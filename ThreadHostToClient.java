@@ -59,7 +59,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 System.out.println("Le thread a été interrompu.");
             }
         }
-        System.out.println("Fermeture du thread sac : " + Thread.currentThread().getName());
+        System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
         send("put host fermeture\n\r");
         Liste_Thread.supprimer(index.get());
     }

@@ -41,4 +41,9 @@ public class CoordFloat {
         x = Float.intBitsToFloat((int) (tmp & 0xFFFFFFFFL)); // x
         y = Float.intBitsToFloat((int) (tmp >>> 32));   // y
     }
+
+    public void add(Float val1) {
+        x += val1;
+        y += val1;
+    }
 }

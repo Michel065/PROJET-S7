@@ -129,7 +129,7 @@ public class ThreadClientToHost extends Thread {
                 message_transmit += "get projectiles\n\r";
                 message_transmit += "get players\n\r";
                 message_transmit += "get ourplayer status\n\r";
-                message_transmit = stringifie_action(message_transmit);
+                message_transmit += stringifie_action(message_transmit);
 
                 envoie_et_analyse(message_transmit);
                 is_host_alive(0);
@@ -138,7 +138,7 @@ public class ThreadClientToHost extends Thread {
                 System.out.println("Le thread a été interrompu");
             }
         }        
-        System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
+        System.out.println("Fermeture du thread : coucou " + Thread.currentThread().getName());
         send("put client fermeture\n\r");
     }
 

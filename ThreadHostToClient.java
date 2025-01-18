@@ -59,7 +59,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 System.out.println("Le thread a été interrompu.");
             }
         }
-        System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
+        System.out.println("Fermeture du thread sac : " + Thread.currentThread().getName());
         send("put host fermeture\n\r");
         Liste_Thread.supprimer(index.get());
     }
@@ -178,7 +178,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }else if(object.equals("tirer")) {
                         tire();
                     } else if(object.equals("null")) {
-                        remode_ourplayer();
+                        kill_ourplayer();
                     } else if(object.equals("invincibilite")) {
                         ourplayer.setInvinvibilite(Boolean.parseBoolean(data));
                     }

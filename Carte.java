@@ -7,6 +7,7 @@ public class Carte {
     private int largeur_case, largeur_matrice, nbr_moyen_obstacle_par_case, nbr_max_obstacle_par_case;
     private double pourcentage_obstacle;
     private int nbr_actuel_obstacle;
+    private CoordFloat coord_tmp=new CoordFloat();
 
     private MatriceCarre<CoordInt> carte;
     private List<Obstacle> obstacles;
@@ -112,33 +113,31 @@ public class Carte {
     }
 
     public boolean test_collision_rond_obstacle(CoordFloat coordd, float radius) {
-        CoordFloat coord=new CoordFloat(coordd);
-        coord.x-=((float)0.50-radius);
-        coord.y-=((float)0.50-radius);
+        coord_tmp.set((float)0.50-radius,(float)0.50-radius);
 
-        CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y);
-        CoordInt tmp2 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y + 1);
-        CoordInt tmp3 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y - 1);
-        CoordInt tmp4 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x + 1, (int)coord.y);
-        CoordInt tmp5 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x + 1, (int)coord.y + 1);
-        CoordInt tmp6 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x + 1, (int)coord.y - 1);
-        CoordInt tmp7 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y);
-        CoordInt tmp8 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y + 1);
-        CoordInt tmp9 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y - 1);
+        CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x, (int)coord_tmp.y);
+        CoordInt tmp2 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x, (int)coord_tmp.y + 1);
+        CoordInt tmp3 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x, (int)coord_tmp.y - 1);
+        CoordInt tmp4 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x + 1, (int)coord_tmp.y);
+        CoordInt tmp5 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x + 1, (int)coord_tmp.y + 1);
+        CoordInt tmp6 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x + 1, (int)coord_tmp.y - 1);
+        CoordInt tmp7 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x - 1, (int)coord_tmp.y);
+        CoordInt tmp8 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x - 1, (int)coord_tmp.y + 1);
+        CoordInt tmp9 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x - 1, (int)coord_tmp.y - 1);
 
         
 
         if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null || tmp6 == null || tmp7 == null || tmp8 == null || tmp9 == null) return true;
 
-        if(test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp1))) return true;
-        else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp2))) return true;
-        else if(!tmp3.eq(tmp1) && !tmp3.eq(tmp2) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp3))) return true;
-        else if(!tmp4.eq(tmp1) && !tmp4.eq(tmp2) && !tmp4.eq(tmp3) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp4))) return true;
-        else if(!tmp5.eq(tmp1) && !tmp5.eq(tmp2) && !tmp5.eq(tmp3) && !tmp5.eq(tmp4) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp5))) return true;
-        else if(!tmp6.eq(tmp1) && !tmp6.eq(tmp2) && !tmp6.eq(tmp3) && !tmp6.eq(tmp4) && !tmp6.eq(tmp5) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp6))) return true;
-        else if(!tmp7.eq(tmp1) && !tmp7.eq(tmp2) && !tmp7.eq(tmp3) && !tmp7.eq(tmp4) && !tmp7.eq(tmp5) && !tmp7.eq(tmp6) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp7))) return true;
-        else if(!tmp8.eq(tmp1) && !tmp8.eq(tmp2) && !tmp8.eq(tmp3) && !tmp8.eq(tmp4) && !tmp8.eq(tmp5) && !tmp8.eq(tmp6) && !tmp8.eq(tmp7) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp8))) return true;
-        else if(!tmp9.eq(tmp1) && !tmp9.eq(tmp2) && !tmp9.eq(tmp3) && !tmp9.eq(tmp4) && !tmp9.eq(tmp5) && !tmp9.eq(tmp6) && !tmp9.eq(tmp7) && !tmp9.eq(tmp8) && test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp9))) return true;
+        if(test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp1))) return true;
+        else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp2))) return true;
+        else if(!tmp3.eq(tmp1) && !tmp3.eq(tmp2) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp3))) return true;
+        else if(!tmp4.eq(tmp1) && !tmp4.eq(tmp2) && !tmp4.eq(tmp3) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp4))) return true;
+        else if(!tmp5.eq(tmp1) && !tmp5.eq(tmp2) && !tmp5.eq(tmp3) && !tmp5.eq(tmp4) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp5))) return true;
+        else if(!tmp6.eq(tmp1) && !tmp6.eq(tmp2) && !tmp6.eq(tmp3) && !tmp6.eq(tmp4) && !tmp6.eq(tmp5) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp6))) return true;
+        else if(!tmp7.eq(tmp1) && !tmp7.eq(tmp2) && !tmp7.eq(tmp3) && !tmp7.eq(tmp4) && !tmp7.eq(tmp5) && !tmp7.eq(tmp6) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp7))) return true;
+        else if(!tmp8.eq(tmp1) && !tmp8.eq(tmp2) && !tmp8.eq(tmp3) && !tmp8.eq(tmp4) && !tmp8.eq(tmp5) && !tmp8.eq(tmp6) && !tmp8.eq(tmp7) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp8))) return true;
+        else if(!tmp9.eq(tmp1) && !tmp9.eq(tmp2) && !tmp9.eq(tmp3) && !tmp9.eq(tmp4) && !tmp9.eq(tmp5) && !tmp9.eq(tmp6) && !tmp9.eq(tmp7) && !tmp9.eq(tmp8) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp9))) return true;
         else return false;
     }
 

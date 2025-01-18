@@ -69,7 +69,7 @@ public class Player extends Rond {
 
     public void reset_speed() {
         speed_y = 0;
-        speed_x=0;
+        speed_x = 0;
     }
 
     @Override

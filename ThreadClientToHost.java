@@ -223,8 +223,7 @@ public class ThreadClientToHost extends Thread {
                     String[] data_player;
                     for(int i=0; i < nbr; i++) {
                         data_player = liste_Projectiles[i].split(":");
-                        //LightRond rond=new LightRond(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), ourPlayer.getRadius(), Integer.parseInt(data_player[3]), Integer.parseInt(data_player[2]));
-                        players.add(new LightPlayer(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), 50, Integer.parseInt(data_player[2])));
+                        players.add(new LightPlayer(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), Integer.parseInt(data_player[3]), Integer.parseInt(data_player[2])));
                         
                     }
                 }

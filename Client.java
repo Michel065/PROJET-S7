@@ -214,7 +214,9 @@ public class Client extends Application {
                 // Dessiner le rond
                 gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
                 
-                one_create_life_bar(drawX- sizeWindow / 2-player.getRadius(),drawY- sizeWindow / 2-player.getRadius(),player.get_vie_pourcentage());
+                drawX=drawX- sizeWindow / 2+ player.getRadius()*caseWidth;
+                drawY=drawY- sizeWindow / 2+ player.getRadius()*caseWidth;
+                one_create_life_bar(drawX,drawY,player.get_vie_pourcentage());
 
             }
         }
@@ -224,10 +226,10 @@ public class Client extends Application {
         if (gc == null) {
             return;
         }
-        double largeur_blanc = 0.9 * (1 - pourcentage);
+        double largeur_blanc = 0.9 * (1 - pourcentage)*caseWidth;
         gc.setFill(Color.WHITE);
-        gc.fillOval(centerX , centerY, caseWidth * largeur_blanc, caseWidth * largeur_blanc);
-        }
+        gc.fillOval(centerX-largeur_blanc/2, centerY-largeur_blanc/2, largeur_blanc, largeur_blanc);
+    }
     
     public static void main(String[] args) {
         Application.launch(Client.class, args);

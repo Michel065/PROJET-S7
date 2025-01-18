@@ -120,7 +120,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     protected void update_player() {
         if(statut_joueur) {
-            
             ourplayer.addHealth(degat_en_attente.getAndSet(0));
             pourcentage_vie.set(ourplayer.get_pourcentage_vie());
             if(ourplayer.getHealth()>0){

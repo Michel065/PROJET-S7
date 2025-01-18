@@ -119,7 +119,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected void update_player() {
-        if(ourplayer != null) {
+        if(statut_joueur) {
             
             ourplayer.addHealth(degat_en_attente.getAndSet(0));
             pourcentage_vie.set(ourplayer.get_pourcentage_vie());
@@ -134,11 +134,11 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                     ourplayer.reset_speed();
                 }
             }
-            else remode_ourplayer(); 
+            else kill_ourplayer(); 
         }
     }
 
-    protected void remode_ourplayer() {
+    protected void kill_ourplayer() {
         statut_joueur = false;
     }
 
@@ -182,6 +182,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected boolean is_finish() {
+        System.out.println("fini:"+ (Host.is_close || (!client_ouvert && !statut_joueur && ourprojectiles.size() == 0)));
         return Host.is_close || (!client_ouvert && !statut_joueur && ourprojectiles.size() == 0); // À revoir dans le run
     }
 

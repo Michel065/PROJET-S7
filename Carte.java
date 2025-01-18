@@ -126,8 +126,6 @@ public class Carte {
         CoordInt tmp8 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y + 1);
         CoordInt tmp9 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x - 1, (int)coord.y - 1);
 
-        
-
         if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null || tmp6 == null || tmp7 == null || tmp8 == null || tmp9 == null) return true;
 
         if(test_collision_rond_obstacle_sur_chunk(coord, radius, carte.get(tmp1))) return true;

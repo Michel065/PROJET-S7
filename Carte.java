@@ -111,7 +111,11 @@ public class Carte {
         return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     }
 
-    public boolean test_collision_rond_obstacle(CoordFloat coord, float radius) {
+    public boolean test_collision_rond_obstacle(CoordFloat coordd, float radius) {
+        CoordFloat coord = new CoordFloat(coordd);
+        coord.x -= ((float)0.50 - radius);
+        coord.y -= ((float)0.50 - radius);
+
         CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y);
         CoordInt tmp2 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y + 1);
         CoordInt tmp3 = get_Coordonnees_De_Reel_Vers_Grille((int)coord.x, (int)coord.y - 1);

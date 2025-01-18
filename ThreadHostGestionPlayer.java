@@ -140,7 +140,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
     protected void remode_ourplayer() {
         statut_joueur = false;
-        ourplayer = null;
     }
 
     protected void create_player() {
@@ -183,7 +182,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected boolean is_finish() {
-        return Host.is_close || (!client_ouvert && ourplayer == null && ourprojectiles.size() == 0); // À revoir dans le run
+        return Host.is_close || (!client_ouvert && !statut_joueur && ourprojectiles.size() == 0); // À revoir dans le run
     }
 
     public abstract void run();

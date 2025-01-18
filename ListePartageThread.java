@@ -59,7 +59,10 @@ public class ListePartageThread {
 
     private synchronized void maj_liste_equipe(){
         for(int i=0;i<get_size();i++){
-            personne_par_equipe[liste[i].getEquipe()] +=1;
+            int equipe=liste[i].getEquipe();
+            if(equipe!=-1){
+                personne_par_equipe[equipe]+=1;
+            }
         }
     }
 

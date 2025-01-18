@@ -21,8 +21,8 @@ public class Client extends Application {
     public static boolean is_close = false;
     private Carte carte;
 
-    private ConcurrentLinkedQueue<LightRond> players = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<LightRond> projectiles = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<LightPlayer> players = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<LightProjectile> projectiles = new ConcurrentLinkedQueue<>();
     private Float[] centre = new Float[2];
 
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
@@ -161,19 +161,19 @@ public class Client extends Application {
         double offsetY = (centreY - (int) centreY) * caseWidth;
     
         // Dessiner les LightRond
-        for (LightRond rond : projectiles) {
-            synchronized (rond) {
+        for (LightProjectile proj : projectiles) {
+            synchronized (proj) {
                 //System.out.println(rond.getX());
                 //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
-                Color projectileColor = colors[rond.getCouleur()];
+                Color projectileColor = colors[proj.getEquipe()];
                 gc.setFill(projectileColor);
     
                 // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
-                double drawX = (rond.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
-                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseWidth - offsetY;
+                double drawX = (proj.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
+                double drawY = (proj.getY() - (int) centreY + rayon_display_en_case) * caseWidth - offsetY;
     
                 // Taille du rond (fixée à une fraction de la case)
-                double projectileSize = Math.min(caseWidth, caseWidth) * rond.getRadius() * 2;
+                double projectileSize = Math.min(caseWidth, caseWidth) * proj.getRadius() * 2;
     
                 // Dessiner le rond
                 gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
@@ -195,26 +195,26 @@ public class Client extends Application {
         
         Color playerColor;
         // Dessiner les LightRond
-        for (LightRond rond : players) {
-            synchronized (rond) {
+        for (LightPlayer player : players) {
+            synchronized (player) {
                 //System.out.println("coord x:" + rond.getX() + " coord y:" + rond.getY() + " coord radius:" + rond.getRadius());
-                if(rond.getCouleur()==-1)
+                if(player.getEquipe()==-1)
                     playerColor = Color.WHITE;
                 else
-                    playerColor = colors[rond.getCouleur()];
+                    playerColor = colors[player.getEquipe()];
                 gc.setFill(playerColor);
                 
                 // Calcul des coordonnées pour placer correctement le rond en tenant compte du décalage
-                double drawX = (rond.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
-                double drawY = (rond.getY() - (int) centreY + rayon_display_en_case) * caseWidth - offsetY;
+                double drawX = (player.getX() - (int) centreX + rayon_display_en_case) * caseWidth - offsetX;
+                double drawY = (player.getY() - (int) centreY + rayon_display_en_case) * caseWidth - offsetY;
                 
                 // Taille du rond (fixée à une fraction de la case)
-                double projectileSize = Math.min(caseWidth, caseWidth) * rond.getRadius() * 2;
+                double projectileSize = Math.min(caseWidth, caseWidth) * player.getRadius() * 2;
     
                 // Dessiner le rond
                 gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
                 
-                one_create_life_bar(drawX- sizeWindow / 2,drawY- sizeWindow / 2,rond.get_vie_pourcentage());
+                one_create_life_bar(drawX- sizeWindow / 2-player.getRadius(),drawY- sizeWindow / 2-player.getRadius(),player.get_vie_pourcentage());
 
             }
         }

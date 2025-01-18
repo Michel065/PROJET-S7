@@ -18,14 +18,15 @@ public class ThreadClientToHost extends Thread {
     private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
-    private boolean host_ouvert = true;
+    private boolean host_ouvert = true,player_status=true;
+    private long dernier_msg_recu_tmp,dernier_msg_recu=System.nanoTime();
 
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
     // Pour la carte
     private Carte carte;
-    private ConcurrentLinkedQueue<LightRond> players;
-    private ConcurrentLinkedQueue<LightRond> projectiles;
+    private ConcurrentLinkedQueue<LightPlayer> players;
+    private ConcurrentLinkedQueue<LightProjectile> projectiles;
 
     // Partagé :
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30);
@@ -36,7 +37,7 @@ public class ThreadClientToHost extends Thread {
 
     private Player ourPlayer;
     
-    ThreadClientToHost(Stage primaryStage, String ip, int port, ConcurrentLinkedQueue<LightRond> pl, ConcurrentLinkedQueue<LightRond> pr) {
+    ThreadClientToHost(Stage primaryStage, String ip, int port, ConcurrentLinkedQueue<LightPlayer> pl, ConcurrentLinkedQueue<LightProjectile> pr) {
         this.primaryStage = primaryStage;
         this.port = port;
         this.IP = ip;
@@ -72,6 +73,7 @@ public class ThreadClientToHost extends Thread {
     }
 
     private String stringifie_action(String message_sortant) {
+        if(!player_status) return "";
         if (activeKeys.contains(KeyCode.Z)) {
             message_sortant += "put ourplayer avance\n\r";
         }
@@ -107,8 +109,6 @@ public class ThreadClientToHost extends Thread {
 
             message_transmit="put ourplayer new\n\r";
             message_transmit+="get carte\n\r";
-            message_transmit+="get player radius\n\r";
-            message_transmit+="get projectile radius\n\r";
             message_transmit+="put ourplayer invincibilite false\n\r";
 
             envoie_et_analyse(message_transmit);
@@ -128,10 +128,11 @@ public class ThreadClientToHost extends Thread {
                 message_transmit += "get ourplayer orientation\n\r";
                 message_transmit += "get projectiles\n\r";
                 message_transmit += "get players\n\r";
-                //message_transmit += "get ourplayer status\n\r";
+                message_transmit += "get ourplayer status\n\r";
                 message_transmit = stringifie_action(message_transmit);
 
                 envoie_et_analyse(message_transmit);
+                is_host_alive(0);
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu");
@@ -147,6 +148,7 @@ public class ThreadClientToHost extends Thread {
             while (serveur_output.ready()) { // Pour éviter des accumulations
                 message_recu = serveur_output.readLine();
                 message_transmit += Analyse(message_recu);
+                is_host_alive(1);
             }
             send(message_transmit);
             message_transmit="";
@@ -154,6 +156,17 @@ public class ThreadClientToHost extends Thread {
         catch (IOException e) {
             System.err.println("Erreur : " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public void is_host_alive(int val) {
+        dernier_msg_recu_tmp = System.nanoTime();
+        if(Math.abs(dernier_msg_recu_tmp - dernier_msg_recu) >=2000 * 1000 * 1000) {
+            host_ouvert=false;
+            Client.is_close=true;
+        }
+        if(val==1) {
+            dernier_msg_recu = dernier_msg_recu_tmp;
         }
     }
 
@@ -179,9 +192,6 @@ public class ThreadClientToHost extends Thread {
                     if (object.equals("coord")) {
                         String[] coord = data.split(":");
                         ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
-                        /////////////////////////////////////
-                        System.out.println("player en x:" + coord[0] + " ; y:" + coord[1]);
-                        /////////////////////////////////////
                     }else if(object.equals("null")){
                         Client.is_close = true;
                     }else if(object.equals("orientation")){
@@ -189,7 +199,8 @@ public class ThreadClientToHost extends Thread {
                     }
                     else if(object.equals("equipe")){
                         ourPlayer.setEquipe(Integer.parseInt(data));
-                        System.out.println("coucou"+Integer.parseInt(data));
+                    }else if(object.equals("status")){
+                        player_status=(Integer.parseInt(data)==1);
                     }
                 } else if (target.equals("fenetre")) {
                     if (object.equals("rayon")) {
@@ -202,7 +213,7 @@ public class ThreadClientToHost extends Thread {
                     String[] coord;
                     for(int i=0; i < nbr; i++) {
                         coord = liste_Projectiles[i].split(":");
-                        projectiles.add(new LightRond(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), ourPlayer.get_proj_radius(), 1, Integer.parseInt(coord[2])));
+                        projectiles.add(new LightProjectile(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]), Integer.parseInt(coord[2])));
                     }
                 }
                 else if (target.equals("players")) {
@@ -212,8 +223,8 @@ public class ThreadClientToHost extends Thread {
                     String[] data_player;
                     for(int i=0; i < nbr; i++) {
                         data_player = liste_Projectiles[i].split(":");
-                        LightRond rond=new LightRond(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), ourPlayer.getRadius(), Integer.parseInt(data_player[3]), Integer.parseInt(data_player[2]));
-                        players.add(rond);
+                        //LightRond rond=new LightRond(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), ourPlayer.getRadius(), Integer.parseInt(data_player[3]), Integer.parseInt(data_player[2]));
+                        players.add(new LightPlayer(Float.parseFloat(data_player[0]), Float.parseFloat(data_player[1]), 50, Integer.parseInt(data_player[2])));
                         
                     }
                 }

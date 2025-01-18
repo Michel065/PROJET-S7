@@ -49,14 +49,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 delta_time = Math.abs((last_time - current_time) / (float)(1000 * 1000 * 1000));
                 last_time = current_time;
 
-                message_transmit = "";
-                while (client_output.ready()) { // Pour éviter des accumulations
-                    this.message_recu = client_output.readLine();
-                    message_transmit += Analyse(this.message_recu);
-                    is_client_alive(1);
-                }
-
-                send(message_transmit);
+                analyse_et_envoie();
                 update_projectiles();
                 update_player();
 
@@ -65,19 +58,31 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu.");
             }
-            catch (IOException e) {
-                System.err.println("Erreur : " + e.getMessage());
-                e.printStackTrace();
-            }
         }
         System.out.println("Fermeture du thread : " + Thread.currentThread().getName());
         send("put host fermeture\n\r");
         Liste_Thread.supprimer(index.get());
     }
 
+    public void analyse_et_envoie(){
+        try {
+            while (client_output.ready()) { // Pour éviter des accumulations
+                this.message_recu = client_output.readLine();
+                message_transmit += Analyse(this.message_recu);
+                is_client_alive(1);
+            }
+            send(message_transmit);
+            message_transmit = "";
+        }
+        catch (IOException e) {
+            System.err.println("Erreur : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void is_client_alive(int val) {
         dernier_msg_recu_tmp = System.nanoTime();
-        if(Math.abs(dernier_msg_recu_tmp - dernier_msg_recu) >=2000 * 1000 * 1000) {
+        if(Math.abs(dernier_msg_recu_tmp - dernier_msg_recu) >=2000 * 1000 * 1000) { // 2seconde
             Liste_Thread.supprimer(index.get());
             statut_joueur=false;
             ourplayer=null;
@@ -112,6 +117,12 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else if (object.equals("equipe")) {
                         reponse="put ourplayer equipe " + ourplayer.getEquipe();
+                    }
+                    else if (object.equals("status")) {
+                        if(statut_joueur)
+                            reponse="put ourplayer status 1";
+                        else
+                            reponse="put ourplayer status 0";
                     }
                 }
                 else if (target.equals("projectiles")) {                    
@@ -196,6 +207,6 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
 
     public boolean objet_dans_fentre_client(CoordFloat rond) {
         CoordFloat centre = ourplayer.getCoord();
-        return Math.abs(centre.x - rond.x) < rayon_display_en_case && Math.abs(centre.y - rond.y) < rayon_display_en_case;
+        return Math.abs(centre.x - rond.x) < rayon_display_en_case && Math.abs(centre.y - rond.y) < rayon_display_en_case+2;
     }
 }

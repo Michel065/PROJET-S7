@@ -1,7 +1,7 @@
 public class Player extends Rond {
     private double orientation = 0;
     private float max_speed=(float)10, speed_x, speed_y;
-    private int health = 100,max_health = 100;
+    private int health = 100, max_health = 100;
 
     // Infos projectile :
     private float proj_speed = (float)2.5;

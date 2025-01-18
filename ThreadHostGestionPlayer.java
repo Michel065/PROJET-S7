@@ -182,7 +182,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     }
 
     protected boolean is_finish() {
-        System.out.println("fini:"+ (Host.is_close || (!client_ouvert && !statut_joueur && ourprojectiles.size() == 0)));
         return Host.is_close || (!client_ouvert && !statut_joueur && ourprojectiles.size() == 0); // À revoir dans le run
     }
 

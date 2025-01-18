@@ -214,7 +214,9 @@ public class Client extends Application {
                 // Dessiner le rond
                 gc.fillOval(drawX - sizeWindow / 2, drawY - sizeWindow / 2, projectileSize, projectileSize);
                 
-                one_create_life_bar(drawX- sizeWindow / 2-player.getRadius(),drawY- sizeWindow / 2-player.getRadius(),player.get_vie_pourcentage());
+                drawX=drawX- sizeWindow / 2 - player.getRadius()*caseWidth+offsetX;
+                drawY=drawY- sizeWindow / 2- player.getRadius()*caseWidth+offsetY;
+                one_create_life_bar(drawX,drawY,player.get_vie_pourcentage());
 
             }
         }

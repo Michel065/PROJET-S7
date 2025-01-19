@@ -164,6 +164,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
             btnFF.setOnAction(event -> {
                 respawnStage.close();
+                client_ouvert = false;
             });
 
             VBox layout = new VBox(20);

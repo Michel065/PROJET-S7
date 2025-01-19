@@ -196,7 +196,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 } 
                 if (target.equals("client")) {
                     if(object.equals("fermeture")) {
-                        client_ouvert=false;
+                        client_ouvert = false;
                     }
                 }
             } else reponse = msg_erreur;

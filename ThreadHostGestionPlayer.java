@@ -3,6 +3,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.application.Platform;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+
 public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
     protected ListePartageThread Liste_Thread;
@@ -12,7 +20,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     private Projectile proj_tmp;
     protected long  current_time, last_time;
     protected float delta_time; // En secondes
-    protected boolean client_ouvert=true;
+    protected boolean client_ouvert = true;
 
     // Variable de tmp allouée une seule fois
     private CoordFloat tmp_coord_Float = new CoordFloat();
@@ -23,8 +31,8 @@ public abstract class ThreadHostGestionPlayer extends Thread {
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30); // 30 projectiles max par joueur
     protected boolean statut_joueur = false; // Juste pour savoir si on est vivant ou pas
     protected int equipe = -1;
-    protected CoordFloatAtomic coord_joueur= new CoordFloatAtomic();
-    protected AtomicInteger pourcentage_vie= new AtomicInteger();
+    protected CoordFloatAtomic coord_joueur = new CoordFloatAtomic();
+    protected AtomicInteger pourcentage_vie = new AtomicInteger();
 
     ThreadHostGestionPlayer(Carte carte, ListePartageThread Liste_Thread) {
         this.carte = carte;
@@ -122,7 +130,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         if(statut_joueur) {
             ourplayer.addHealth(degat_en_attente.getAndSet(0));
             pourcentage_vie.set(ourplayer.get_pourcentage_vie());
-            if(ourplayer.getHealth()>0){
+            if(ourplayer.getHealth() > 0){
                 ourplayer.setDeltaTime(delta_time);
                 ourplayer.simu_move();
                 if (!carte.test_collision_rond_obstacle(ourplayer.get_simu_move(), ourplayer.getRadius()) && !player_touch()) {
@@ -133,8 +141,42 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                     ourplayer.reset_speed();
                 }
             }
-            else kill_ourplayer(); 
+            else {
+                kill_ourplayer(); 
+                open_respawn_window();
+            }
         }
+    }
+
+    public void open_respawn_window() {
+        Platform.runLater(() -> {
+            Stage respawnStage = new Stage();
+            respawnStage.setTitle("Vous êtes mort !");
+
+            Label label = new Label("Revenez dans la bataille !");
+            Button btnRespawn = new Button("Respawn");
+            Button btnFF = new Button("Abandonner");
+
+            btnRespawn.setOnAction(event -> {
+                respawn_player();
+                respawnStage.close();
+            });
+
+            btnFF.setOnAction(event -> {
+                respawnStage.close();
+            });
+
+            VBox layout = new VBox(20);
+            layout.setAlignment(Pos.CENTER);
+            layout.setPadding(new Insets(20));
+
+            layout.getChildren().addAll(label, btnRespawn, btnFF);
+
+            Scene scene = new Scene(layout, 300, 200);
+            respawnStage.setScene(scene);
+
+            respawnStage.show();
+        });
     }
 
     protected void kill_ourplayer() {
@@ -168,6 +210,11 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
         statut_joueur = true;
         coord_joueur.setCoords(ourplayer.getCoord());
+    }
+
+    protected void respawn_player() {
+        create_player();
+        ourplayer.setInvinvibilite(false);
     }
 
     protected void tire() {

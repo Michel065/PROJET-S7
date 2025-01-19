@@ -123,8 +123,8 @@ public class UI extends Application {
         Label messageLabel = new Label("Votre adresse IP est : " + getLocalIPAddress() + "\nL'hôte écoute sur le port : " + port);
         Button okButton = new Button("Éteindre serveur");
 
-        okButton.setOnAction(e ->
-            {server.stop();
+        okButton.setOnAction(e -> {
+            server.stop();
             stage.close();
         });
 

@@ -115,7 +115,7 @@ public class Carte {
     public boolean test_collision_rond_obstacle(CoordFloat coord, float radius) {
         CoordFloat coord_tmp = new CoordFloat(coord);
         coord_tmp.x -= ((float)0.50 - radius);
-        coord_tmp.y -= ((float)0.50 -   radius);
+        coord_tmp.y -= ((float)0.50 - radius);
 
         CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x, (int)coord_tmp.y);
         CoordInt tmp2 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x, (int)coord_tmp.y + 1);

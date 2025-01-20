@@ -1,6 +1,6 @@
 public class Player extends Rond {
     private double orientation = 0;
-    private float max_speed=(float)10, speed_x, speed_y;
+    private float max_speed=(float)5, speed_x, speed_y;
     private int health = 100, max_health = 100;
 
     // Infos projectile :
@@ -45,8 +45,8 @@ public class Player extends Rond {
     }
 
     public void addToSpeed(float gain_par_seconde) {
-        speed_x += Math.cos(orientation) * gain_par_seconde;//*delta_time;
-        speed_y += Math.sin(orientation) * gain_par_seconde;//*delta_time;
+        speed_x += Math.cos(orientation) * gain_par_seconde*delta_time;
+        speed_y += Math.sin(orientation) * gain_par_seconde*delta_time;
 
         if(speed_x > 0)
             speed_x = Math.min(speed_x, max_speed);
@@ -59,11 +59,11 @@ public class Player extends Rond {
     }
 
     private void reduce_speed() {
-        if(Math.abs(speed_x) > 0.11)
-            speed_x *= 0.95*delta_time;
+        if(Math.abs(speed_x) > 0.1)
+            speed_x *= 1-(delta_time);
         else speed_x = 0;
-        if(Math.abs(speed_y) > 0.11)
-            speed_y *= 0.95;
+        if(Math.abs(speed_y) > 0.1)
+            speed_y *= 1-(delta_time);
         else speed_y = 0;
     }
 

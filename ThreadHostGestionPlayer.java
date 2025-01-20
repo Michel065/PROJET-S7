@@ -116,7 +116,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         for (Projectile projectile : ourprojectiles) {
             projectile.setDeltaTime(delta_time);
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
+            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), rayon_proj,null) || other_player_is_touch_by_proj(projectile)) { 
                 a_remove.add(projectile);
             } else {
                 projectile.move();
@@ -133,7 +133,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
             if(ourplayer.getHealth() > 0){
                 ourplayer.setDeltaTime(delta_time);
                 ourplayer.simu_move();
-                if (!carte.test_collision_rond_obstacle(ourplayer.get_simu_move(), ourplayer.getRadius()) && !player_touch()) {
+                if (!carte.test_collision_rond_obstacle(ourplayer.get_simu_move(), ourplayer.getRadius(),null) && !player_touch()) {
                     ourplayer.move();
                     coord_joueur.setCoords(ourplayer.getCoord());
                 } 

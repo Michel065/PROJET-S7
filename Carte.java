@@ -7,13 +7,13 @@ public class Carte {
     private int largeur_case, largeur_matrice, nbr_moyen_obstacle_par_case, nbr_max_obstacle_par_case;
     private double pourcentage_obstacle;
     private int nbr_actuel_obstacle;
-    private CoordFloat coord_tmp=new CoordFloat();
+    private CoordFloat coord_tmp = new CoordFloat();
 
     private MatriceCarre<CoordInt> carte;
     private List<Obstacle> obstacles;
     
     public Carte(long taille, double pourcentage_obstacle, int nbr_moyen_obstacle_par_case) {
-        this.taille_origine=taille;
+        this.taille_origine = taille;
         this.nbr_moyen_obstacle_par_case = nbr_moyen_obstacle_par_case;
         this.pourcentage_obstacle = pourcentage_obstacle;
         
@@ -111,7 +111,7 @@ public class Carte {
     private float distance_euclidienne_carre(float x1, float y1, float x2, float y2) {
         return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     }
-    public boolean test_collision_rond_obstacle(CoordFloat coord, float radius,CoordFloat X) {
+    public boolean test_collision_rond_obstacle(CoordFloat coord, float radius, CoordFloat X) {
         coord_tmp.set(coord);
         coord_tmp.add(-((float)0.50 - radius));
         
@@ -127,15 +127,15 @@ public class Carte {
 
        if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null || tmp6 == null || tmp7 == null || tmp8 == null || tmp9 == null) return true;
 
-        if(test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp1),X)) return true;
-        else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp2),X)) return true;
-        else if(!tmp3.eq(tmp1) && !tmp3.eq(tmp2) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp3),X)) return true;
-        else if(!tmp4.eq(tmp1) && !tmp4.eq(tmp2) && !tmp4.eq(tmp3) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp4),X)) return true;
-        else if(!tmp5.eq(tmp1) && !tmp5.eq(tmp2) && !tmp5.eq(tmp3) && !tmp5.eq(tmp4) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp5),X)) return true;
-        else if(!tmp6.eq(tmp1) && !tmp6.eq(tmp2) && !tmp6.eq(tmp3) && !tmp6.eq(tmp4) && !tmp6.eq(tmp5) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp6),X)) return true;
-        else if(!tmp7.eq(tmp1) && !tmp7.eq(tmp2) && !tmp7.eq(tmp3) && !tmp7.eq(tmp4) && !tmp7.eq(tmp5) && !tmp7.eq(tmp6) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp7),X)) return true;
-        else if(!tmp8.eq(tmp1) && !tmp8.eq(tmp2) && !tmp8.eq(tmp3) && !tmp8.eq(tmp4) && !tmp8.eq(tmp5) && !tmp8.eq(tmp6) && !tmp8.eq(tmp7) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp8),X)) return true;
-        else if(!tmp9.eq(tmp1) && !tmp9.eq(tmp2) && !tmp9.eq(tmp3) && !tmp9.eq(tmp4) && !tmp9.eq(tmp5) && !tmp9.eq(tmp6) && !tmp9.eq(tmp7) && !tmp9.eq(tmp8) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp9),X)) return true;
+        if(test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp1), X)) return true;
+        else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp2), X)) return true;
+        else if(!tmp3.eq(tmp1) && !tmp3.eq(tmp2) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp3), X)) return true;
+        else if(!tmp4.eq(tmp1) && !tmp4.eq(tmp2) && !tmp4.eq(tmp3) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp4), X)) return true;
+        else if(!tmp5.eq(tmp1) && !tmp5.eq(tmp2) && !tmp5.eq(tmp3) && !tmp5.eq(tmp4) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp5), X)) return true;
+        else if(!tmp6.eq(tmp1) && !tmp6.eq(tmp2) && !tmp6.eq(tmp3) && !tmp6.eq(tmp4) && !tmp6.eq(tmp5) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp6), X)) return true;
+        else if(!tmp7.eq(tmp1) && !tmp7.eq(tmp2) && !tmp7.eq(tmp3) && !tmp7.eq(tmp4) && !tmp7.eq(tmp5) && !tmp7.eq(tmp6) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp7), X)) return true;
+        else if(!tmp8.eq(tmp1) && !tmp8.eq(tmp2) && !tmp8.eq(tmp3) && !tmp8.eq(tmp4) && !tmp8.eq(tmp5) && !tmp8.eq(tmp6) && !tmp8.eq(tmp7) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp8), X)) return true;
+        else if(!tmp9.eq(tmp1) && !tmp9.eq(tmp2) && !tmp9.eq(tmp3) && !tmp9.eq(tmp4) && !tmp9.eq(tmp5) && !tmp9.eq(tmp6) && !tmp9.eq(tmp7) && !tmp9.eq(tmp8) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp9), X)) return true;
         else return false;
     }
 

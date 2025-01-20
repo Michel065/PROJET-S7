@@ -66,17 +66,17 @@ public class Player extends Rond {
 
     private void reduce_speed() {
         if(Math.abs(speed_x) > 0.1)
-            speed_x *= 1-(delta_time);
+            speed_x *= 1 - (delta_time);
         else speed_x = 0;
         if(Math.abs(speed_y) > 0.1)
-            speed_y *= 1-(delta_time);
+            speed_y *= 1 - (delta_time);
         else speed_y = 0;
     }
 
     public void reset_speed() {
         speed_x = 0;
         speed_y = 0;
-        if(Math.abs(Math.cos(orientation))>Math.abs(Math.sin(orientation)))
+        if(Math.abs(Math.cos(orientation)) > Math.abs(Math.sin(orientation)))
             speed_x = 0;
         else
             speed_y = 0;

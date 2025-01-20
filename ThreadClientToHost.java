@@ -18,7 +18,7 @@ public class ThreadClientToHost extends Thread {
     private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
-    private boolean host_ouvert = true,player_status=true;
+    private boolean host_ouvert = true, player_status=true;
     private long dernier_msg_recu_tmp,dernier_msg_recu=System.nanoTime();
 
     private final Set<KeyCode> activeKeys = new HashSet<>();

@@ -140,10 +140,10 @@ public class Carte {
     }
 
     public boolean test_collision_proj_obstacle(CoordFloat coord, float radius) {
-        return test_collision_rond_obstacle(coord,radius,null);
+        return test_collision_rond_obstacle(coord, radius, null);
     }
 
-    public boolean test_collision_rond_obstacle_sur_chunk(CoordFloat coord, float radius, CoordInt couple,CoordFloat X) {
+    public boolean test_collision_rond_obstacle_sur_chunk(CoordFloat coord, float radius, CoordInt couple, CoordFloat X) {
         float[] distances = new float[4];
         CoordFloat[] sommets = new CoordFloat[4];
 
@@ -212,6 +212,17 @@ public class Carte {
             fy = cy - y1;
 
             t = (fx * dx + fy * dy) / (dx * dx + dy * dy); // Ratio de projection du centre du cercle sur le segment
+
+            // Calcul des coordonnées de X
+            if(x1 == x2) {
+                X.x = x1;
+                X.y = y1 + (y2-y1) / Maths.abs(y2-y1) * t;
+            }
+            else if(y1 == y2) {
+                X.x = x1 + (x2-x1) / Maths.abs(x2-x1) * t;
+                X.y = y1;
+            }
+            else System.out.println("WTFWTFWTFWTF les x ET les y sont distincts WTFWTFWTFWTFWTFWTF");
 
             // Si la projection tombe en dehors du segment, on vérifie les extrémités
             if (t < 0) {

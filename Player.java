@@ -44,9 +44,9 @@ public class Player extends Rond {
         orientation+=(angle * 0.01745329253);
     }
 
-    public void addToSpeed(float val) {
-        speed_x += Math.abs(Math.cos(orientation)) * val;
-        speed_y += Math.abs(Math.sin(orientation)) * val;
+    public void addToSpeed(float gain_par_seconde) {
+        speed_x += Math.cos(orientation) * gain_par_seconde;//*delta_time;
+        speed_y += Math.sin(orientation) * gain_par_seconde;//*delta_time;
 
         if(speed_x > 0)
             speed_x = Math.min(speed_x, max_speed);
@@ -60,7 +60,7 @@ public class Player extends Rond {
 
     private void reduce_speed() {
         if(Math.abs(speed_x) > 0.11)
-            speed_x *= 0.95;
+            speed_x *= 0.95*delta_time;
         else speed_x = 0;
         if(Math.abs(speed_y) > 0.11)
             speed_y *= 0.95;
@@ -68,7 +68,6 @@ public class Player extends Rond {
     }
 
     public void reset_speed() {
-
         speed_x = 0;
         speed_y = 0;
         if(Math.abs(Math.cos(orientation))>Math.abs(Math.sin(orientation)))
@@ -80,14 +79,14 @@ public class Player extends Rond {
 
     @Override
     public void simu_move(){
-        coord_simu.set(coord.x + (float)(Math.cos(orientation) * speed_x * delta_time), coord.y + (float)(Math.sin(orientation) * speed_y * delta_time));
+        coord_simu.set(coord.x + (float)(Math.abs(Math.cos(orientation)) * speed_x * delta_time), coord.y + (float)(Math.abs(Math.sin(orientation)) * speed_y * delta_time));
     }
 
     @Override
     public void move(){
         //System.out.println("en x:"+speed_x+" en y:"+speed_y);
-        coord.x += (float)(Math.cos(orientation) * speed_x * delta_time);
-        coord.y += (float)(Math.sin(orientation) * speed_y * delta_time);
+        coord.x += (float)(Math.abs(Math.cos(orientation)) * speed_x * delta_time);
+        coord.y += (float)(Math.abs(Math.sin(orientation)) * speed_y * delta_time);
         reduce_speed();
     }
 
@@ -103,7 +102,7 @@ public class Player extends Rond {
         end = System.nanoTime();
         if(end - start >= cooldown){
             start = end;
-            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x + 0.45f/2 - proj_radius, coord.y + 0.45f/2 - proj_radius, (float)Math.cos(orientation), (float)Math.sin(orientation));
+            return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x + radius/2 - proj_radius, coord.y + radius/2 - proj_radius, (float)Math.cos(orientation), (float)Math.sin(orientation));
             //return new Projectile(proj_speed, proj_life, proj_radius, proj_degat, coord.x, coord.y, (float)Math.cos(orientation), (float)Math.sin(orientation)); 
         }
         return null;

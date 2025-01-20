@@ -168,9 +168,9 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
             } else if(action.equals("put")) {
                 if (target.equals("ourplayer")) {
                     if (object.equals("avance")) {
-                        ourplayer.addToSpeed((float)0.5);
+                        ourplayer.addToSpeed((float)1.5);
                     } else if(object.equals("recule")) {
-                        ourplayer.addToSpeed((float)-0.5);
+                        ourplayer.addToSpeed((float)-1.5);
                     }else if(object.equals("rotation_gauche")) {
                         ourplayer.rotate(-5);
                     }else if(object.equals("rotation_droite")) {

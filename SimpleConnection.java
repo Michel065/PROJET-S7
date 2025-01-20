@@ -19,21 +19,22 @@ public class SimpleConnection {
         scanner.close();
     }
 
-    // Fonction pour démarrer le serveur
     private static void startServer() {
-        try (ServerSocket serverSocket = new ServerSocket(12345)) {
-            InetAddress[] allAddresses = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
-            for (InetAddress addr : allAddresses) {
-                System.out.println("Adresse IP disponible : " + addr.getHostAddress());
-            }
-            System.out.println("Serveur en attente d'une connexion sur le port 5000...");
+        try {
+            // Forcer le serveur à écouter sur l'IP spécifique
+            ServerSocket serverSocket = new ServerSocket(12345, 50, InetAddress.getByName("192.168.52.237"));
+            System.out.println("Serveur en attente d'une connexion sur l'adresse : 192.168.52.237 et le port 12345...");
+    
+            // Attente de connexion d'un client
             Socket clientSocket = serverSocket.accept();
             System.out.println("Un client s'est connecté !");
             clientSocket.close();
+            serverSocket.close();
         } catch (IOException e) {
             System.err.println("Erreur dans le serveur : " + e.getMessage());
         }
     }
+    
 
     // Fonction pour démarrer le client
     private static void startClient() {

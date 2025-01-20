@@ -22,7 +22,7 @@ public class SimpleConnection {
     private static void startServer() {
         try {
             // Forcer le serveur à écouter sur l'IP spécifique
-            ServerSocket serverSocket = new ServerSocket(12345, 50, InetAddress.getByName("192.168.52.237"));
+            ServerSocket serverSocket = new ServerSocket(12345);//, 50, InetAddress.getByName("192.168.52.237"));
             System.out.println("Serveur en attente d'une connexion sur l'adresse : 192.168.52.237 et le port 12345...");
     
             // Attente de connexion d'un client

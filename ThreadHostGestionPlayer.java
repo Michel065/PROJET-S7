@@ -3,13 +3,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javafx.scene.Scene;
-import javafx.scene.layout.*;
-import javafx.application.Platform;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+
 
 public abstract class ThreadHostGestionPlayer extends Thread {
     protected Carte carte;
@@ -133,52 +127,22 @@ public abstract class ThreadHostGestionPlayer extends Thread {
             if(ourplayer.getHealth() > 0){
                 ourplayer.setDeltaTime(delta_time);
                 ourplayer.simu_move();
-                if (!carte.test_collision_rond_obstacle(ourplayer.get_simu_move(), ourplayer.getRadius(),null) && !player_touch()) {
+                if (!carte.test_collision_rond_obstacle(ourplayer.get_simu_move(), ourplayer.getRadius(),ourplayer.get_Point_Contact()) && !player_touch()) {
                     ourplayer.move();
                     coord_joueur.setCoords(ourplayer.getCoord());
                 } 
                 else {
+                    ourplayer.rectifie_move();
                     ourplayer.reset_speed();
                 }
             }
             else {
                 kill_ourplayer(); 
-                open_respawn_window();
             }
         }
     }
 
-    public void open_respawn_window() {
-        Platform.runLater(() -> {
-            Stage respawnStage = new Stage();
-            respawnStage.setTitle("Vous êtes mort !");
-
-            Label label = new Label("Revenez dans la bataille !");
-            Button btnRespawn = new Button("Respawn");
-            Button btnFF = new Button("Abandonner");
-
-            btnRespawn.setOnAction(event -> {
-                respawnStage.close();
-                respawn_player();
-            });
-
-            btnFF.setOnAction(event -> {
-                respawnStage.close();
-                client_ouvert = false;
-            });
-
-            VBox layout = new VBox(10);
-            layout.setAlignment(Pos.CENTER);
-            layout.setPadding(new Insets(20));
-
-            layout.getChildren().addAll(label, btnRespawn, btnFF);
-
-            Scene scene = new Scene(layout, 300, 200);
-            respawnStage.setScene(scene);
-
-            respawnStage.show();
-        });
-    }
+    
 
     protected void kill_ourplayer() {
         statut_joueur = false;

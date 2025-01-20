@@ -12,6 +12,8 @@ public class Player extends Rond {
     private long cooldown = 500 * 1000 * 1000; // En ns
     private long start = System.nanoTime(), end;
 
+    private CoordFloat X= new CoordFloat();// ppoint de contact avec un obstacle
+
     public Player(int health, float x, float y) {
         super((float)0.45, x, y);
         name = "Player";
@@ -21,6 +23,10 @@ public class Player extends Rond {
 
     public int getHealth() {
         return health;
+    }
+
+    public CoordFloat get_Point_Contact(){
+        return X;
     }
 
     public int get_pourcentage_vie() {
@@ -87,6 +93,20 @@ public class Player extends Rond {
         //System.out.println("en x:"+speed_x+" en y:"+speed_y);
         coord.x += (float)(Math.abs(Math.cos(orientation)) * speed_x * delta_time);
         coord.y += (float)(Math.abs(Math.sin(orientation)) * speed_y * delta_time);
+        reduce_speed();
+    }
+
+    public void rectifie_move(){
+        if(coord_simu.x==X.x){
+            coord.x=X.x;            
+            float sin=(float)Math.sin(orientation);
+            coord.y=X.y+(radius+(float)0.01)*sin/Math.abs(sin);
+        }
+        else{
+            coord.y=X.y;            
+            float cos=(float)Math.cos(orientation);
+            coord.x=X.x+(radius+(float)0.01)*cos/Math.abs(cos);
+        }
         reduce_speed();
     }
 

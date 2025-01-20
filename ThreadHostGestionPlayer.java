@@ -158,8 +158,8 @@ public abstract class ThreadHostGestionPlayer extends Thread {
             Button btnFF = new Button("Abandonner");
 
             btnRespawn.setOnAction(event -> {
-                respawn_player();
                 respawnStage.close();
+                respawn_player();
             });
 
             btnFF.setOnAction(event -> {
@@ -167,7 +167,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                 client_ouvert = false;
             });
 
-            VBox layout = new VBox(20);
+            VBox layout = new VBox(10);
             layout.setAlignment(Pos.CENTER);
             layout.setPadding(new Insets(20));
 

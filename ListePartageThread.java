@@ -7,9 +7,10 @@ public class ListePartageThread {
     private int nbr_equipe=4;
     private int[] personne_par_equipe = new int[nbr_equipe];
 
-    ListePartageThread(int n) { 
+    ListePartageThread(int n,int nbr_equipe) { 
         liste = new ThreadHostToClient[n];
         max_size=n;
+        this.nbr_equipe=nbr_equipe;
         init_equipe();
     }
 

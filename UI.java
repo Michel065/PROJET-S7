@@ -104,7 +104,7 @@ public class UI extends Application {
 
     private void startHost(int port) {
         try {
-            Host server = new Host(10, 20, 0.05, 5);
+            Host server = new Host(10,3, 20, 0.05, 5);
             server.start(port);
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);

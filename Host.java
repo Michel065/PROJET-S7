@@ -5,11 +5,11 @@ public class Host {
     private ThreadHostConnexion recepteur;
     public static boolean is_close = false;
 
-    Host(int nbr_joueur_max, int map, double pourcentageObstacle, int nbrMoyenObstacleParCase) {
+    Host(int nbr_joueur_max,int nbr_equipe, int map, double pourcentageObstacle, int nbrMoyenObstacleParCase) {
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();
-        Liste_Thread = new ListePartageThread(nbr_joueur_max);
+        Liste_Thread = new ListePartageThread(nbr_joueur_max,nbr_equipe);
     }    
 
     // Pour le display
@@ -36,7 +36,7 @@ public class Host {
     }
 
     public static void main(String[] args){
-        Host server = new Host(10, 20, 0.05, 5);
+        Host server = new Host(10,3, 10, 0.05, 5);
         server.start(5003);
     }
 }

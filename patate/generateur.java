@@ -12,7 +12,7 @@ public class generateur extends Application {
         }
         nbr_client = Integer.parseInt(args[0]);
         
-        Host host = new Host(10, 20, 0.05, 5);
+        Host host = new Host(10,3, 20, 0.05, 5);
         host.start(5001);
 
         // Lancer la plateforme JavaFX

@@ -10,11 +10,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javafx.animation.AnimationTimer;
 
-import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.application.Platform;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 

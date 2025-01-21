@@ -276,7 +276,7 @@ public class Client extends Application {
             });
 
             // Gestion de la fermeture
-            primaryStage.setOnCloseRequest(event -> {
+            respawnStage.setOnCloseRequest(event -> {
                 Client.is_close = true;
             });
 

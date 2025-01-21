@@ -120,7 +120,22 @@ public class UI extends Application {
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
-        Label messageLabel = new Label("Votre adresse IP est : " + getLocalIPAddress() + "\nL'hôte écoute sur le port : " + port);
+        Label messageLabel = new Label("Votre adresse IP est : ");
+        root.getChildren().add(messageLabel);
+        try {
+            int i=0;
+            InetAddress[] allAddresses = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+            for (InetAddress addr : allAddresses) {
+                i++;
+                messageLabel = new Label(i+") "+addr.getHostAddress());
+                root.getChildren().add(messageLabel);
+            }
+        }
+        catch (Exception e) { 
+            System.err.println("Erreur : " + e);
+            e.printStackTrace();
+        }
+        messageLabel = new Label("L'hôte écoute sur le port : " + port);
         Button okButton = new Button("Éteindre serveur");
 
         okButton.setOnAction(e -> {
@@ -146,28 +161,6 @@ public class UI extends Application {
             e.printStackTrace();
             showError("Erreur lors de la connexion au serveur : " + e.getMessage());
         }
-    }
-
-    private String getLocalIPAddress() {
-        try {
-            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-            while (networkInterfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = networkInterfaces.nextElement();
-
-                if (!networkInterface.isLoopback() && networkInterface.isUp()) {
-                    Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-                    while (inetAddresses.hasMoreElements()) {
-                        InetAddress inetAddress = inetAddresses.nextElement();
-                        if (inetAddress instanceof Inet4Address) {
-                            return inetAddress.getHostAddress();
-                        }
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        return "Erreur lors de la récupération de l'adresse IP";
     }
 
     private void showError(String message) {

@@ -9,15 +9,20 @@ MAIN = UI
 # Cibles
 all:
 	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw Main
 	rm -f *.class
 
-runui:
+host:
+	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) Carte.java CoordFloat.java CoordFloatAtomic.java CoordInt.java Host.java LightPlayer.java LightProjectile.java LightRond.java ListeAtomicCoord.java ListePartageThread.java Main.java MatriceCarre.java Obstacle.java Player.java Projectile.java Rond.java ThreadHostConnexion.java ThreadHostGestionPlayer.java ThreadHostToClient.java
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw Host
+	rm -f *.class
+
+client:
 	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
+	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw 
 	rm -f *.class
 
-run:
+ui:
+	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
 	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
 	rm -f *.class
 

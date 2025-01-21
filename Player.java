@@ -96,7 +96,7 @@ public class Player extends Rond {
         reduce_speed();
     }
 
-    public void rectifie_move(){
+    /*public void rectifie_move(){
         System.out.println("on rectifie");
         if(coord_simu.x==X.x){
             coord.x=X.x;            
@@ -104,14 +104,14 @@ public class Player extends Rond {
             //else if(coord_simu.y<coord.y) coord.y = X.y+radius+((float)0.49 - radius);//-5*((float)0.49 - radius);
             System.out.println("a");
         }
-        /*else if (coord_simu.y==X.y){
+        else if (coord_simu.y==X.y){
             coord.y=X.y;            
             if(coord_simu.x>=coord.x) coord.x = X.x-radius-(float)0.00;
             else coord.x=X.x+radius+(float)1;
             System.out.println("b");
-        }*/
+        }
         reduce_speed();
-    }
+    }*/
 
     public float getOrientation() {
         return (float)orientation;

@@ -131,7 +131,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                     ourplayer.move();
                 } 
                 else {
-                    ourplayer.rectifie_move();
+                    //ourplayer.rectifie_move();
                     ourplayer.reset_speed();
                 }
                 coord_joueur.setCoords(ourplayer.getCoord());

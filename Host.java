@@ -34,4 +34,9 @@ public class Host {
         killAllClient(); // Terminer tous les threads clients
         System.out.println("Serveur arrêté");
     }
+
+    public static void main(String[] args){
+        Host server = new Host(10, 20, 0.05, 5);
+        server.start(5673);
+    }
 }

@@ -32,6 +32,8 @@ public class ListePartageThread {
         } else {
             liste[index] = null;
         }
+        print_equipe();
+
     }
     
     public synchronized ThreadHostToClient recuperer(int index) {
@@ -66,16 +68,16 @@ public class ListePartageThread {
         }
     }
 
-    public int recup_meuilleur_equipe() {
-        int somme=0;
-        for(int i =0;i<nbr_equipe;i++){
-            somme+=personne_par_equipe[i];
+    private synchronized void print_equipe(){
+        for(int i=0;i<get_size();i++){
+            System.out.println(liste[i].getEquipe()); 
+            
         }
+    }
 
-        if(somme != (get_size()-1) ){
-            init_equipe();
-            maj_liste_equipe();
-        }
+    public int recup_meuilleur_equipe() {
+        init_equipe();
+        maj_liste_equipe();
 
         int id_min=0,score=personne_par_equipe[0];
         for(int i =1;i<nbr_equipe;i++){

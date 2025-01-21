@@ -37,7 +37,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(label, hostButton, clientButton);
 
-        Scene scene = new Scene(root, 300, 400);
+        Scene scene = new Scene(root, 300, 500);
         stage.setScene(scene);
         stage.setTitle("Sélection du rôle"); // Ajout d'un titre pour la fenêtre
         stage.show();
@@ -69,7 +69,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(ipLabel, ipField, portLabel, portField, connectButton, cancelButton);
 
-        Scene scene = new Scene(root, 300, 400);
+        Scene scene = new Scene(root, 300, 500);
         stage.setTitle("Client setup");
         stage.setScene(scene);
     }
@@ -79,15 +79,22 @@ public class UI extends Application {
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
+        int mapSizeMin = 10;
+        double obstaclePercentageMax = 0.1;
+        int obstaclePerChunkMax = 7;
+
         Label portLabel = new Label("Entrez le numéro de port :");
         TextField portField = new TextField("5003");
         Label maxPlayersLabel = new Label("Nombre maximum de joueurs :");
         TextField maxPlayersField = new TextField("10");
-        Label mapLabel = new Label("Taille de la map : ");
-        TextField mapField = new TextField("20");
+        Label mapSizeLabel = new Label("Taille de la map : ");
+        Label mapSizeWarningLabel = new Label("(min. " + mapSizeMin + ")");
+        TextField mapSizeField = new TextField("20");
         Label obstaclePercentageLabel = new Label("Pourcentage d'obstacles :");
+        Label obstaclePercentageWarningLabel = new Label("(max. " + obstaclePercentageMax + ")");
         TextField obstaclePercentageField = new TextField("0.05");
         Label obstaclePerChunkLabel = new Label("Nombre moyen d'obstacles par chunk :");
+        Label obstaclePerChunkWarningLabel = new Label("(max. " + obstaclePerChunkMax + ")");
         TextField obstaclePerChunkField = new TextField("5");
         Button startButton = new Button("Démarrer");
         Button cancelButton = new Button("Annuler");
@@ -96,10 +103,10 @@ public class UI extends Application {
             try {
                 int port = Integer.parseInt(portField.getText());
                 int maxPlayers = Integer.parseInt(maxPlayersField.getText());
-                int mapSize = Integer.parseInt(mapField.getText());
+                int mapSize = Integer.parseInt(mapSizeField.getText());
                 double obstaclePercentage = Double.parseDouble(obstaclePercentageField.getText());
                 int obstaclePerChunk = Integer.parseInt(obstaclePerChunkField.getText());
-                new Thread(() -> startHost(port, maxPlayers, mapSize, obstaclePercentage, obstaclePerChunk)).start();
+                new Thread(() -> startHost(port, maxPlayers, Math.max(mapSize, mapSizeMin), Math.min(obstaclePercentage, obstaclePercentageMax), Math.min(obstaclePerChunk, obstaclePerChunkMax))).start();
             } catch (NumberFormatException ex) {
                 showError("Le port doit être un nombre valide.");
             }
@@ -109,13 +116,13 @@ public class UI extends Application {
 
         root.getChildren().addAll(  portLabel, portField,
                                     maxPlayersLabel, maxPlayersField,
-                                    mapLabel, mapField,
-                                    obstaclePercentageLabel, obstaclePercentageField,
-                                    obstaclePerChunkLabel, obstaclePerChunkField,
+                                    mapSizeLabel, mapSizeWarningLabel, mapSizeField,
+                                    obstaclePercentageLabel, obstaclePercentageWarningLabel, obstaclePercentageField,
+                                    obstaclePerChunkLabel, obstaclePerChunkWarningLabel, obstaclePerChunkField,
                                     startButton,
                                     cancelButton);
 
-        Scene scene = new Scene(root, 300, 400);
+        Scene scene = new Scene(root, 300, 500);
         stage.setTitle("Host setup");
         stage.setScene(scene);
     }
@@ -163,7 +170,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(messageLabel, okButton);
 
-        Scene scene = new Scene(root, 300, 400);
+        Scene scene = new Scene(root, 300, 500);
         stage.setTitle("Host démarré");
         stage.setScene(scene);
     }

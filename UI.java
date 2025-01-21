@@ -37,7 +37,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(label, hostButton, clientButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 400);
         stage.setScene(scene);
         stage.setTitle("Sélection du rôle"); // Ajout d'un titre pour la fenêtre
         stage.show();
@@ -69,7 +69,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(ipLabel, ipField, portLabel, portField, connectButton, cancelButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 400);
         stage.setTitle("Client setup");
         stage.setScene(scene);
     }
@@ -81,13 +81,25 @@ public class UI extends Application {
 
         Label portLabel = new Label("Entrez le numéro de port :");
         TextField portField = new TextField("5003");
+        Label maxPlayersLabel = new Label("Nombre maximum de joueurs :");
+        TextField maxPlayersField = new TextField("10");
+        Label mapLabel = new Label("Taille de la map : ");
+        TextField mapField = new TextField("20");
+        Label obstaclePercentageLabel = new Label("Pourcentage d'obstacles :");
+        TextField obstaclePercentageField = new TextField("0.05");
+        Label obstaclePerChunkLabel = new Label("Nombre moyen d'obstacles par chunk :");
+        TextField obstaclePerChunkField = new TextField("5");
         Button startButton = new Button("Démarrer");
         Button cancelButton = new Button("Annuler");
 
         startButton.setOnAction(e -> {
             try {
                 int port = Integer.parseInt(portField.getText());
-                new Thread(() -> startHost(port)).start();
+                int maxPlayers = Integer.parseInt(maxPlayersField.getText());
+                int mapSize = Integer.parseInt(mapField.getText());
+                double obstaclePercentage = Double.parseDouble(obstaclePercentageField.getText());
+                int obstaclePerChunk = Integer.parseInt(obstaclePerChunkField.getText());
+                new Thread(() -> startHost(port, maxPlayers, mapSize, obstaclePercentage, obstaclePerChunk)).start();
             } catch (NumberFormatException ex) {
                 showError("Le port doit être un nombre valide.");
             }
@@ -95,16 +107,22 @@ public class UI extends Application {
 
         cancelButton.setOnAction(e -> showRoleSelection());
 
-        root.getChildren().addAll(portLabel, portField, startButton, cancelButton);
+        root.getChildren().addAll(  portLabel, portField,
+                                    maxPlayersLabel, maxPlayersField,
+                                    mapLabel, mapField,
+                                    obstaclePercentageLabel, obstaclePercentageField,
+                                    obstaclePerChunkLabel, obstaclePerChunkField,
+                                    startButton,
+                                    cancelButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 400);
         stage.setTitle("Host setup");
         stage.setScene(scene);
     }
 
-    private void startHost(int port) {
+    private void startHost(int port, int maxPlayers, int mapSize, double obstaclePercentage, int obstaclePerChunk) {
         try {
-            Host server = new Host(10, 20, 0.05, 5);
+            Host server = new Host(maxPlayers, mapSize, obstaclePercentage, obstaclePerChunk);
             server.start(port);
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);
@@ -145,7 +163,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(messageLabel, okButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 400);
         stage.setTitle("Host démarré");
         stage.setScene(scene);
     }

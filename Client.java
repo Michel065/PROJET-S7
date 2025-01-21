@@ -105,7 +105,7 @@ public class Client extends Application {
                 caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
 
                 /*
-                // Ajouter les axes en couleur (débug))
+                // Ajouter les axes en couleur (débug)
                 double arrowWidth = caseWidth;
                 double arrowHeight = caseWidth / 4;
 

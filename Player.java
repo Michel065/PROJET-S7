@@ -12,7 +12,7 @@ public class Player extends Rond {
     private long cooldown = 500 * 1000 * 1000; // En ns
     private long start = System.nanoTime(), end;
 
-    private CoordFloat X = new CoordFloat();// ppoint de contact avec un obstacle
+    private CoordFloat X = new CoordFloat(); // Point de contact avec un obstacle
 
     public Player(int health, float x, float y) {
         super((float)0.45, x, y);
@@ -96,22 +96,24 @@ public class Player extends Rond {
         reduce_speed();
     }
 
-    /*public void rectifie_move(){
-        System.out.println("on rectifie");
-        if(coord_simu.x==X.x){
-            coord.x=X.x;            
-            if(coord_simu.y>coord.y) coord.y=X.y+radius-2*((float)0.49 - radius);
-            //else if(coord_simu.y<coord.y) coord.y = X.y+radius+((float)0.49 - radius);//-5*((float)0.49 - radius);
+    /*
+    public void rectifie_move() {
+        System.out.println("On rectifie");
+        if(coord_simu.x == X.x) {
+            coord.x = X.x;            
+            if(coord_simu.y > coord.y) coord.y = X.y + radius - 2 * ((float)0.49 - radius);
+            //else if(coord_simu.y < coord.y) coord.y = X.y + radius + ((float)0.49 - radius); // - 5 * ((float)0.49 - radius);
             System.out.println("a");
         }
-        else if (coord_simu.y==X.y){
-            coord.y=X.y;            
-            if(coord_simu.x>=coord.x) coord.x = X.x-radius-(float)0.00;
-            else coord.x=X.x+radius+(float)1;
+        else if (coord_simu.y == X.y) {
+            coord.y = X.y;            
+            if(coord_simu.x >= coord.x) coord.x = X.x - radius - (float)0.00;
+            else coord.x = X.x + radius + (float)1;
             System.out.println("b");
         }
         reduce_speed();
-    }*/
+    }
+    */
 
     public float getOrientation() {
         return (float)orientation;

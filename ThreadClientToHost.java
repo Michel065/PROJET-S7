@@ -247,7 +247,7 @@ public class ThreadClientToHost extends Thread {
 
     public void respawn_player(){
         if(!player_status){
-            message_transmit="\"put ourplayer new\n\r";
+            message_transmit="put ourplayer new\n\r";
             message_transmit+="put ourplayer invincibilite false\n\r";
             send(message_transmit);
             message_transmit="";

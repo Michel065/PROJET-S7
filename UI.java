@@ -37,7 +37,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(label, hostButton, clientButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 500);
         stage.setScene(scene);
         stage.setTitle("Sélection du rôle"); // Ajout d'un titre pour la fenêtre
         stage.show();
@@ -49,9 +49,9 @@ public class UI extends Application {
         root.setAlignment(Pos.CENTER);
 
         Label ipLabel = new Label("Adresse IP de l'host :");
-        TextField ipField = new TextField();
+        TextField ipField = new TextField("127.0.0.1");
         Label portLabel = new Label("Port de l'host :");
-        TextField portField = new TextField();
+        TextField portField = new TextField("5003");
         Button connectButton = new Button("Se connecter");
         Button cancelButton = new Button("Annuler");
 
@@ -69,7 +69,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(ipLabel, ipField, portLabel, portField, connectButton, cancelButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 500);
         stage.setTitle("Client setup");
         stage.setScene(scene);
     }
@@ -79,15 +79,34 @@ public class UI extends Application {
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
+        int mapSizeMin = 10;
+        double obstaclePercentageMax = 0.1;
+        int obstaclePerChunkMax = 7;
+
         Label portLabel = new Label("Entrez le numéro de port :");
-        TextField portField = new TextField("5001");
+        TextField portField = new TextField("5003");
+        Label maxPlayersLabel = new Label("Nombre maximum de joueurs :");
+        TextField maxPlayersField = new TextField("10");
+        Label mapSizeLabel = new Label("Taille de la map : ");
+        Label mapSizeWarningLabel = new Label("(min. " + mapSizeMin + ")");
+        TextField mapSizeField = new TextField("20");
+        Label obstaclePercentageLabel = new Label("Pourcentage d'obstacles :");
+        Label obstaclePercentageWarningLabel = new Label("(max. " + obstaclePercentageMax + ")");
+        TextField obstaclePercentageField = new TextField("0.05");
+        Label obstaclePerChunkLabel = new Label("Nombre moyen d'obstacles par chunk :");
+        Label obstaclePerChunkWarningLabel = new Label("(max. " + obstaclePerChunkMax + ")");
+        TextField obstaclePerChunkField = new TextField("5");
         Button startButton = new Button("Démarrer");
         Button cancelButton = new Button("Annuler");
 
         startButton.setOnAction(e -> {
             try {
                 int port = Integer.parseInt(portField.getText());
-                new Thread(() -> startHost(port)).start();
+                int maxPlayers = Integer.parseInt(maxPlayersField.getText());
+                int mapSize = Integer.parseInt(mapSizeField.getText());
+                double obstaclePercentage = Double.parseDouble(obstaclePercentageField.getText());
+                int obstaclePerChunk = Integer.parseInt(obstaclePerChunkField.getText());
+                new Thread(() -> startHost(port, maxPlayers, Math.max(mapSize, mapSizeMin), Math.min(obstaclePercentage, obstaclePercentageMax), Math.min(obstaclePerChunk, obstaclePerChunkMax))).start();
             } catch (NumberFormatException ex) {
                 showError("Le port doit être un nombre valide.");
             }
@@ -95,16 +114,22 @@ public class UI extends Application {
 
         cancelButton.setOnAction(e -> showRoleSelection());
 
-        root.getChildren().addAll(portLabel, portField, startButton, cancelButton);
+        root.getChildren().addAll(  portLabel, portField,
+                                    maxPlayersLabel, maxPlayersField,
+                                    mapSizeLabel, mapSizeWarningLabel, mapSizeField,
+                                    obstaclePercentageLabel, obstaclePercentageWarningLabel, obstaclePercentageField,
+                                    obstaclePerChunkLabel, obstaclePerChunkWarningLabel, obstaclePerChunkField,
+                                    startButton,
+                                    cancelButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 500);
         stage.setTitle("Host setup");
         stage.setScene(scene);
     }
 
-    private void startHost(int port) {
+    private void startHost(int port, int maxPlayers, int mapSize, double obstaclePercentage, int obstaclePerChunk) {
         try {
-            Host server = new Host(10,3, 20, 0.05, 5);
+            Host server = new Host(maxPlayers, mapSize, obstaclePercentage, obstaclePerChunk);
             server.start(port);
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);
@@ -145,7 +170,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(messageLabel,okButton);
 
-        Scene scene = new Scene(root, 400, 200);
+        Scene scene = new Scene(root, 300, 500);
         stage.setTitle("Host démarré");
         stage.setScene(scene);
     }

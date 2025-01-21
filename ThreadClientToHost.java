@@ -38,8 +38,6 @@ public class ThreadClientToHost extends Thread {
         return ourprojectilespartagee;
     }
 
-    
-    
     ThreadClientToHost(Stage primaryStage, String ip, int port, ConcurrentLinkedQueue<LightPlayer> pl, ConcurrentLinkedQueue<LightProjectile> pr) {
         this.primaryStage = primaryStage;
         this.port = port;

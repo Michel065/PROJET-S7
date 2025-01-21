@@ -221,8 +221,7 @@ public class Carte {
                 else if(y1 == y2) {
                     X.x = coord.x+(float)0.50 - radius;
                     X.y = y1;
-                }
-                else System.out.println("WTFWTFWTFWTF les x ET les y sont distincts WTFWTFWTFWTFWTFWTF");    
+                }  
             }
             
             // Si la projection tombe en dehors du segment, on vérifie les extrémités

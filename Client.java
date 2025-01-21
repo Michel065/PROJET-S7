@@ -39,8 +39,9 @@ public class Client extends Application {
     public static int nbr_fenetre_respawn_ouvert=0;
 
     public Client() {
-        this.serverIp = "127.0.0.1";
-        this.port = 5001;
+        this.serverIp = "192.168.52.237";
+        this.port = 80;
+        System.out.println("demarage:"+serverIp+" "+port);
     }
 
     public Client(String serverAddress, int serverPort) {

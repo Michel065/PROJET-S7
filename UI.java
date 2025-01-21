@@ -37,7 +37,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(label, hostButton, clientButton);
 
-        Scene scene = new Scene(root, 300, 500);
+        Scene scene = new Scene(root, 300, 600);
         stage.setScene(scene);
         stage.setTitle("Sélection du rôle"); // Ajout d'un titre pour la fenêtre
         stage.show();
@@ -69,7 +69,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(ipLabel, ipField, portLabel, portField, connectButton, cancelButton);
 
-        Scene scene = new Scene(root, 300, 500);
+        Scene scene = new Scene(root, 300, 600);
         stage.setTitle("Client setup");
         stage.setScene(scene);
     }
@@ -123,20 +123,21 @@ public class UI extends Application {
 
         root.getChildren().addAll(  portLabel, portField,
                                     maxPlayersLabel, maxPlayersField,
+                                    teamNumberLabel, teamNumberWarningLabel, teamNumberField,
                                     mapSizeLabel, mapSizeWarningLabel, mapSizeField,
                                     obstaclePercentageLabel, obstaclePercentageWarningLabel, obstaclePercentageField,
                                     obstaclePerChunkLabel, obstaclePerChunkWarningLabel, obstaclePerChunkField,
                                     startButton,
                                     cancelButton);
 
-        Scene scene = new Scene(root, 300, 500);
+        Scene scene = new Scene(root, 300, 600);
         stage.setTitle("Host setup");
         stage.setScene(scene);
     }
 
-    private void startHost(int port, int maxPlayers, int mapSize, double obstaclePercentage, int obstaclePerChunk) {
+    private void startHost(int port, int maxPlayers, int teamNumber, int mapSize, double obstaclePercentage, int obstaclePerChunk) {
         try {
-            Host server = new Host(maxPlayers, mapSize, obstaclePercentage, obstaclePerChunk);
+            Host server = new Host(maxPlayers, teamNumber, mapSize, obstaclePercentage, obstaclePerChunk);
             server.start(port);
 
             System.out.println("L'hôte est maintenant en écoute sur le port : " + port);
@@ -177,7 +178,7 @@ public class UI extends Application {
 
         root.getChildren().addAll(messageLabel,okButton);
 
-        Scene scene = new Scene(root, 300, 500);
+        Scene scene = new Scene(root, 300, 600);
         stage.setTitle("Host démarré");
         stage.setScene(scene);
     }

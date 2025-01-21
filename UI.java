@@ -49,9 +49,9 @@ public class UI extends Application {
         root.setAlignment(Pos.CENTER);
 
         Label ipLabel = new Label("Adresse IP de l'host :");
-        TextField ipField = new TextField();
+        TextField ipField = new TextField("127.0.0.1");
         Label portLabel = new Label("Port de l'host :");
-        TextField portField = new TextField();
+        TextField portField = new TextField("5003");
         Button connectButton = new Button("Se connecter");
         Button cancelButton = new Button("Annuler");
 
@@ -80,7 +80,7 @@ public class UI extends Application {
         root.setAlignment(Pos.CENTER);
 
         Label portLabel = new Label("Entrez le numéro de port :");
-        TextField portField = new TextField("5001");
+        TextField portField = new TextField("5003");
         Button startButton = new Button("Démarrer");
         Button cancelButton = new Button("Annuler");
 

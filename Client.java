@@ -10,6 +10,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javafx.animation.AnimationTimer;
 
+import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.application.Platform;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+
 public class Client extends Application {
     private final int sizeWindow = 700;
     private GraphicsContext gc;
@@ -28,6 +36,7 @@ public class Client extends Application {
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
 
     private double caseWidth;
+    public static int nbr_fenetre_respawn_ouvert=0;
 
     public Client() {
         this.serverIp = "127.0.0.1";
@@ -55,11 +64,6 @@ public class Client extends Application {
             }
         }
     }
-
-    // Méthode pour démarrer la logique principale
-    public void startClient() {
-        recupCarteFromThread();
-    }
     
     @Override
     public void start(Stage primaryStage) {
@@ -84,7 +88,7 @@ public class Client extends Application {
         });
     
         // Démarrage du client et de l'animation
-        startClient();
+        recupCarteFromThread();
         startAnimation(primaryStage);
     }
 
@@ -102,15 +106,33 @@ public class Client extends Application {
                 double orientation = toServer.get_orientation();
                 gc.rotate(-90-Math.toDegrees(orientation));
                 caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
+
+                /* // ajouter les axe en couleur c pour debug 
+                double arrowWidth = caseWidth;
+                double arrowHeight = caseWidth/ 4; 
+                gc.setFill(Color.GREEN); 
+                gc.fillRect(-arrowWidth , -arrowHeight/ 2, arrowWidth, arrowHeight);
+
+                gc.setFill(Color.BLUE); 
+                gc.fillRect(-arrowHeight/ 2 , -arrowWidth, arrowHeight, arrowWidth);*/
+    
+
                 drawObstacles();
                 drawProjectiles();
                 drawPlayers();
                 gc.restore();
+
     
                 if (Client.is_close) {
                     stop(); 
                     primaryStage.close(); 
                 }
+                if(!ThreadClientToHost.player_status && nbr_fenetre_respawn_ouvert==0){
+                    open_respawn_window();
+                    System.out.println("creation fenetre respawn:");
+                    nbr_fenetre_respawn_ouvert++;
+                }
+
             }
         }.start();
     }
@@ -233,5 +255,37 @@ public class Client extends Application {
     
     public static void main(String[] args) {
         Application.launch(Client.class, args);
+    }
+
+    public void open_respawn_window() {
+        Platform.runLater(() -> {
+            Stage respawnStage = new Stage();
+            respawnStage.setTitle("Vous êtes mort !");
+
+            Label label = new Label("Revenez dans la bataille !");
+            Button btnRespawn = new Button("Respawn");
+            Button btnFF = new Button("Abandonner");
+
+            btnRespawn.setOnAction(event -> {
+                respawnStage.close();
+                toServer.respawn_player();
+            });
+
+            btnFF.setOnAction(event -> {
+                respawnStage.close();
+                Client.is_close = true;
+            });
+
+            VBox layout = new VBox(10);
+            layout.setAlignment(Pos.CENTER);
+            layout.setPadding(new Insets(20));
+
+            layout.getChildren().addAll(label, btnRespawn, btnFF);
+
+            Scene scene = new Scene(layout, 300, 200);
+            respawnStage.setScene(scene);
+
+            respawnStage.show();
+        });
     }
 }

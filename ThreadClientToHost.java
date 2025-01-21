@@ -18,8 +18,10 @@ public class ThreadClientToHost extends Thread {
     private String IP = "", message_recu = "", message_transmit = "";
     private PrintWriter serveur_input;
     private BufferedReader serveur_output;
-    private boolean host_ouvert = true, player_status=true;
+    private boolean host_ouvert = true;
+    public static boolean player_status=true;
     private long dernier_msg_recu_tmp,dernier_msg_recu=System.nanoTime();
+    private Player ourPlayer;
 
     private final Set<KeyCode> activeKeys = new HashSet<>();
 
@@ -28,6 +30,7 @@ public class ThreadClientToHost extends Thread {
     private ConcurrentLinkedQueue<LightPlayer> players;
     private ConcurrentLinkedQueue<LightProjectile> projectiles;
 
+    
     // Partagé :
     protected ListeAtomicCoord ourprojectilespartagee = new ListeAtomicCoord(30);
 
@@ -35,7 +38,7 @@ public class ThreadClientToHost extends Thread {
         return ourprojectilespartagee;
     }
 
-    private Player ourPlayer;
+    
     
     ThreadClientToHost(Stage primaryStage, String ip, int port, ConcurrentLinkedQueue<LightPlayer> pl, ConcurrentLinkedQueue<LightProjectile> pr) {
         this.primaryStage = primaryStage;
@@ -138,8 +141,9 @@ public class ThreadClientToHost extends Thread {
                 System.out.println("Le thread a été interrompu");
             }
         }        
-        System.out.println("Fermeture du thread : coucou " + Thread.currentThread().getName());
+        System.out.println("Fermeture du thread client to host : " + Thread.currentThread().getName());
         send("put client fermeture\n\r");
+        Client.is_close=true;
     }
 
     public void envoie_et_analyse(String msg){
@@ -192,6 +196,7 @@ public class ThreadClientToHost extends Thread {
                     if (object.equals("coord")) {
                         String[] coord = data.split(":");
                         ourPlayer.setPosition(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]));
+                        //System.out.println("coos du joueur : " + coord[0] + " ; " + coord[1]);
                     }else if(object.equals("null")){
                         Client.is_close = true;
                     }else if(object.equals("orientation")){
@@ -201,6 +206,7 @@ public class ThreadClientToHost extends Thread {
                         ourPlayer.setEquipe(Integer.parseInt(data));
                     }else if(object.equals("status")){
                         player_status=(Integer.parseInt(data)==1);
+                        if(player_status)Client.nbr_fenetre_respawn_ouvert=0;
                     }
                 } else if (target.equals("fenetre")) {
                     if (object.equals("rayon")) {
@@ -238,4 +244,11 @@ public class ThreadClientToHost extends Thread {
         if(!reponse.equals("")) reponse += "\n\r";
         return reponse;
     }
+
+    public void respawn_player(){
+        if(!player_status){
+            send("put ourplayer new");
+        }
+    }
+
 }

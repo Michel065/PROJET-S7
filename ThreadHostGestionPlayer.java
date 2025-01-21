@@ -110,7 +110,7 @@ public abstract class ThreadHostGestionPlayer extends Thread {
         for (Projectile projectile : ourprojectiles) {
             projectile.setDeltaTime(delta_time);
             projectile.simu_move();
-            if (!projectile.is_alive() || carte.test_collision_rond_obstacle(projectile.get_simu_move(), rayon_proj,null) || other_player_is_touch_by_proj(projectile)) { 
+            if (!projectile.is_alive() || carte.test_collision_proj_obstacle(projectile.get_simu_move(), rayon_proj) || other_player_is_touch_by_proj(projectile)) { 
                 a_remove.add(projectile);
             } else {
                 projectile.move();
@@ -129,12 +129,12 @@ public abstract class ThreadHostGestionPlayer extends Thread {
                 ourplayer.simu_move();
                 if (!carte.test_collision_rond_obstacle(ourplayer.get_simu_move(), ourplayer.getRadius(),ourplayer.get_Point_Contact()) && !player_touch()) {
                     ourplayer.move();
-                    coord_joueur.setCoords(ourplayer.getCoord());
                 } 
                 else {
                     ourplayer.rectifie_move();
                     ourplayer.reset_speed();
                 }
+                coord_joueur.setCoords(ourplayer.getCoord());
             }
             else {
                 kill_ourplayer(); 
@@ -175,11 +175,6 @@ public abstract class ThreadHostGestionPlayer extends Thread {
 
         statut_joueur = true;
         coord_joueur.setCoords(ourplayer.getCoord());
-    }
-
-    protected void respawn_player() {
-        create_player();
-        ourplayer.setInvinvibilite(false);
     }
 
     protected void tire() {

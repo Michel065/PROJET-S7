@@ -7,7 +7,6 @@ public class Carte {
     private int largeur_case, largeur_matrice, nbr_moyen_obstacle_par_case, nbr_max_obstacle_par_case;
     private double pourcentage_obstacle;
     private int nbr_actuel_obstacle;
-    private CoordFloat coord_tmp = new CoordFloat();
 
     private MatriceCarre<CoordInt> carte;
     private List<Obstacle> obstacles;
@@ -112,7 +111,7 @@ public class Carte {
         return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     }
     public boolean test_collision_rond_obstacle(CoordFloat coord, float radius, CoordFloat X) {
-        coord_tmp.set(coord);
+        CoordFloat coord_tmp = new CoordFloat(coord);
         coord_tmp.add(-((float)0.50 - radius));
         
         CoordInt tmp1 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x, (int)coord_tmp.y);
@@ -125,7 +124,11 @@ public class Carte {
         CoordInt tmp8 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x - 1, (int)coord_tmp.y + 1);
         CoordInt tmp9 = get_Coordonnees_De_Reel_Vers_Grille((int)coord_tmp.x - 1, (int)coord_tmp.y - 1);
 
-       if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null || tmp6 == null || tmp7 == null || tmp8 == null || tmp9 == null) return true;
+        if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null || tmp6 == null || tmp7 == null || tmp8 == null || tmp9 == null) return true;
+
+        if(X != null)
+            //X.add(((float)0.50 - radius));
+            System.out.println("coord:"+coord.x+";"+coord.y+" X:"+X.x+";"+X.y);
 
         if(test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp1), X)) return true;
         else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp2), X)) return true;
@@ -214,16 +217,20 @@ public class Carte {
             t = (fx * dx + fy * dy) / (dx * dx + dy * dy); // Ratio de projection du centre du cercle sur le segment
 
             // Calcul des coordonnées de X
-            if(x1 == x2) {
-                X.x = x1;
-                X.y = y1 + (y2-y1) / Maths.abs(y2-y1) * t;
+            if(X != null){
+                if(x1 == x2) {
+                    X.x = x1;
+                    X.y = coord.y+(float)0.50 - radius;
+                    //System.out.println("les x sont égaux à " + x1 + ", les y valent " + y1 + " et " + y2);
+                }
+                else if(y1 == y2) {
+                    X.x = coord.x+(float)0.50 - radius;
+                    X.y = y1;
+                    //System.out.println("les y sont égaux à " + y1 + ", les x valent " + x1 + " et " + x2);
+                }
+                else System.out.println("WTFWTFWTFWTF les x ET les y sont distincts WTFWTFWTFWTFWTFWTF");    
             }
-            else if(y1 == y2) {
-                X.x = x1 + (x2-x1) / Maths.abs(x2-x1) * t;
-                X.y = y1;
-            }
-            else System.out.println("WTFWTFWTFWTF les x ET les y sont distincts WTFWTFWTFWTFWTFWTF");
-
+            
             // Si la projection tombe en dehors du segment, on vérifie les extrémités
             if (t < 0) {
                 if (distances[minimini] <= radius * radius) return true;

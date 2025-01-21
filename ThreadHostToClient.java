@@ -184,7 +184,9 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                     }
                     else if(object.equals("new")) {
                         create_player();
-                        equipe = Liste_Thread.recup_meuilleur_equipe();
+                        if(equipe ==-1){
+                            equipe = Liste_Thread.recup_meuilleur_equipe();
+                        }
                         if(ourplayer.setEquipe(equipe)) {
                             reponse = "ourplayer enregistre";
                         }

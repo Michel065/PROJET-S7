@@ -47,7 +47,7 @@ public class Player extends Rond {
     }
 
     public void rotate(int angle) {
-        orientation+=(angle * 0.01745329253);
+        orientation+=(angle * Math.PI/180);
     }
 
     public void addToSpeed(float gain_par_seconde) {
@@ -97,16 +97,19 @@ public class Player extends Rond {
     }
 
     public void rectifie_move(){
+        System.out.println("on rectifie");
         if(coord_simu.x==X.x){
             coord.x=X.x;            
-            float sin=(float)Math.sin(orientation);
-            coord.y=X.y+(radius+(float)0.01)*sin/Math.abs(sin);
+            if(coord_simu.y>coord.y) coord.y=X.y+radius-2*((float)0.49 - radius);
+            //else if(coord_simu.y<coord.y) coord.y = X.y+radius+((float)0.49 - radius);//-5*((float)0.49 - radius);
+            System.out.println("a");
         }
-        else{
+        /*else if (coord_simu.y==X.y){
             coord.y=X.y;            
-            float cos=(float)Math.cos(orientation);
-            coord.x=X.x+(radius+(float)0.01)*cos/Math.abs(cos);
-        }
+            if(coord_simu.x>=coord.x) coord.x = X.x-radius-(float)0.00;
+            else coord.x=X.x+radius+(float)1;
+            System.out.println("b");
+        }*/
         reduce_speed();
     }
 

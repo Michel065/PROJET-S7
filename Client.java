@@ -36,12 +36,12 @@ public class Client extends Application {
     private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
 
     private double caseWidth;
-    public static int nbr_fenetre_respawn_ouvert=0;
+    public static int nbr_fenetre_respawn_ouvert = 0;
 
     public Client() {
         this.serverIp = "192.168.129.237";
-        this.port = 80;
-        System.out.println("demarage:"+serverIp+" "+port);
+        this.port = 5003;
+        System.out.println("Démarrage : " + serverIp + " \\" + port);
     }
 
     public Client(String serverAddress, int serverPort) {
@@ -98,42 +98,40 @@ public class Client extends Application {
             int val = sizeWindow / 2;
             @Override
             public void handle(long now) {
-                
-    
                 gc.setTransform(1, 0, 0, 1, val, val); 
                 gc.save();
                 gc.clearRect(-val, -val, sizeWindow, sizeWindow);
                 toServer.get_case_centre(centre);
                 double orientation = toServer.get_orientation();
-                gc.rotate(-90-Math.toDegrees(orientation));
+                gc.rotate(-90 - Math.toDegrees(orientation));
                 caseWidth = (double) sizeWindow / (rayon_display_en_case * 2);
 
-                /* // ajouter les axe en couleur c pour debug 
+                /*
+                // Ajouter les axes en couleur (débug))
                 double arrowWidth = caseWidth;
-                double arrowHeight = caseWidth/ 4; 
+                double arrowHeight = caseWidth / 4;
+
                 gc.setFill(Color.GREEN); 
-                gc.fillRect(-arrowWidth , -arrowHeight/ 2, arrowWidth, arrowHeight);
+                gc.fillRect(-arrowWidth, -arrowHeight / 2, arrowWidth, arrowHeight);
 
                 gc.setFill(Color.BLUE); 
-                gc.fillRect(-arrowHeight/ 2 , -arrowWidth, arrowHeight, arrowWidth);*/
-    
+                gc.fillRect(-arrowHeight / 2, -arrowWidth, arrowHeight, arrowWidth);
+                */    
 
                 drawObstacles();
                 drawProjectiles();
                 drawPlayers();
                 gc.restore();
 
-    
                 if (Client.is_close) {
                     stop(); 
                     primaryStage.close(); 
                 }
-                if(!ThreadClientToHost.player_status && nbr_fenetre_respawn_ouvert==0){
+                if(!ThreadClientToHost.player_status && nbr_fenetre_respawn_ouvert == 0) {
                     open_respawn_window();
                     System.out.println("creation fenetre respawn:");
                     nbr_fenetre_respawn_ouvert++;
                 }
-
             }
         }.start();
     }
@@ -249,7 +247,7 @@ public class Client extends Application {
         if (gc == null) {
             return;
         }
-        double largeur_blanc = 0.9 * (1 - pourcentage)*caseWidth;
+        double largeur_blanc = 0.9 * (1 - pourcentage) * caseWidth;
         gc.setFill(Color.WHITE);
         gc.fillOval(centerX-largeur_blanc/2, centerY-largeur_blanc/2, largeur_blanc, largeur_blanc);
     }
@@ -274,6 +272,11 @@ public class Client extends Application {
 
             btnFF.setOnAction(event -> {
                 respawnStage.close();
+                Client.is_close = true;
+            });
+
+            // Gestion de la fermeture
+            primaryStage.setOnCloseRequest(event -> {
                 Client.is_close = true;
             });
 

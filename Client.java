@@ -31,7 +31,7 @@ public class Client extends Application {
     private ConcurrentLinkedQueue<LightProjectile> projectiles = new ConcurrentLinkedQueue<>();
     private Float[] centre = new Float[2];
 
-    private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW};
+    private Color[] colors = {Color.PURPLE, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.BLACK, Color.GRAY, Color.ORANGE, Color.PINK};
 
     private double caseWidth;
     public static int nbr_fenetre_respawn_ouvert = 0;

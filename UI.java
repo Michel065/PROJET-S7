@@ -79,14 +79,19 @@ public class UI extends Application {
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.CENTER);
 
+        int teamNumberMin = 2;
+        int teamNumberMax = 10;
         int mapSizeMin = 10;
         double obstaclePercentageMax = 0.1;
         int obstaclePerChunkMax = 7;
 
-        Label portLabel = new Label("Entrez le numéro de port :");
+        Label portLabel = new Label("Numéro de port :");
         TextField portField = new TextField("5003");
         Label maxPlayersLabel = new Label("Nombre maximum de joueurs :");
         TextField maxPlayersField = new TextField("10");
+        Label teamNumberLabel = new Label("Nombre d'équipes :");
+        Label teamNumberWarningLabel = new Label("(" + teamNumberMin + " - " + teamNumberMax + ")");
+        TextField teamNumberField = new TextField("4");
         Label mapSizeLabel = new Label("Taille de la map : ");
         Label mapSizeWarningLabel = new Label("(min. " + mapSizeMin + ")");
         TextField mapSizeField = new TextField("20");
@@ -103,10 +108,12 @@ public class UI extends Application {
             try {
                 int port = Integer.parseInt(portField.getText());
                 int maxPlayers = Integer.parseInt(maxPlayersField.getText());
+                int teamNumber = Integer.parseInt(teamNumberField.getText());
                 int mapSize = Integer.parseInt(mapSizeField.getText());
                 double obstaclePercentage = Double.parseDouble(obstaclePercentageField.getText());
                 int obstaclePerChunk = Integer.parseInt(obstaclePerChunkField.getText());
-                new Thread(() -> startHost(port, maxPlayers, Math.max(mapSize, mapSizeMin), Math.min(obstaclePercentage, obstaclePercentageMax), Math.min(obstaclePerChunk, obstaclePerChunkMax))).start();
+
+                new Thread(() -> startHost(port, maxPlayers, Math.max(Math.min(teamNumberMax, teamNumber), teamNumberMin), Math.max(mapSize, mapSizeMin), Math.min(obstaclePercentage, obstaclePercentageMax), Math.min(obstaclePerChunk, obstaclePerChunkMax))).start();
             } catch (NumberFormatException ex) {
                 showError("Le port doit être un nombre valide.");
             }

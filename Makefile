@@ -18,8 +18,11 @@ client:
 ui:
 	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
 
+ui:
+	$(JAVA) --module-path "$(JAVAFX_PATH)" --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
+
 gen:
 	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw generateur $(ARGS)
 
 clean:
-	rm -f *.class
+	del /Q *.class

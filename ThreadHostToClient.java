@@ -54,7 +54,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 update_player();
 
                 is_client_alive(0);
-                Thread.sleep(45);
+                Thread.sleep(40);
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu.");
             }
@@ -83,9 +83,9 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
     public void is_client_alive(int val) {
         dernier_msg_recu_tmp = System.nanoTime();
         if(Math.abs(dernier_msg_recu_tmp - dernier_msg_recu) >= 2000 * 1000 * 1000) { // 2 secondes
-            Liste_Thread.supprimer(index.get());
             statut_joueur = false;
             ourplayer = null;
+            client_ouvert=false;
         }
         if(val == 1) {
             dernier_msg_recu = dernier_msg_recu_tmp;

@@ -126,10 +126,6 @@ public class Carte {
 
         if (tmp1 == null || tmp2 == null || tmp3 == null || tmp4 == null || tmp5 == null || tmp6 == null || tmp7 == null || tmp8 == null || tmp9 == null) return true;
 
-        if(X != null)
-            //X.add(((float)0.50 - radius));
-            System.out.println("coord:"+coord.x+";"+coord.y+" X:"+X.x+";"+X.y);
-
         if(test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp1), X)) return true;
         else if(!tmp2.eq(tmp1) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp2), X)) return true;
         else if(!tmp3.eq(tmp1) && !tmp3.eq(tmp2) && test_collision_rond_obstacle_sur_chunk(coord_tmp, radius, carte.get(tmp3), X)) return true;
@@ -221,12 +217,10 @@ public class Carte {
                 if(x1 == x2) {
                     X.x = x1;
                     X.y = coord.y+(float)0.50 - radius;
-                    //System.out.println("les x sont égaux à " + x1 + ", les y valent " + y1 + " et " + y2);
                 }
                 else if(y1 == y2) {
                     X.x = coord.x+(float)0.50 - radius;
                     X.y = y1;
-                    //System.out.println("les y sont égaux à " + y1 + ", les x valent " + x1 + " et " + x2);
                 }
                 else System.out.println("WTFWTFWTFWTF les x ET les y sont distincts WTFWTFWTFWTFWTFWTF");    
             }

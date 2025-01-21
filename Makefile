@@ -1,30 +1,24 @@
-# Variables
-JAVAC = javac
-JAVA = java
-JAVAFX_PATH = /usr/share/openjfx/lib
+JAVAFX_PATH = C:\Program Files\Java\javafx-sdk-23.0.1\lib
 JAVAFX_MODULES = javafx.controls,javafx.fxml
 DPRISM = -Dprism.order
-MAIN = UI
+JAVAC = javac
+JAVA = java
 
 # Cibles
 all:
-	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw Main
-	rm -f *.class
+	$(JAVAC) --module-path "$(JAVAFX_PATH)" --add-modules $(JAVAFX_MODULES) *.java
 
-runui:
-	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
-	rm -f *.class
+host:
+	$(JAVA) Host
 
-run:
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
-	rm -f *.class
+client:
+	$(JAVA) --module-path "$(JAVAFX_PATH)" --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw Client
+
+ui:
+	$(JAVA) --module-path "$(JAVAFX_PATH)" --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw UI
 
 gen:
-	$(JAVAC) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) *.java
-	$(JAVA) --module-path $(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw generateur $(ARGS)
-	rm -f *.class
+	$(JAVA) --module-path "$(JAVAFX_PATH)" --add-modules $(JAVAFX_MODULES) $(DPRISM)=sw generateur $(ARGS)
 
 clean:
-	rm -f *.class
+	del /Q *.class

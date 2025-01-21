@@ -40,7 +40,7 @@ public class Client extends Application {
 
     public Client() {
         this.serverIp = "192.168.129.237";
-        this.port = 80;
+        this.port = 5003;
         System.out.println("demarage:"+serverIp+" "+port);
     }
 

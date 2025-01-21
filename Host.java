@@ -5,7 +5,7 @@ public class Host {
     private ThreadHostConnexion recepteur;
     public static boolean is_close = false;
 
-    Host(int nbr_joueur_max,int nbr_equipe, int map, double pourcentageObstacle, int nbrMoyenObstacleParCase) {
+    Host(int nbr_joueur_max, int nbr_equipe, int map, double pourcentageObstacle, int nbrMoyenObstacleParCase) {
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();

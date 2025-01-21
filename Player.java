@@ -12,7 +12,7 @@ public class Player extends Rond {
     private long cooldown = 500 * 1000 * 1000; // En ns
     private long start = System.nanoTime(), end;
 
-    private CoordFloat X= new CoordFloat();// ppoint de contact avec un obstacle
+    private CoordFloat X = new CoordFloat();// ppoint de contact avec un obstacle
 
     public Player(int health, float x, float y) {
         super((float)0.45, x, y);

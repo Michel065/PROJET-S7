@@ -54,7 +54,7 @@ public class ThreadHostToClient extends ThreadHostGestionPlayer {
                 update_player();
 
                 is_client_alive(0);
-                Thread.sleep(70);
+                Thread.sleep(40);
             } catch (InterruptedException e) {
                 System.out.println("Le thread a été interrompu.");
             }

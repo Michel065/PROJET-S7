@@ -1,71 +1,42 @@
-import java.util.List;
-
-
-
 public class Host {
-    
     public long map;
     private Carte carte;
-    private ListShare<Projectile> projectiles;
-    private ListShare<Player> players;
+    private ListePartageThread Liste_Thread;
     private ThreadHostConnexion recepteur;
-    public static boolean is_close=false;
+    public static boolean is_close = false;
 
-
-
-    Host(int map,double pourcentageObstacle,int nbrMoyenObstacleParCase){
+    Host(int nbr_joueur_max, int nbr_equipe, int map, double pourcentageObstacle, int nbrMoyenObstacleParCase) {
         carte = new Carte(map, pourcentageObstacle, nbrMoyenObstacleParCase);
         this.map = carte.getTailleReel(); 
         carte.create_all_initial_obstacle();
-        this.players= new ListShare<>();
-        this.projectiles= new ListShare<>();
+        Liste_Thread = new ListePartageThread(nbr_joueur_max,nbr_equipe);
     }    
 
-    public void print_projectile(){
-        for (Projectile pro : projectiles) {
-            System.out.println(pro.toString());
-        }
+    // Pour le display
+    public boolean is_finish() {
+        return Liste_Thread.get_size() == 0;
     }
 
-
-    //pour le display
-    public boolean is_finish(){
-        return players.size()==0;
+    public void killAllClient() {
+        while(Liste_Thread.get_size() > 0) {Liste_Thread.supprimer(0);}
     }
 
-    public ListShare<Projectile> getProjectiles(){
-        return projectiles;
-    }
-
-    public List<Obstacle> getObstacles(){
-        return carte.getObstacles();
-    }
-
-    public ListShare<Player> getPlayers(){
-        return players;
-    }
-
-    public void killAllPlayers(){
-        while(players.size()>0) {players.remove(0);}
-    }
-
-    public void start(int port){
-        recepteur= new ThreadHostConnexion(port,carte,players,projectiles);
+    public void start(int port) {
+        recepteur = new ThreadHostConnexion(port, carte, Liste_Thread);
         recepteur.start();
     }
 
-    public static void main(String[] args) {
-        Host host;
-        if( args.length>0){
-            System.out.println("manuel ON ... \nOK");
-            host = new Host(Integer.parseInt(args[0]), Double.parseDouble(args[1]), Integer.parseInt(args[2])); // Initialisation de la logique
+    public void stop() {
+        is_close = true; // Marquer le serveur comme arrêté
+        if (recepteur != null) {
+            recepteur.interrupt(); // Interrompre le thread d'écoute
         }
-        else{
-            System.out.println("manuel OFF ... \nOK");
-            host = new Host(20, 0.05, 5); // Initialisation de la logique
-        }
-        System.out.println("Host start ...\nOK");
-        host.start(5001);
+        killAllClient(); // Terminer tous les threads clients
+        System.out.println("Serveur arrêté");
+    }
 
+    public static void main(String[] args){
+        Host server = new Host(10,3, 10, 0.05, 5);
+        server.start(5003);
     }
 }

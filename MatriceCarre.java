@@ -6,15 +6,15 @@ public class MatriceCarre<A> {
         mat = (A[][]) new Object[largeur][largeur]; 
     }
 
-    public A get(int x,int y){
+    public A get(int x, int y) {
         return mat[x][y];
     }
 
-    public A get(Tuple val){
+    public A get(CoordInt val) {
         return mat[val.x][val.y];
     }
     
-    public void set(int x,int y,A val){
+    public void set(int x, int y, A val) {
         mat[x][y]=val;
     }
 }

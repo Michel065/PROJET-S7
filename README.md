@@ -48,7 +48,7 @@ Avant de lancer le projet, assurez-vous d'avoir :
 
 1. Clonez le dépôt GitHub :
    ```bash
-   git clone https://github.com/votre-utilisateur/projet-s7.git
+   git clone https://github.com/Michel065/PROJET-S7.git
    cd projet-s7
 
 2. Installez JavaFX : 
